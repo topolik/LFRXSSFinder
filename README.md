@@ -36,7 +36,6 @@ Loads and parses taglib sources to find vulnerable taglibs and their usages as w
 
 Project is very simple, doesn't use complex Java/JSP parsers and works only with RegEXP to cut down false positives.
 
-Other Info
-----------
+--
 (c) Copyright 2013 Tomáš Polešovský
 
