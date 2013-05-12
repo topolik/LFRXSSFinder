@@ -28,6 +28,7 @@ public class XSSLogicProcessorHelperUtilThingie {
 
     static final String SAFE_VARIABLE_DECLARATION_START = ".*(byte|short|int|long|float|double|boolean|(java.lang.)?(Byte|Short|Integer|Long|Float|Double|Boolean))(\\[\\])? ";
     static final Pattern JAVA_VARIABLE_PATTERN = Pattern.compile("\\w+");
+    static final String ESCAPED_QUOTE = Matcher.quoteReplacement("\\\"");
     private XSSEnvironment environment;
 
     public XSSLogicProcessorHelperUtilThingie(XSSEnvironment environment) {
@@ -54,7 +55,7 @@ public class XSSLogicProcessorHelperUtilThingie {
             */
         complexExpressionParsers.add(new BeanCallCEP(environment));
         complexExpressionParsers.add(new StringConcatCEP(environment));
-        
+
         InputStream in = getClass().getResourceAsStream("/safe_expressions.txt");
         try {
             Scanner s = new Scanner(in);
@@ -104,22 +105,19 @@ public class XSSLogicProcessorHelperUtilThingie {
             return RESULT_SAFE;
         }
         if(simpleVariableResult != RESULT_DONT_KNOW){
-
-
-
             // OK, it was a variable we don't need to continue
             return simpleVariableResult;
         }
 
-        // OK, so we have more complex call :(
-        List<String> complexResult = brakeComplexExpression(argument, lineNum, line, f, loader);
+        // OK, so we have a more complex call :(
+        List<String> complexResult = breakComplexExpression(argument, lineNum, line, f, loader);
         if (complexResult == RESULT_SAFE) {
             // huh, it's safe
             return RESULT_SAFE;
         }
 
         /*
-         * cannot semantically understand what's inside, so we leave it as suspected :0
+         * cannot semantically understand what's inside, so we leave it as a suspected :O
          */
 
         List<String> result = new ArrayList<String>();
@@ -223,8 +221,8 @@ public class XSSLogicProcessorHelperUtilThingie {
     }
 
     protected boolean isExpressionSafe(String expression) {
-        // replace all \" from definitions (doesn't change the XSS meaning for the SAFE_XSS_RE)
-        String normalizedFunctionArgument = expression.replaceAll(Matcher.quoteReplacement("\\\""), "");
+        // replace all \" couples from definitions (doesn't change the XSS meaning for the SAFE_XSS_RE)
+        String normalizedFunctionArgument = expression.replace(ESCAPED_QUOTE, "");
         // try to filer out safe Portal API calls
         for (String safeCall : SAFE_API_CALLS) {
             if (normalizedFunctionArgument.startsWith(safeCall)) {
@@ -241,7 +239,7 @@ public class XSSLogicProcessorHelperUtilThingie {
         return environment.getPortalAPICallsProcessor().isExpressionSafe(expression);
     }
 
-    protected List<String> brakeComplexExpression(String expression, int lineNum, String line, FileContent f, FileLoader loader) {
+    protected List<String> breakComplexExpression(String expression, int lineNum, String line, FileContent f, FileLoader loader) {
         List<String> result = new ArrayList<String>();
         for(ComplexExpressionParser cep : complexExpressionParsers){
             List<String> callResult = cep.execute(expression, lineNum, line, f, loader);

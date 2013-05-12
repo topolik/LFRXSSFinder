@@ -38,6 +38,9 @@ public class App {
             if(relevantLines.contains("ParamUtil.getString(req")){
                 System.out.println("@@@ POSSIBLE XSS @@@");
             }
+            if (relevantLines.contains("BeanParamUtil.getString(")) {
+                System.out.println("@@@ POSSIBLE XSS @@@");
+            }
             System.out.println("---------------------------------------------");
 
             boolean found = false;
@@ -52,7 +55,7 @@ public class App {
                 occurences.add(new Occurence(lineContent));
             }
         }
-        
+
         int possibleXSS = xsss.size();
         System.out.println("Total possible XSS: " + possibleXSS);
 

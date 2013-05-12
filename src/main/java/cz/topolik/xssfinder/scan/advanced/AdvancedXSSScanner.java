@@ -36,9 +36,9 @@ public class AdvancedXSSScanner extends SimpleXSSScanner {
 
         // we have taglibs already processed
 		// TODO: we have it processed but only to find vulnerable params, we don't save all threats
-//        if(environment.getTaglibProcessor().isTagLibJSP(f)){
-//            return null;
-//        }
+        if (environment.getTaglibProcessor().isTagLibJSP(f)) {
+            return null;
+        }
 
         // just string constants (Jasper convention)
         if(trimmed.startsWith(OUT_WRITE)){

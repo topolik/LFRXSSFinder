@@ -28,7 +28,7 @@ import static cz.topolik.xssfinder.scan.advanced.Constants.*;
  * @author Tomas Polesovsky
  */
 public class TaglibProcessor {
-    
+
     private static final Pattern TAGLIB_CALL_PATTERN = Pattern.compile("^(_jspx_th_[\\w]+)\\.set([\\w]+)\\((.*)\\);$");
     //[String id = (String)request.getAttribute("liferay-ui:upload-progress:id");]
     private static final Pattern VULNERABLE_TAGLIB_LINE_PATTERN = Pattern.compile("^.*request.getAttribute\\(\"([a-zA-Z-]+):([a-zA-Z-]+):([a-zA-Z-]+)\"\\).*$");
@@ -52,7 +52,7 @@ public class TaglibProcessor {
         if(isTagLibJSP(f)){
             return null;
         }
-        
+
         Matcher m = TAGLIB_CALL_PATTERN.matcher(line);
         if (!m.matches()) {
             return null;
@@ -100,9 +100,11 @@ public class TaglibProcessor {
 
         loader.load(FileLoader.DIR_JSPPRECOMPILED);
 
+        /*  TODO: taglibs are temporarily disabled
 		Logger.log(" ... recognizing vulnerable taglibs ... ");
         getVulnerableTaglibs(taglibStructure, loader.getFiles(FileLoader.DIR_JSPPRECOMPILED), loader);
 		Logger.log(" ... recognizing vulnerable taglibs ... finished with " + vulnerableTaglibs.size() + " entries");
+        */
     }
 
     protected Map<String, Map<String, String>> loadTaglibTLDs(FileLoader loader) throws ParserConfigurationException, SAXException, IOException {
