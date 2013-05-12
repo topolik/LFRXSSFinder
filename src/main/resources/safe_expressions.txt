@@ -1,0 +1,78 @@
+simple=(java.lang.String)SessionMessages.get(
+simple=(String)SessionMessages.get(
+simple=SessionMessages.get(
+simple=LocaleUtil.toLanguageId(
+simple=LanguageUtil.getLanguageId(
+simple=LanguageUtil.get(
+simple=UnicodeLanguageUtil.get(
+simple=UnicodeLanguageUtil.format(
+simple=UnicodeFormatter.toString(
+simple=PortalUtil.escapeRedirect(
+simple=PortalUtil.generateRandomKey(
+simple=PortalUtil.getPortalURL(
+simple=PortalUtil.getStaticResourceURL(
+simple=PortalUtil.getURLWithSessionId(
+simple=PortalUtil.getPortletTitle(
+simple=PortletURLUtil.getRefreshURL(
+simple=HtmlUtil.escape
+simple=HtmlUtil.stripHtml(
+simple=HttpUtil.encode
+simple=BrowserSnifferUtil.
+simple=PwdGenerator.getPassword(
+simple=String.valueOf(
+simple=Boolean.
+simple=!
+simple=AssetPublisherUtil.getClassName(
+simple=SessionClicks.get(
+simple=portletDisplay.getId(
+simple=dateFormatDateTime.format(
+simple=renderResponse.createRenderURL(
+simple=renderResponse.createActionURL(
+simple=themeDisplay.getPathTheme
+simple=facet.getFieldName()
+simple=currencyFormat.format(
+simple=company.getVirtualHostname(
+simple=themeDisplay.getPathMain()
+simple=clusterNode.getClusterNodeId()
+simple=PrefsPropsUtil.get
+simple=portletConfig.getInitParameter(
+simple=dateFormatDate.format(
+simple=Math.
+simple=(IntegerWrapper)request
+simple=portletURL.toString()
+simple=renderResponse.create
+simple=uniqueNamespace
+
+# all constants are safe (should not be manipulated)
+pattern=^[\w]+\.[A-Z_0-9]+$
+pattern=^(namespace|true|false|0|1)$
+# plain string is safe
+pattern=^"[^"]*"$
+# array of plain strings is safe
+pattern=^new String\[\] ?\{("[^"]*"|\, ?)+\}$
+pattern=^[\w]+\.length$
+pattern=^[\w\.]+\.(class|getClass\(\)).getName\(\)$
+pattern=^[\w]+\.getNamespace\(\)$
+pattern=^[\w]+\.size\(\)$
+pattern=^[\w]+[tT]heme\.get.+$
+# math operation
+pattern=^[^ ]+ ?[\-\*/] ?[^ ]+$
+pattern=^[\w]*[Ff]ormat\.format\(.*$
+# boolean expr
+pattern=^[^ ]+ ?(==|!=) ?[^ ]+$
+
+# logicExpr ? X : Y
+reg-exp-cep=2,3=^[\(]?(.*)\?([^:]+):([^\)]+)[\)]?$
+# LanguageUtil.format(pageContext, "x-is-not-a-display-type", displayStyle)
+reg-exp-cep=1=^LanguageUtil\.format\([^\,]+\, ?[^\,]+\, ?(.+)\)$
+reg-exp-cep=1=^LanguageUtil\.format\([^\,]+\, ?[^\,]+\, ?(.+), ?(true|false)\)$
+# StringUtil.shorten(HtmlUtil.stripHtml(entry.getDescription()), pageAbstractLength)
+reg-exp-cep=1=^StringUtil\.shorten\(([^\,]+)\,[^\,]+\)$
+reg-exp-cep=1=^StringUtil\.merge\((.+)\)$
+reg-exp-cep=1=^StringUtil\.merge\((.+), ?"[^"]*"\)$
+reg-exp-cep=1=GetterUtil\.getString\((.*), ?"[^"]*"\)$
+reg-exp-cep=1=([\w]+)\.toString\(\)$
+reg-exp-cep=1=^([\w]+)\[[^\]]+\]$
+reg-exp-cep=1=^new Object\[\] ?\{([^,]+)\}$
+reg-exp-cep=1,2=^new Object\[\] ?\{([^,]+), ?([^,]+)\}$
+reg-exp-cep=1,2,3=^new Object\[\] ?\{([^,]+), ?([^,]+), ?([^,]+)\}$

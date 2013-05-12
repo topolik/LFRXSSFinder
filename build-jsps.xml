@@ -1,0 +1,70 @@
+<project name="portal-" basedir="." default="make-it">
+	<property name="project.dir" value="." />
+
+	<import file="build-common.xml" />
+
+	<import file="${app.server.tomcat.bin.dir}/catalina-tasks.xml"/>
+
+	<target name="clean">
+		<rmdir dir="jsp-precompile" />
+	</target>
+	<target name="jspc">
+		<mkdir dir="jsp-precompile" />
+
+		<taskdef classname="org.apache.jasper.JspC" name="jasperliferay" >
+			<classpath>
+				<pathelement location="${java.home}/../lib/tools.jar"/>
+				<fileset dir="${catalina.home}/bin">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="${catalina.home}/lib">
+					<include name="*.jar"/>
+				</fileset>
+				<pathelement location="portal-web/docroot/WEB-INF/classes"/>
+				<pathelement location="portal-service/classes"/>
+				<pathelement location="portal-impl/classes"/>
+				<pathelement location="util-taglib/classes"/>
+				<pathelement location="util-bridges/classes"/>
+				<pathelement location="util-java/classes"/>
+				<pathelement location="util-taglib/classes"/>
+				<fileset dir="lib/portal">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="lib/development">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="lib/global">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="tools">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="${app.server.tomcat.dir}/lib">
+					<include name="*.jar"/>
+				</fileset>
+				<fileset dir="${app.server.tomcat.dir}/bin">
+					<include name="*.jar"/>
+				</fileset>
+			 </classpath>
+		</taskdef>
+
+		<jasperliferay
+			 validateXml="false"
+			 uriroot="portal-web/docroot"
+			 webXmlFragment="jsp-precompile/WEB-INF/generated_web.xml"
+			 outputDir="jsp-precompile/WEB-INF/src" />
+
+	</target>
+	<target name="xss">
+	   <java jar="XSSFinder-1.0-SNAPSHOT.jar"
+		   fork="true"
+		   failonerror="true"
+		   maxmemory="1024m"
+		   >
+		 <arg value="."/>
+	   </java>
+	</target>
+
+	<target name="make-it" depends="jspc,xss">
+	</target>
+</project>
