@@ -1,3 +1,25 @@
+file=html/common/themes/bottom_jsp.java,GetterUtil.getString(layoutSetSettings.getProperty("javascript"))
+file=html/common/themes/bottom_jsp.java,GetterUtil.getString(layoutTypeSettings.getProperty("javascript"))
+file=html/common/themes/bottom_jsp.java,dataSample
+
+file=html/common/themes/layout_005ffriendly_005furl_005fredirect_jsp.java,PortalUtil.getCurrentCompleteURL(request)
+file=html/common/themes/portlet_jsp.java,containerStyles
+
+file=html/common/themes/top_005fhead_jsp.java,LocaleUtil.toW3cLanguageId(availableLocale)
+file=html/common/themes/top_005fhead_jsp.java,(layoutTypePortlet.isCustomizable() && LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE))
+file=html/common/themes/top_005fhead_jsp.java,LocaleUtil.toW3cLanguageId(availableLocale)
+file=html/common/themes/top_005fhead_jsp.java,PortalUtil.getLayoutURL(layout, themeDisplay)
+file=html/common/themes/top_005fhead_jsp.java,(layout instanceof VirtualLayout)
+file=html/common/themes/top_005fhead_jsp.java,GetterUtil.getString(themeDisplay.getThemeSetting("portlet-setup-show-borders-default"), StringUtil.valueOf(PropsValues.THEME_PORTLET_DECORATE_DEFAULT))
+file=html/common/themes/top_005fhead_jsp.java,session.getId()
+file=html/common/themes/top_005fhead_jsp.java,themeDisplay.getURLControlPanel()
+file=html/common/themes/top_005fhead_jsp.java,javaScriptRootPath
+file=html/common/themes/top_005fhead_jsp.java,javaScriptFile
+file=html/common/themes/top_005fhead_jsp.java,markupHeader
+file=html/common/themes/top_005fhead_jsp.java,LanguageUtil.getBCP47LanguageId(request)
+
+file=html/portlet/wiki/edit_005fpage_jsp.java,LanguageUtil.format(pageContext, "this-page-is-currently-redirected-to-x", redirectPage.getTitle())
+
 simple=(java.lang.String)SessionMessages.get(
 simple=(String)SessionMessages.get(
 simple=SessionMessages.get(
@@ -34,6 +56,7 @@ simple=company.getVirtualHostname(
 simple=themeDisplay.getPathMain()
 simple=clusterNode.getClusterNodeId()
 simple=PropsUtil.get
+simple=PrefsPropsUtil.get
 simple=portletConfig.getInitParameter(
 simple=dateFormatDate.format(
 simple=Math.
@@ -48,6 +71,9 @@ simple=StringPool.
 simple=CharPool.
 simple=AuthTokenUtil
 simple=timeZone.get
+simple=PortalUtil.getComputerName()
+simple=StringUtil.randomId()
+simple=ticket.getKey()
 
 # all constants are safe (should not be manipulated)
 pattern=^[\w]+\.[A-Z_0-9]+$
@@ -62,7 +88,7 @@ pattern=^[\w]+\.getNamespace\(\)$
 pattern=^[\w]+\.size\(\)$
 pattern=^[\w]+[tT]heme\.get.+$
 # math operation
-pattern=^[^ ]+ ?[\-\*/] ?[^ ]+$
+#pattern=^[^ ]+ ?[\-\*/] ?[^ ]+$
 pattern=^[\w]*[Ff]ormat\.format\(.*$
 # boolean expr
 pattern=^[^ ]+ ?(==|!=) ?[^ ]+$
@@ -71,8 +97,8 @@ pattern=^[^ ]+ ?(==|!=) ?[^ ]+$
 # logicExpr ? X : Y
 reg-exp-cep=2,3=^[\(]?(.*)\?([^:]+):([^\)]+)[\)]?$
 # LanguageUtil.format(pageContext, "x-is-not-a-display-type", displayStyle)
-reg-exp-cep=1=^LanguageUtil\.format\([^\,]+\, ?[^\,]+\, ?(.+)\)$
-reg-exp-cep=1=^LanguageUtil\.format\([^\,]+\, ?[^\,]+\, ?(.+), ?(true|false)\)$
+#reg-exp-cep=1=^LanguageUtil\.format\([^\,]+\, ?[^\,]+\, ?(.+)\)$
+#reg-exp-cep=1=^LanguageUtil\.format\([^\,]+\, ?[^\,]+\, ?(.+), ?(true|false)\)$
 # StringUtil.shorten(HtmlUtil.stripHtml(entry.getDescription()), pageAbstractLength)
 reg-exp-cep=1=^StringUtil\.shorten\(([^\,]+)\,[^\,]+\)$
 reg-exp-cep=1=^StringUtil\.merge\((.+)\)$
