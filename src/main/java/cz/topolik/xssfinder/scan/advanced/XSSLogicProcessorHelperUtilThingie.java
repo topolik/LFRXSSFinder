@@ -1,11 +1,9 @@
 package cz.topolik.xssfinder.scan.advanced;
 
-import cz.topolik.xssfinder.scan.advanced.parser.RegExpCEP;
+import cz.topolik.xssfinder.scan.advanced.parser.*;
 import cz.topolik.xssfinder.FileContent;
 import cz.topolik.xssfinder.FileLoader;
-import cz.topolik.xssfinder.scan.advanced.parser.BeanCallCEP;
-import cz.topolik.xssfinder.scan.advanced.parser.ComplexExpressionParser;
-import cz.topolik.xssfinder.scan.advanced.parser.StringConcatCEP;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,22 +35,6 @@ public class XSSLogicProcessorHelperUtilThingie {
     }
 
     protected void init(){
-        /*
-        (Arrays.asList(new ComplexExpressionParser[]{
-                // logicExpr ? X : Y; X,Y are from {"whatever", StringPool.*} *
-                new RegExpCEP("^[\\(]?(.*)\\?([^:]+):([^\\)]+)[\\)]?$", new int[]{2, 3}, environment),
-                // LanguageUtil.format(pageContext, "x-is-not-a-display-type", displayStyle) *
-                new RegExpCEP("^LanguageUtil.format\\([^\\,]+\\,[^\\,]+\\,(.+)\\)$", new int[]{1}, environment),
-                // StringUtil.shorten(HtmlUtil.stripHtml(entry.getDescription()), pageAbstractLength) *
-                new RegExpCEP("^StringUtil.shorten\\(([^\\,]+)\\,[^\\,]+\\)$", new int[]{1}, environment),
-                new RegExpCEP("^StringUtil.merge\\(([^\\,]+)\\)$", new int[]{1}, environment),
-                // classVariable.callSomething()
-                new RegExpCEP("GetterUtil.getString\\((.*), ?\"[^\"]*\"\\)$", new int[]{1}, environment),
-                new RegExpCEP("([\\w]+)\\.toString\\(\\)$", new int[]{1}, environment),
-                new RegExpCEP("^([\\w]+)\\[[^\\]]+\\]$", new int[]{1}, environment),
-                new RegExpCEP("^StringUtil.merge\\((.+),([^\\)]+)\\)$", new int[]{1,2}, environment),
-            };
-            */
         complexExpressionParsers.add(new BeanCallCEP(environment));
         complexExpressionParsers.add(new StringConcatCEP(environment));
 
@@ -78,6 +60,13 @@ public class XSSLogicProcessorHelperUtilThingie {
                         groups[i] = Integer.parseInt(groupsStr[i]);
                     }
                     complexExpressionParsers.add(new RegExpCEP(regExp, groups, environment));
+                } else
+                if(line.startsWith("file=")){
+                    String fileLine = line.substring(line.indexOf("=")+1);
+                    int pos = fileLine.indexOf(",");
+                    String fileName = fileLine.substring(0, pos);
+                    String content = fileLine.substring(pos + 1);
+                    complexExpressionParsers.add(new FileContentCEP(fileName, content));
                 }
             }
         } finally {
@@ -99,6 +88,14 @@ public class XSSLogicProcessorHelperUtilThingie {
             return RESULT_SAFE;
         }
 
+        // Try to break it using intelligent parsers
+        List<String> complexResult = breakComplexExpression(argument, lineNum, line, f, loader);
+        if (complexResult == RESULT_SAFE) {
+            // huh, it's safe
+            return RESULT_SAFE;
+        }
+
+        // OK, perhaps a variable assignment?
         List<String> simpleVariableResult = findVariableDeclaration(lineNum, argument, f, loader);
         if (simpleVariableResult == RESULT_SAFE) {
             // it's safe :)
@@ -107,13 +104,6 @@ public class XSSLogicProcessorHelperUtilThingie {
         if(simpleVariableResult != RESULT_DONT_KNOW){
             // OK, it was a variable we don't need to continue
             return simpleVariableResult;
-        }
-
-        // OK, so we have a more complex call :(
-        List<String> complexResult = breakComplexExpression(argument, lineNum, line, f, loader);
-        if (complexResult == RESULT_SAFE) {
-            // huh, it's safe
-            return RESULT_SAFE;
         }
 
         /*
