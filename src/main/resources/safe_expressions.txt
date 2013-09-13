@@ -17,8 +17,13 @@ file=html/common/themes/top_005fhead_jsp.java,javaScriptRootPath
 file=html/common/themes/top_005fhead_jsp.java,javaScriptFile
 file=html/common/themes/top_005fhead_jsp.java,markupHeader
 file=html/common/themes/top_005fhead_jsp.java,LanguageUtil.getBCP47LanguageId(request)
+file=html/common/themes/top_005fhead_jsp.java,"#p_p_id_" + portlet.getPortletId() + "_"
 
 file=html/portlet/wiki/edit_005fpage_jsp.java,LanguageUtil.format(pageContext, "this-page-is-currently-redirected-to-x", redirectPage.getTitle())
+
+file=html/portlet/layouts_005fadmin/export_005flayouts_jsp.java,portlet.getPortletId()
+
+file=html/portlet/control_005fpanel_005fmenu/view_jsp.java,portletId
 
 simple=(java.lang.String)SessionMessages.get(
 simple=(String)SessionMessages.get(
@@ -108,5 +113,6 @@ reg-exp-cep=1=GetterUtil\.getString\((.*)\)$
 reg-exp-cep=1=([\w]+)\.toString\(\)$
 reg-exp-cep=1=^([\w]+)\[[^\]]+\]$
 reg-exp-cep=1=^new Object\[\] ?\{([^,]+)\}$
+reg-exp-cep=1=^for ?\([^ ]+ [^ ]+ ?: (.+) ?\) ?\{$
 reg-exp-cep=1,2=^new Object\[\] ?\{([^,]+), ?([^,]+)\}$
 reg-exp-cep=1,2,3=^new Object\[\] ?\{([^,]+), ?([^,]+), ?([^,]+)\}$
