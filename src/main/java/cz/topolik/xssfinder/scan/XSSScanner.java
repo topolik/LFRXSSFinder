@@ -10,4 +10,5 @@ import java.util.Set;
  */
 public interface XSSScanner {
     Set<PossibleXSSLine> scan(FileLoader loader);
+    void destroy();
 }

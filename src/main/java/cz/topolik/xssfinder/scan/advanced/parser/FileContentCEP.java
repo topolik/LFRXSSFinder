@@ -8,22 +8,26 @@ import java.util.List;
 /**
  * @author Tomas Polesovsky
  */
-public class FileContentCEP implements ComplexExpressionParser {
+public class FileContentCEP implements WhitelistExpressionParser {
     private String fileName;
     private String content;
+    private int lineNum = -1;
 
-    public FileContentCEP(String fileName, String content) {
+    public FileContentCEP(String fileName, String content, int lineNum) {
         this.fileName = fileName;
         this.content = content;
+        this.lineNum = lineNum;
     }
 
     @Override
-    public List<String> execute(String expression, int lineNum, String line, FileContent f, FileLoader loader) {
+    public boolean isSafe(String expression, int lineNum, String line, FileContent f, FileLoader loader) {
+        if((this.lineNum == -1 || this.lineNum == lineNum) &&
+                f.getFile().toString().endsWith(fileName) &&
+                expression.equalsIgnoreCase(content)){
 
-        if(f.getFile().toString().endsWith(fileName) && expression.equalsIgnoreCase(content)){
-            return RESULT_SAFE;
+            return true;
         }
 
-        return RESULT_DONT_KNOW;
+        return false;
     }
 }

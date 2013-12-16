@@ -25,7 +25,9 @@ public class PortalAPICallsProcessor {
     Map<String, ParsedClass> parsedClasses = new HashMap<String, ParsedClass>();
 
     private static final Pattern CLASS_DECLARATION = Pattern.compile("^public (abstract class|class|interface) ([^\\s\\{]+).*$");
-    private static final Pattern METHOD_DECLARATION = Pattern.compile("^\\s?public (static )?([^\\s]+) ([\\w]+)\\(.*$");
+    private static final Pattern METHOD_DECLARATION = Pattern.compile("^\\s?public (static )?([a-zA-Z.]+\\.)?([^.\\s]+|[a-zA-Z]+<[^\\s]+>) ([\\w]+)\\(.*$");
+
+    private static final Pattern SAFE_RETURN_TYPES = Pattern.compile(XSSLogicProcessorHelperUtilThingie.SAFE_VARIABLE_DECLARATION_START.trim());
 
     public void init(FileLoader loader) {
         loader.load(FileLoader.DIR_PORTALSERVICE);
@@ -37,7 +39,7 @@ public class PortalAPICallsProcessor {
         loader.load(FileLoader.DIR_UTILJAVA);
         initRegistry(loader.getFiles(FileLoader.DIR_UTILJAVA), loader);
 
-        Logger.log("Wiring " + parsedClasses.size() + " classes togerher by inheritance ....");
+        Logger.log("Wiring " + parsedClasses.size() + " classes together by inheritance ....");
         wireClasses();
         Logger.log(" ... finished");
 
@@ -91,7 +93,7 @@ public class PortalAPICallsProcessor {
 
     protected void parseFile(FileContent file, FileLoader loader){
         ParsedClass result = null;
-		List<String> restrictedMethods = new ArrayList<String>();
+		List<String> vulnerableMethods = new ArrayList<String>();
 
         for(int i = 0; i < file.getContent().size(); i++){
             String line = file.getContent().get(i);
@@ -124,21 +126,22 @@ public class PortalAPICallsProcessor {
             } else {
                 Matcher m = METHOD_DECLARATION.matcher(line);
                 if(m.matches()){
-                    String returnType = m.group(2);
-                    String methodName = normalize(m.group(3));
-                    if(!returnType.startsWith("String")){
+                    String returnType = m.group(3);
+                    String methodName = normalize(m.group(4));
+
+                    if(SAFE_RETURN_TYPES.matcher(returnType).matches()){
                         result.getMethods().add(methodName);
                     } else {
-						restrictedMethods.add(methodName);
+						vulnerableMethods.add(methodName);
 					}
                 }
             }
         }
 
-		// there may be safe method added which has String return type
-		for(String restrictedMethod : restrictedMethods) {
-			if(result.getMethods().contains(restrictedMethod)){
-				result.getMethods().remove(restrictedMethod);
+		// there may be a safe method added which has String return type
+		for(String vulnerableMethod : vulnerableMethods) {
+			if(result.getMethods().contains(vulnerableMethod)){
+				result.getMethods().remove(vulnerableMethod);
 			}
 		}
     }

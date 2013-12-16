@@ -33,6 +33,10 @@ public class RegExpCEP implements ComplexExpressionParser {
         List<String> result = new ArrayList<String>();
         boolean everythingOK = true;
         for(int i = 0; i < groups.length; i++){
+            if(groups[i] > m.groupCount()){
+                continue;
+            }
+
             String arg = m.group(groups[i]);
             List<String> callResult = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(arg, lineNum, line, f, loader);
             if(callResult != RESULT_SAFE){

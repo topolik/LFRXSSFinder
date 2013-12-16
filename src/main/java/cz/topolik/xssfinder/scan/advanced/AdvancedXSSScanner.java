@@ -30,6 +30,9 @@ public class AdvancedXSSScanner extends SimpleXSSScanner {
         return result;
     }
 
+    public void destroy(){
+        environment.destroy();
+    }
     @Override
     protected String[] isLineSuspected(int lineNum, String line, FileContent f, FileLoader loader) {
         String trimmed = line.trim();

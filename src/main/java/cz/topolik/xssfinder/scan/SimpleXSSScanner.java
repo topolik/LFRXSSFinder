@@ -118,4 +118,7 @@ public class SimpleXSSScanner implements XSSScanner {
         return new String[]{declarationLine};
     }
 
+    @Override
+    public void destroy() {
+    }
 }

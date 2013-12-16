@@ -3,12 +3,7 @@ package cz.topolik.xssfinder;
 import cz.topolik.xssfinder.scan.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -59,7 +54,8 @@ public class FileLoader {
         for(Set<FileContent> files : allFiles.values()){
             result.addAll(files);
         }
-        return result;
+
+        return new TreeSet<FileContent>(result);
     }
 
     public Set<FileContent> getFiles(String directoryName){
@@ -100,6 +96,7 @@ public class FileLoader {
                 result.add(f);
             }
         }
-        return result;
+
+        return new TreeSet<FileContent>(result);
     }
 }

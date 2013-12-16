@@ -2,6 +2,8 @@ package cz.topolik.xssfinder;
 
 import cz.topolik.xssfinder.scan.XSSScanner;
 import cz.topolik.xssfinder.scan.advanced.AdvancedXSSScanner;
+import cz.topolik.xssfinder.scan.threaded.ThreadedXSSScanner;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,31 +18,42 @@ public class App {
     public static void main(String[] args) throws IllegalAccessException {
         if(args.length < 1){
             printSyntax();
-            args = new String[]{"/opt/liferay.git/portal"};
+            args = new String[]{"/opt/liferay.git/portal", "8"};
         }
 
         FileLoader loader = new FileLoader(new File(args[0]));
 
-        XSSScanner scanner = new AdvancedXSSScanner();
+        XSSScanner scanner = new ThreadedXSSScanner(Integer.parseInt(args[1]));
 
         Set<PossibleXSSLine> xsss = new TreeSet<PossibleXSSLine>(scanner.scan(loader));
+
+        scanner.destroy();
 
         List<Occurence> occurences = new ArrayList<Occurence>();
         int i = 0;
         for(PossibleXSSLine line : xsss){
             String relevantLines = Arrays.asList(line.getStackTrace()).toString();
-            System.out.println("Problem " + ++i + ":");
+//            System.out.println("Problem " + ++i + ":");
             System.out.print(line.getSourceFile().getFile().getAbsolutePath() + " ");
             System.out.print(line.getLineNum()+": ");
             System.out.println(line.getLineContent().trim());
             System.out.println("Relevant lines:");
             System.out.println(relevantLines);
-            if(relevantLines.contains("ParamUtil.getString(req")){
+            if(relevantLines.contains("ParamUtil.getString(req") ||
+                relevantLines.contains("BeanParamUtil.getString(") ||
+                relevantLines.contains("PrefsParamUtil.getString(")) {
+
                 System.out.println("@@@ POSSIBLE XSS @@@");
             }
-            if (relevantLines.contains("BeanParamUtil.getString(")) {
-                System.out.println("@@@ POSSIBLE XSS @@@");
-            }
+            System.out.println("Format for whitelist:");
+            System.out.print("file=");
+            int pos = line.getSourceFile().getFile().toString().indexOf("src/org/apache/jsp/") + 19;
+            System.out.print(line.getSourceFile().getFile().toString().substring(pos));
+            System.out.print(",");
+            System.out.print(line.getLineNum());
+            System.out.print(",");
+            String vuln = line.getLineContent().trim();
+            System.out.println(vuln.substring(10, vuln.length() - 2).trim());
             System.out.println("---------------------------------------------");
 
             boolean found = false;
@@ -66,10 +79,23 @@ public class App {
             System.out.println("Occurence: ["+o.getOccured() + ", " + o.getLine()+"]");
         }
 
+        System.out.println("==============================================================");
+        for(PossibleXSSLine line : xsss){
+            System.out.print("file=");
+            int pos = line.getSourceFile().getFile().toString().indexOf("src/org/apache/jsp/") + 19;
+            System.out.print(line.getSourceFile().getFile().toString().substring(pos));
+            System.out.print(",");
+            System.out.print(line.getLineNum());
+            System.out.print(",");
+            String vuln = line.getLineContent().trim();
+            System.out.println(vuln.substring(10, vuln.length() - 2).trim());
+        }
+
+
     }
 
     private static void printSyntax(){
-        System.out.println("First parameter missing. Please specify directory with java-precompiled jsps to perform XSS scan!");
+        System.out.println("Usage: \n\t\tdirectory with java-precompiled jsps to perform XSS scan\n\t\tthread pool size");
     }
 }
 

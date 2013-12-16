@@ -61,4 +61,7 @@ public class XSSEnvironment {
         Logger.log("Environment initialization finished");
     }
 
+    public void destroy() {
+        getXSSLogicProcessorHelperUtilThingie().destroy();
+    }
 }

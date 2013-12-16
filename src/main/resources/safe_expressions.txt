@@ -1,10 +1,16 @@
+#
+# File based whitelist (file name suffix[,line],string)
+#
+file=errors/code_jsp.java,uri
+
 file=html/common/themes/bottom_jsp.java,GetterUtil.getString(layoutSetSettings.getProperty("javascript"))
 file=html/common/themes/bottom_jsp.java,GetterUtil.getString(layoutTypeSettings.getProperty("javascript"))
 file=html/common/themes/bottom_jsp.java,dataSample
-
 file=html/common/themes/layout_005ffriendly_005furl_005fredirect_jsp.java,PortalUtil.getCurrentCompleteURL(request)
+file=html/common/themes/portlet_jsp.java,portletDisplay.getTitle()
 file=html/common/themes/portlet_jsp.java,containerStyles
-
+file=html/common/themes/top_005fhead_jsp.java,analyticsScript
+file=html/common/themes/top_005fhead_jsp.java,canonicalURL
 file=html/common/themes/top_005fhead_jsp.java,LocaleUtil.toW3cLanguageId(availableLocale)
 file=html/common/themes/top_005fhead_jsp.java,(layoutTypePortlet.isCustomizable() && LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE))
 file=html/common/themes/top_005fhead_jsp.java,LocaleUtil.toW3cLanguageId(availableLocale)
@@ -12,31 +18,250 @@ file=html/common/themes/top_005fhead_jsp.java,PortalUtil.getLayoutURL(layout, th
 file=html/common/themes/top_005fhead_jsp.java,(layout instanceof VirtualLayout)
 file=html/common/themes/top_005fhead_jsp.java,GetterUtil.getString(themeDisplay.getThemeSetting("portlet-setup-show-borders-default"), StringUtil.valueOf(PropsValues.THEME_PORTLET_DECORATE_DEFAULT))
 file=html/common/themes/top_005fhead_jsp.java,session.getId()
-file=html/common/themes/top_005fhead_jsp.java,themeDisplay.getURLControlPanel()
+file=html/common/themes/top_005fhead_jsp.java,path
+file=html/common/themes/top_005fhead_jsp.java,1266,sb.toString()
 file=html/common/themes/top_005fhead_jsp.java,javaScriptRootPath
-file=html/common/themes/top_005fhead_jsp.java,javaScriptFile
+file=html/common/themes/top_005fhead_jsp.java,javaScriptfile
 file=html/common/themes/top_005fhead_jsp.java,markupHeader
 file=html/common/themes/top_005fhead_jsp.java,LanguageUtil.getBCP47LanguageId(request)
 file=html/common/themes/top_005fhead_jsp.java,"#p_p_id_" + portlet.getPortletId() + "_"
-
-file=html/portlet/wiki/edit_005fpage_jsp.java,LanguageUtil.format(pageContext, "this-page-is-currently-redirected-to-x", redirectPage.getTitle())
-
-file=html/portlet/layouts_005fadmin/export_005flayouts_jsp.java,portlet.getPortletId()
-
+file=html/common/themes/user_005flocale_005foptions_jsp.java,LanguageUtil.format(userLocale, "display-the-page-in-x", userLocale.getDisplayName(userLocale))
+file=html/js/liferay/available_005flanguages_jsp.java,curLocale.getDisplayName(locale)
+file=html/portal/api/jsonws/action_jsp.java,invocationPath
+file=html/portal/api/jsonws/action_jsp.java,jsonWebServiceActionMapping.getMethod()
+file=html/portal/api/jsonws/action_jsp.java,actionClassName.substring(0, pos)
+file=html/portal/api/jsonws/action_jsp.java,actionClassName.substring(pos + 1)
+file=html/portal/api/jsonws/action_jsp.java,javadocClassComment
+file=html/portal/api/jsonws/action_jsp.java,actionMethod.getName()
+file=html/portal/api/jsonws/action_jsp.java,javadocMethodComment
+file=html/portal/api/jsonws/action_jsp.java,methodParameter.getName()
+file=html/portal/api/jsonws/action_jsp.java,methodParameterTypeClassName
+file=html/portal/api/jsonws/action_jsp.java,parameterComment
+file=html/portal/api/jsonws/action_jsp.java,returnTypeName
+file=html/portal/api/jsonws/action_jsp.java,returnComment
+file=html/portal/api/jsonws/action_jsp.java,exceptionTypeClass.getName()
+file=html/portal/api/jsonws/action_jsp.java,throwsComment
+file=html/portal/api/jsonws/action_jsp.java,methodParameterTypeClassName
+file=html/portal/api/jsonws/action_jsp.java,methodParameterName
+file=html/portal/api/jsonws/action_jsp.java,invocationPath
+file=html/portal/api/jsonws/action_jsp.java,themeDisplay.getPortalURL() + jsonWSPath + invocationPath
+file=html/portal/api/jsonws/actions_jsp.java,jsonWebServiceClassName
+file=html/portal/api/jsonws/actions_jsp.java,methodURL
+file=html/portal/api/jsonws/actions_jsp.java,668,path
+file=html/portal/api/jsonws/actions_jsp.java,jsonWSPath
+file=html/portal/emoticons_jsp.java,emoticons[i][1]
+file=html/portal/emoticons_jsp.java,451,image
+file=html/portal/error_jsp.java,LanguageUtil.format(pageContext, "your-account-with-login-x-is-not-active", new LanguageWrapper[] {new LanguageWrapper("", HtmlUtil.escape(user.getFullName()), ""), new LanguageWrapper("<strong><em>", HtmlUtil.escape(userLogin), "</em></strong>")}, false)
+file=html/portal/flash_jsp.java,themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript()
+file=html/portal/j_005flogin_jsp.java,themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript()
+file=html/portal/layout/edit/panel_jsp.java,portletsJSON
+file=html/portal/layout/edit/portlet_jsp.java,layoutTemplate.getStaticResourcePath()
+file=html/portal/layout/edit/portlet_jsp.java,layoutTemplate.getThumbnailPath()
+file=html/portal/layout/edit/portlet_jsp.java,layoutTemplate.getName()
+file=html/portal/layout/view/article_jsp.java,461,content
+file=html/portal/layout/view/control_005fpanel_jsp.java,844,backURL
+file=html/portal/layout/view/view_005fcategory_jsp.java,548,portletURL
+file=html/portal/license_jsp.java,versionInfo
+file=html/portal/license_jsp.java,buildInfo
+file=html/portal/license_jsp.java,(clusterNodes.size() > 1) ? "onsubmit=\"return validateForm();\"" : ""
+file=html/portal/license_jsp.java,errorMessage
+file=html/portal/license_jsp.java,successMessage
+file=html/portal/license_jsp.java,serverInfo.get("hostName")
+file=html/portal/license_jsp.java,ipAddress
+file=html/portal/license_jsp.java,macAddress
+file=html/portal/license_jsp.java,curLicenseProperties.get("productEntryName")
+file=html/portal/license_jsp.java,curErrorMessage
+file=html/portal/license_jsp.java,key
+file=html/portal/license_jsp.java,themeDisplay.getURLCurrent()
+file=html/portal/license_jsp.java,clusterNode.getInetAddress().getHostAddress()
+file=html/portal/maintenance_jsp.java,MaintenanceUtil.getStatus()
+file=html/portal/render_005fportlet_jsp.java,cssClasses
+file=html/portal/render_005fportlet_jsp.java,freeformStyles
+file=html/portal/render_005fportlet_jsp.java,showConfigurationIcon && portletDecorate
+file=html/portal/render_005fportlet_jsp.java,1719,entry.getKey()
+file=html/portal/render_005fportlet_jsp.java,1723,entry.getValue()
+file=html/portal/render_005fportlet_jsp.java,1844,entry.getKey()
+file=html/portal/render_005fportlet_jsp.java,1848,entry.getValue()
+file=html/portal/render_005fportlet_jsp.java,renderRequestImpl.getAttribute(WebKeys.PORTLET_CONTENT)
+file=html/portal/status_jsp.java,StringUtil.replace(te.getMessage(), new String[] {"<", "\n"}, new String[] {"&lt;", "<br />\n"})
+file=html/portal/terms_005fof_005fuse_jsp.java,company.getName()
+file=html/portal/terms_005fof_005fuse_jsp.java,company.getEmailAddress()
+file=html/portal/progress_005fpoller_jsp.java,462,LanguageUtil.get(pageContext, message)
+file=html/portlet/admin/edit_005fdocument_005flibrary_005fextra_005fsettings_jsp.java,LanguageUtil.format(pageContext, "custom-fields-already-exist-for-these-extra-settings-x", StringUtil.merge(expandoBridgeAttributeNames))
+file=html/portlet/admin/edit_005fdocument_005flibrary_005fextra_005fsettings_jsp.java,LanguageUtil.format(pageContext, "convert-extra-settings-key-from-x-to", key)
+file=html/portlet/admin/edit_005finstance_jsp.java,selCompany.getShardName()
+file=html/portlet/admin/view_jsp.java,totalMemoryChartURL
+file=html/portlet/admin/view_jsp.java,maxMemoryChartURL
+file=html/portlet/amazon_005frankings/configuration_jsp.java,isbn
+file=html/portlet/amazon_005frankings/view_jsp.java,amazonRankings.getSmallImageURL()
+file=html/portlet/amazon_005frankings/view_jsp.java,StringUtil.shorten(amazonRankings.getProductName(), _DESCRIPTION_LENGTH)
+file=html/portlet/amazon_005frankings/view_jsp.java,StringUtil.shorten(StringUtil.merge(amazonRankings.getAuthors(), ", "), _DESCRIPTION_LENGTH)
+file=html/portlet/amazon_005frankings/view_jsp.java,StringUtil.shorten(amazonRankings.getManufacturer() + "; (" + amazonRankings.getReleaseDateAsString() + ")", _DESCRIPTION_LENGTH)
+file=html/portlet/amazon_005frankings/view_jsp.java,amazonRankings.getISBN()
+file=html/portlet/announcements/view_jsp.java,entry.getContent()
+file=html/portlet/announcements/preview_005fentry_jsp.java,entry.getContent()
+file=html/portlet/asset_005fcategory_005fadmin/view_005fcategory_jsp.java,710,categoryProperty.getKey()
+file=html/portlet/asset_005fcategory_005fadmin/view_005fcategory_jsp.java,712,categoryProperty.getValue()
+file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,selectStyle
+file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,selectScope
+file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,conversion
+file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,emailParam + "Subject_" + currentLanguageId
+file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,4308,value
+file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,4315,value
+file=html/portlet/asset_005fpublisher/configuration_005fmanual_jsp.java,selectStyle
+file=html/portlet/asset_005fpublisher/configuration_005fmanual_jsp.java,selectScope
+file=html/portlet/asset_005fpublisher/configuration_005fmanual_jsp.java,assetRenderer.getIconPath(renderRequest)
+file=html/portlet/asset_005fpublisher/configuration_005fmanual_jsp.java,conversion
+file=html/portlet/asset_005fpublisher/configuration_005fmanual_jsp.java,emailParam + "Subject_" + currentLanguageId
+file=html/portlet/asset_005fpublisher/display/abstracts_jsp.java,viewURL
+file=html/portlet/asset_005fpublisher/display/abstracts_jsp.java,assetRenderer.getIconPath(renderRequest)
+file=html/portlet/asset_005fpublisher/display/abstracts_jsp.java,"metadata-" + metadataFields[j]
+file=html/portlet/asset_005fpublisher/display/full_005fcontent_jsp.java,printAssetURL
+file=html/portlet/asset_005fpublisher/display/full_005fcontent_jsp.java,assetRenderer.getURLViewInContext(liferayPortletRequest, liferayPortletResponse, viewFullContentURLString)
+file=html/portlet/asset_005fpublisher/display/full_005fcontent_jsp.java,"metadata-" + metadataFields[j]
+file=html/portlet/asset_005fpublisher/display/preview_jsp.java,imagePreviewURL
+file=html/portlet/asset_005fpublisher/display/table_jsp.java,viewURL
+file=html/portlet/asset_005fpublisher/display/title_005flist_jsp.java,assetRendererFactory.getType()
+file=html/portlet/asset_005fpublisher/display/title_005flist_jsp.java,"metadata-" + metadataFields[j]
+file=html/portlet/asset_005fpublisher/select_005fstructure_005ffield_jsp.java,renderResponse.getNamespace() + "applyButton" + name
+file=html/portlet/asset_005fpublisher/select_005fstructure_005ffield_jsp.java,renderResponse.getNamespace() + name + "fieldForm"
+file=html/portlet/asset_005fpublisher/view_jsp.java,1565,assetCategory.getTitle(locale)
+file=html/portlet/asset_005fpublisher/view_jsp.java,ResourceActionsUtil.getModelResource(locale, groupAssetRendererFactory.getClassName())
+file=html/portlet/asset_005ftag_005fadmin/view_005ftag_jsp.java,tagProperty.getKey()
+file=html/portlet/asset_005ftag_005fadmin/view_005ftag_jsp.java,tagProperty.getValue()
+file=html/portlet/blogs/asset/full_005fcontent_jsp.java,entry.getContent()
+file=html/portlet/blogs/edit_005fentry_jsp.java,entry.getContent()
+file=html/portlet/blogs/view_005fentry_005fcontent_jsp.java,WorkflowConstants.getStatusLabel(entry.getStatus())
+file=html/portlet/blogs/view_005fentry_005fcontent_jsp.java,inlineEditEnabled ? "class=\"lfr-editable\" contenteditable=\"true\" id=\"" + entryContentId + "\" spellcheck=\"false\"" : StringPool.BLANK
+file=html/portlet/blogs/view_005fentry_005fcontent_jsp.java,entry.getContent()
+file=html/portlet/blogs_005faggregator/view_jsp.java,viewEntryURL
+file=html/portlet/blogs_005faggregator/view_jsp.java,viewAllEntriesURL
+file=html/portlet/blogs_005faggregator/view_jsp.java,portraitUrl
+file=html/portlet/blogs_005faggregator/view_jsp.java,StringUtil.shorten(HtmlUtil.stripHtml(entry.getDescription()), 200, StringPool.BLANK)
+file=html/portlet/blogs_005faggregator/view_jsp.java,StringUtil.shorten(StringUtil.trim(HtmlUtil.stripHtml(entry.getContent())), 100, StringPool.BLANK) + StringPool.TRIPLE_PERIOD
+file=html/portlet/blogs_005faggregator/view_jsp.java,entry.getContent()
+file=html/portlet/blogs_005faggregator/view_jsp.java,viewEntryURL
+file=html/portlet/blogs_005faggregator/view_jsp.java,PropsValues.PORTLET_URL_ANCHOR_ENABLE ? viewEntryURL : viewEntryURL + "#blogsCommentsPanelContainer"
+file=html/portlet/bookmarks/view_005fentry_jsp.java,entry.getUrl()
+file=html/portlet/bookmarks/view_005fentry_jsp.java,entry.getDescription()
+file=html/portlet/bookmarks/view_005fentry_jsp.java,getDescription()
+file=html/portlet/bookmarks/view_005fentry_jsp.java,entry.getName()
+file=html/portlet/control_005fpanel_005fhome/view_jsp.java,categoryHeaderId
+file=html/portlet/control_005fpanel_005fhome/view_jsp.java,LanguageUtil.get(pageContext, "category." + category)
+file=html/portlet/control_005fpanel_005fmenu/view_jsp.java,panelPageCategoryId
+file=html/portlet/control_005fpanel_005fmenu/view_jsp.java,portletURL
 file=html/portlet/control_005fpanel_005fmenu/view_jsp.java,portletId
+file=html/portlet/currency_005fconverter/view_jsp.java,symbol
+file=html/portlet/currency_005fconverter/view_jsp.java,currencyValue
+file=html/portlet/currency_005fconverter/view_jsp.java,currency.getFromSymbol()
+file=html/portlet/currency_005fconverter/view_jsp.java,currency.getToSymbol()
+file=html/portlet/currency_005fconverter/view_jsp.java,currency.getSymbol()
+file=html/portlet/directory/common/additional_005femail_005faddresses_jsp.java,emailAddress.getAddress()
+file=html/portlet/directory/common/websites_jsp.java,website.getUrl()
+file=html/portlet/directory/organization/details_jsp.java,LanguageUtil.get(pageContext, organization.getType())
+file=html/portlet/directory/organization/details_jsp.java,LanguageUtil.get(pageContext, ListTypeServiceUtil.getListType(organization.getStatusId()).getName())
+file=html/portlet/directory/organization/details_jsp.java,LanguageUtil.get(pageContext, CountryServiceUtil.getCountry(organization.getCountryId()).getName())
+file=html/portlet/directory/organization/details_jsp.java,LanguageUtil.get(pageContext, RegionServiceUtil.getRegion(organization.getRegionId()).getName())
+file=html/portlet/directory/organization/services_jsp.java,LanguageUtil.get(pageContext,ListTypeServiceUtil.getListType(orgLabor.getTypeId()).getName())
+file=html/portlet/directory/organization/phone_005fnumbers_jsp.java,phone.getNumber()
+file=html/portlet/directory/organization/phone_005fnumbers_jsp.java,phone.getExtension()
+file=html/portlet/directory/organization/services_jsp.java,LanguageUtil.get(pageContext,ListTypeServiceUtil.getListType(orgLabor.getTypeId()).getName())
+file=html/portlet/directory/organization/services_jsp.java,547,day
+file=html/portlet/directory/user/comments_jsp.java,selUser.getComments()
+file=html/portlet/directory/user/details_jsp.java,selUser.getFullName()
+file=html/portlet/directory/user/details_jsp.java,selUser.getPortraitURL(themeDisplay)
+file=html/portlet/directory/user/details_jsp.java,selUser.getDisplayEmailAddress()
+file=html/portlet/directory/user/phone_005fnumbers_jsp.java,phone.getNumber()
+file=html/portlet/directory/user/phone_005fnumbers_jsp.java,phone.getExtension()
+file=html/portlet/dockbar/edit_005flayout_005fpanel_jsp.java,HttpUtil.addParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selPlid)
+file=html/portlet/dockbar/view_005fcategory_jsp.java,newCategoryPath.replace(':', '-')
+file=html/portlet/dockbar/view_jsp.java,backURL
+file=html/portlet/dockbar/view_jsp.java,myProfileURL.toString()
+file=html/portlet/dockbar/view_jsp.java,myDashboardURL
+file=html/portlet/document_005flibrary/asset/file_005fentry_005fabstract_jsp.java,DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&imageThumbnail=1")
+file=html/portlet/document_005flibrary/asset/file_005fentry_005fabstract_jsp.java,DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&documentThumbnail=1")
+file=html/portlet/document_005flibrary/asset/file_005fentry_005fabstract_jsp.java,DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&videoThumbnail=1")
+file=html/portlet/document_005flibrary/edit_005ffile_005fentry_005ftype_jsp.java,1203,locale
+file=html/portlet/document_005flibrary/edit_005ffile_005fentry_005ftype_jsp.java,removeStructureIcon
+file=html/portlet/document_005flibrary/edit_005ffolder_jsp.java,removeFileEntryTypeIcon
+file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,ResourceActionsUtil.getModelResource(locale, repository.getClassName())
+file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,1243,className
+file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,1287,className
+file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,LanguageUtil.get(pageContext, StringUtil.replace(StringUtil.toLowerCase(supportedParameter), CharPool.UNDERLINE, CharPool.DASH))
+file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,supportedConfiguration
+file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,supportedParameterValue
+file=html/portlet/document_005flibrary/file_005fentry_005faction_jsp.java,iconMenu
+file=html/portlet/document_005flibrary/folder_005faction_jsp.java,iconMenu
+file=html/portlet/document_005flibrary/folder_005faction_jsp.java,viewSlideShowURL
+file=html/portlet/document_005flibrary/folder_005faction_jsp.java,iconMenuId
+     [java] file=html/portlet/document_005flibrary/move_005fentries_jsp.java,1226,fileShortcut.getToTitle() + " (" + LanguageUtil.get(themeDisplay.getLocale(), "shortcut") + ")"
+     [java] file=html/portlet/document_005flibrary/move_005fentries_jsp.java,1256,fileShortcut.getToTitle() + " (" + LanguageUtil.get(themeDisplay.getLocale(), "shortcut") + ")"
+file=html/portlet/document_005flibrary/search_005fresources_jsp.java,searchInfo
+file=html/portlet/document_005flibrary/search_005fresources_jsp.java,searchResults
+file=html/portlet/document_005flibrary/upload_005fmultiple_005ffile_005fentries_jsp.java,uploadMultipleFileEntries
+file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,fileVersion.getVersion()
+file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,thumbnailSrc
+file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,previewFileURL
+file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,previewFileURL + "1"
+file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,DLUtil.getWebDavURL(themeDisplay, fileEntry.getFolder(), fileEntry, PropsValues.DL_FILE_ENTRY_OPEN_IN_MS_OFFICE_MANUAL_CHECK_IN_REQUIRED)
+     [java] file=html/portlet/document_005flibrary/view_005ffolders_jsp.java,1423,mountFolder.getName()
+file=html/portlet/document_005flibrary/view_jsp.java,1367,uploadURL
+     [java] file=html/portlet/document_005flibrary/view_jsp.java,1351,mountFolder.getName()
+file=html/portlet/document_005flibrary_005fdisplay/view_jsp.java,thumbnailSrc
+file=html/portlet/document_005flibrary_005fdisplay/view_jsp.java,((repositoryId == scopeGroupId) && TrashUtil.isTrashEnabled(scopeGroupId))
+file=html/portlet/dynamic_005fdata_005flists/view_005fspreadsheet_005frecords_jsp.java,DDMXSDUtil.getJSONArray(ddmStructure.getXsd())
+file=html/portlet/dynamic_005fdata_005flists/view_005fspreadsheet_005frecords_jsp.java,DDLUtil.getRecordSetJSONArray(recordSet)
+file=html/portlet/dynamic_005fdata_005flists/view_005fspreadsheet_005frecords_jsp.java,DDLUtil.getRecordsJSONArray(records, !editable)
+file=html/portlet/dynamic_005fdata_005flists/view_005ftemplate_005frecords_jsp.java,DDLUtil.getTemplateContent(displayDDMTemplateId, recordSet, themeDisplay, renderRequest, renderResponse)
+file=html/portlet/dynamic_005fdata_005fmapping/edit_005ftemplate_jsp.java,DDMTemplateHelperUtil.getAutocompleteJSON(request, language)
+file=html/portlet/dynamic_005fdata_005fmapping/edit_005ftemplate_jsp.java,EditorUtil.getEditorMode(langType)
+file=html/portlet/dynamic_005fdata_005fmapping/template_005fdescription_jsp.java,rowHREF
+file=html/portlet/group_005fstatistics/view_jsp.java,ResourceActionsUtil.getModelResource(locale, activityCounter.getClassName())
+file=html/portlet/group_005fstatistics/view_jsp.java,displayHeight - 2
 
+file=html/portlet/image_005fgallery_005fdisplay/view_005fimages_jsp.java,(hasAudio || hasVideo) ? "data-options=\"height=" + playerHeight + "&thumbnailURL=" + HtmlUtil.escapeURL(DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&videoThumbnail=1")) + "&width=640" + dataOptions + "\"" : StringPool.BLANK
+file=html/portlet/image_005fgallery_005fdisplay/view_005fimages_jsp.java,DLUtil.getThumbnailStyle(false, 4)
+file=html/portlet/image_005fgallery_005fdisplay/view_005fimages_jsp.java,818,src
+file=html/portlet/image_005fgallery_005fdisplay/view_005fslide_005fshow_jsp.java,765,largeSrc
+file=html/portlet/image_005fgallery_005fdisplay/view_005fslide_005fshow_jsp.java,797,i
+file=html/portlet/image_005fgallery_005fdisplay/view_005fslide_005fshow_jsp.java,799,largeSrc
+
+file=html/portlet/journal/article/categorization_jsp.java,defaultLanguageId
+file=html/portlet/journal/article/content_jsp.java,LanguageUtil.format(pageContext, "translating-web-content-to-x", languageLabel)
+file=html/portlet/journal/article/content_jsp.java,translations[i]
+file=html/portlet/journal/article/display_005fpage_jsp.java,layoutBreadcrumb
+file=html/portlet/journal/article/display_005fpage_jsp.java,parentGroup.getPublicLayoutsPageCount() > 0
+file=html/portlet/journal/article/display_005fpage_jsp.java,urlViewInContext
+
+file=html/portlet/journal/asset/abstract_jsp.java,viewURL
+file=html/portlet/journal/edit_005farticle_jsp.java,htmlBottom
+file=html/portlet/journal/move_005fentries_jsp.java,folder.getName()
+file=html/portlet/journal/preview_005farticle_005fcontent_jsp.java,JournalArticleLocalServiceUtil.getArticleContent(article, article.getTemplateId(), null, themeDisplay.getLanguageId(), themeDisplay)
+file=html/portlet/journal/raw_005farticle_005fcontent_jsp.java,request.getAttribute(com.liferay.portal.util.WebKeys.JOURNAL_ARTICLE_CONTENT)
+file=html/portlet/journal/search_005fresources_jsp.java,searchInfo
+file=html/portlet/journal/search_005fresources_jsp.java,searchResults
+file=html/portlet/journal/update_005ftranslation_005fredirect_jsp.java,WorkflowConstants.getStatusLabel(article.getStatus())
+file=html/portlet/journal/view_005farticle_005fcontent_jsp.java,request.getAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT)
+file=html/portlet/journal_005fcontent/configuration_jsp.java,conversion
+file=html/portlet/journal_005fcontent/configuration_jsp.java,StringUtil.toUpperCase(conversion)
+
+
+#
+# Prefix based whitelist
+#
 simple=(java.lang.String)SessionMessages.get(
 simple=(String)SessionMessages.get(
 simple=SessionMessages.get(
-simple=LocaleUtil.toLanguageId(
 simple=LanguageUtil.getLanguageId(
-simple=LanguageUtil.get(
+simple=LanguageUtil.getTimeDescription(
 simple=UnicodeLanguageUtil.get(
 simple=UnicodeLanguageUtil.format(
 simple=UnicodeFormatter.toString(
 simple=PortalUtil.escapeRedirect(
 simple=PortalUtil.generateRandomKey(
 simple=PortalUtil.getPortalURL(
+simple=PortalUtil.getLayoutFullURL(
+simple=PortalUtil.getCurrentURL(
 simple=PortalUtil.getStaticResourceURL(
 simple=PortalUtil.getURLWithSessionId(
 simple=PortalUtil.getPortletTitle(
@@ -51,14 +276,13 @@ simple=Boolean.
 simple=!
 simple=AssetPublisherUtil.getClassName(
 simple=portletDisplay.getId(
+simple=portletDisplay.getURL
 simple=dateFormatDateTime.format(
 simple=renderResponse.createRenderURL(
 simple=renderResponse.createActionURL(
-simple=themeDisplay.getPathTheme
 simple=facet.getFieldName()
 simple=currencyFormat.format(
 simple=company.getVirtualHostname(
-simple=themeDisplay.getPathMain()
 simple=clusterNode.getClusterNodeId()
 simple=PropsUtil.get
 simple=PrefsPropsUtil.get
@@ -66,7 +290,6 @@ simple=portletConfig.getInitParameter(
 simple=dateFormatDate.format(
 simple=Math.
 simple=(IntegerWrapper)request
-simple=portletURL.toString()
 simple=renderResponse.create
 simple=uniqueNamespace
 simple=locale.get
@@ -79,7 +302,41 @@ simple=timeZone.get
 simple=PortalUtil.getComputerName()
 simple=StringUtil.randomId()
 simple=ticket.getKey()
+simple=StringUtil.toLowerCase(PortalUtil.getComputerName())
+simple=themeDisplay.getPortalURL()
+simple=themeDisplay.getURLControlPanel()
+simple=themeDisplay.getURLSignIn()
+simple=themeDisplay.getPathMain
+simple=themeDisplay.getPathContext()
+simple=searchContainerReference.getId()
 
+# LPS-34889
+simple=themeDisplay.getCDNBaseURL()
+simple=themeDisplay.getCDNDynamicResourcesHost()
+simple=themeDisplay.getCDNHost()
+simple=themeDisplay.getPathImage()
+simple=themeDisplay.getPathJavaScript()
+simple=themeDisplay.getPathTheme
+simple=themeDisplay.getURLUpdateManager()
+
+simple=numberFormat.format(
+simple=decimalFormat.format(
+simple=timeFormat.format(
+simple=format.format(
+simple=FastDateFormatFactoryUtil.getTime(locale).format(Time.getDate(CalendarFactoryUtil.getCalendar(timeZone)))
+simple=portlet.getPortletId()
+simple=portlet.getPortletName()
+simple=portlet.getWebDAVStorageToken()
+simple=scriptJSONArray.toString()
+simple=availableLocalesJSONArray.toString()
+simple=localesMapJSONObject.toString()
+simple=System.currentTimeMillis()
+simple=LanguageUtil.get(pageContext, "")
+simple=LanguageUtil.format(pageContext, "", "", "")
+
+#
+# Regural expression whitelists
+#
 # all constants are safe (should not be manipulated)
 pattern=^[\w]+\.[A-Z_0-9]+$
 pattern=^(namespace|true|false|0|1)$
@@ -91,28 +348,88 @@ pattern=^[\w]+\.length$
 pattern=^[\w\.]+\.(class|getClass\(\)).getName\(\)$
 pattern=^[\w]+\.getNamespace\(\)$
 pattern=^[\w]+\.size\(\)$
+pattern=^new (byte|short|int|long|float|double|boolean|(java.lang.)?(Byte|Short|Integer|Long|Float|Double|Boolean))\[[0-9]*\]( ?\{.*\})?$
 pattern=^[\w]+[tT]heme\.get.+$
 # math operation
 #pattern=^[^ ]+ ?[\-\*/] ?[^ ]+$
-pattern=^[\w]*[Ff]ormat\.format\(.*$
+#pattern=^[\w]*[Ff]ormat\.format\(.*$
 # boolean expr
 pattern=^[^ ]+ ?(==|!=) ?[^ ]+$
+pattern=^[a-zA-Z\.]+(\(\))? ?&&[a-zA-Z\.]+(\(\))? ?$
+pattern=^Props(Keys|Values).[^ ]+$
+pattern=^ReleaseInfo.[a-zA-Z]+\(\)$
+pattern=^PortletDisplayTemplateUtil\.renderDDMTemplate\([^,]+,[^,]+,[^,]+(,[^\)]+)?\)$
+pattern=^[a-zA-Z0-9\.]+\.equals\([a-zA-Z0-9\.]+\)$
+pattern=^WebServerServletTokenUtil\.getToken\([a-zA-Z\.]+(\(\))?\)$
+pattern=^PortletURLFactoryUtil.create\([\w_\.]+(\(\))?, [\w_\.]+(\(\))?, [\w_\.]+(\(\))?, [\w_\.]+(\(\))?\)$
+pattern=^PortalMessages\.get\(request, [\w_\.]+\)$
+pattern=^[\w]+\.getType\(\)\.getName\(\)$
+pattern=^AUIUtil\.buildData\([\w]+\)$
+pattern=^[\w]+\.getRootPortletId\(\)$
+pattern=^ListUtil\.toString\([\w]+, [\w]+\.[A-Z]+_ID_ACCESSOR, "', '"\)$
+pattern=^DLUtil\.getPreviewURL\([\w]+, [\w]+, [\w]+, [^\)]+\)$
 
+# (com.liferay.portal.kernel.portlet.LiferayPortletURL) _jspx_page_context.findAttribute("selectRuleGroupURL");
+pattern=^\(com\.liferay\.portal\.kernel\.portlet\.LiferayPortletURL\) _jspx_page_context\.findAttribute\("[^"]+"\)$
+pattern=^\(com\.liferay\.taglib\.[a-z]+\.[A-Za-z]+URLTag\) [_0-9a-zA-Z]+\.get\([_0-9a-zA-Z\.]+URLTag\.class\)$
+pattern=^LocaleUtil\.(from|to)LanguageId\([a-zA-Z_\.]+(\(\))?(\[[0-9a-z]+\])?\)(\.getDisplayName\((locale)?\))?$
+pattern=^[a-z_][a-zA-Z0-9_]+\.toEscapedModel\(\)$
+
+#RuntimePageUtil.processXML(request, response, articleDisplay.getContent())
+pattern=^RuntimePageUtil\.processXML\([\w]+, [\w]+, [\w\.]+(\(\))?\)$
+
+
+#
+# Regular Expression parser
+#
 
 # logicExpr ? X : Y
-reg-exp-cep=2,3=^[\(]?(.*)\?([^:]+):([^\)]+)[\)]?$
-# LanguageUtil.format(pageContext, "x-is-not-a-display-type", displayStyle)
-#reg-exp-cep=1=^LanguageUtil\.format\([^\,]+\, ?[^\,]+\, ?(.+)\)$
-#reg-exp-cep=1=^LanguageUtil\.format\([^\,]+\, ?[^\,]+\, ?(.+), ?(true|false)\)$
+reg-exp-cep=2,3=^(.*)\?([^:]+):(.*)$
+
 # StringUtil.shorten(HtmlUtil.stripHtml(entry.getDescription()), pageAbstractLength)
 reg-exp-cep=1=^StringUtil\.shorten\(([^\,]+)\,[^\,]+\)$
-reg-exp-cep=1=^StringUtil\.merge\((.+)\)$
 reg-exp-cep=1=^StringUtil\.merge\((.+), ?"[^"]*"\)$
+reg-exp-cep=1=^StringUtil\.merge\((.+), ?[^,]+\)$
+reg-exp-cep=1=^StringUtil\.merge\((.+)\)$
+reg-exp-cep=1=^StringUtil\.toLowerCase\((.+)\)$
+reg-exp-cep=1=^StringUtil\.toUpperCase\((.+)\)$
+reg-exp-cep=1,2=^StringUtil\.replace\(([^,]+),[^,]+,([^,]+)\)$
+reg-exp-cep=1,2=^StringUtil\.replace\(([^,]+), ?new String\[\] ?\{[^}]+\},( ?new String\[\] ?\{[^}]+\})\)$
 reg-exp-cep=1=GetterUtil\.getString\((.*), ?"[^"]*"\)$
 reg-exp-cep=1=GetterUtil\.getString\((.*)\)$
-reg-exp-cep=1=([\w]+)\.toString\(\)$
+reg-exp-cep=1=([\w0-9]+)\.toString\(\)$
 reg-exp-cep=1=^([\w]+)\[[^\]]+\]$
-reg-exp-cep=1=^new Object\[\] ?\{([^,]+)\}$
 reg-exp-cep=1=^for ?\([^ ]+ [^ ]+ ?: (.+) ?\) ?\{$
-reg-exp-cep=1,2=^new Object\[\] ?\{([^,]+), ?([^,]+)\}$
-reg-exp-cep=1,2,3=^new Object\[\] ?\{([^,]+), ?([^,]+), ?([^,]+)\}$
+reg-exp-cep=1,2,3=^new [A-Za-z]+\[\] ?\{([^,]+), ?([^,]+), ?([^,]+)\}$
+reg-exp-cep=1,2=^new [A-Za-z]+\[\] ?\{([^,]+), ?([^,]+)\}$
+reg-exp-cep=1=^new [A-Za-z]+\[\] ?\{([^,]+)\}$
+
+# LanguageUtil.format
+reg-exp-cep=1=^LanguageUtil.format\([a-zA-Z]+, "[^"]+", (.+), ?(true|false)\)$
+reg-exp-cep=1=^LanguageUtil.format\([a-zA-Z]+, "[^"]+", (.*)\)$
+
+# LanguageUtil.get
+reg-exp-cep=1,2=^LanguageUtil.get\(portletConfig, [^,]+, ([^,]+), (.+)\)$
+reg-exp-cep=1=^LanguageUtil.get\(portletConfig, [^,]+, (.+)\)$
+reg-exp-cep=1,2=^LanguageUtil.get\([a-zA-Z\.\(\)]+, ([^,]+), (.+)\)$
+reg-exp-cep=1=^LanguageUtil.get\([a-zA-Z\.\(\)]+, (.+)\)$
+
+
+# String concat: asdf.get(XXX) + "asdf"
+reg-exp-cep=1,2=^([a-zA-Z_.()]+|"[^"]+") ?\+ ?([a-zA-Z_.()]+|"[^"]+")$
+
+# ResourceActionsUtil.getModelResource(locale, BlogsEntry.class.getName())
+reg-exp-cep=1=^ResourceActionsUtil.getModelResource\([^,]+, ?(.*)\)$
+
+
+# HttpUtil.addParameter(themeDisplay.getPathMain() + "/portal/setup_wizard", "defaultDatabase", false)
+reg-exp-cep=1,2=^HttpUtil\.addParameter\(([^,]+), ([^,]+), [^\)]+\)$
+
+# (java.lang.String) xasdf.awad("asda")
+reg-exp-cep=1=^\([\w\._0-9]+\) ?(.*)$
+
+# remove String constants and number operations
+reg-exp-replace-cep=$1$2=^(.*) ?\+ ?"[^"]+"(.*)$
+reg-exp-replace-cep=$1$2=^(.*)"[^"]+" ?\+ ?(.*)$
+reg-exp-replace-cep=$1$2=^(.*) ?[+*-/] ?[0-9]+(.*)$
+reg-exp-replace-cep=$1$2=^(.*)[0-9]+ ?[+*-/] ?(.*)$

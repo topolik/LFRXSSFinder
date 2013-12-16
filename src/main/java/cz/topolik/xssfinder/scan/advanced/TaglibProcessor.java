@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
 
 import cz.topolik.xssfinder.scan.Logger;
 import org.w3c.dom.Document;
@@ -89,6 +90,10 @@ public class TaglibProcessor {
     }
 
     public void init(FileLoader loader) {
+        /*  TODO: taglibs are temporarily disabled */
+        if(true)return;
+
+
         /** Taglib: shortName -> (tagName, tagClass)<br /> e.g. <code>liferay-ui -> asset-categories-error -> com.liferay.taglib.ui.AssetCategoriesErrorTag</code> */
         Map<String, Map<String, String>> taglibStructure = null;
 
@@ -100,11 +105,9 @@ public class TaglibProcessor {
 
         loader.load(FileLoader.DIR_JSPPRECOMPILED);
 
-        /*  TODO: taglibs are temporarily disabled
 		Logger.log(" ... recognizing vulnerable taglibs ... ");
         getVulnerableTaglibs(taglibStructure, loader.getFiles(FileLoader.DIR_JSPPRECOMPILED), loader);
 		Logger.log(" ... recognizing vulnerable taglibs ... finished with " + vulnerableTaglibs.size() + " entries");
-        */
     }
 
     protected Map<String, Map<String, String>> loadTaglibTLDs(FileLoader loader) throws ParserConfigurationException, SAXException, IOException {
