@@ -19,7 +19,11 @@ file=html/common/themes/top_005fhead_jsp.java,(layout instanceof VirtualLayout)
 file=html/common/themes/top_005fhead_jsp.java,GetterUtil.getString(themeDisplay.getThemeSetting("portlet-setup-show-borders-default"), StringUtil.valueOf(PropsValues.THEME_PORTLET_DECORATE_DEFAULT))
 file=html/common/themes/top_005fhead_jsp.java,session.getId()
 file=html/common/themes/top_005fhead_jsp.java,path
-file=html/common/themes/top_005fhead_jsp.java,1266,sb.toString()
+file=html/common/themes/top_005fhead_jsp.java,_escapeCssBlock(layout.getCssText())
+file=html/common/themes/top_005fhead_jsp.java,_escapeCssBlock(finalCSSString)
+file=html/common/themes/top_005fhead_jsp.java,_escapeCssBlock(customCSS)
+# Liferay.Portlet.list = ['<%= sb.toString() %>'];
+file=html/common/themes/top_005fhead_jsp.java,1271,sb.toString()
 file=html/common/themes/top_005fhead_jsp.java,javaScriptRootPath
 file=html/common/themes/top_005fhead_jsp.java,javaScriptfile
 file=html/common/themes/top_005fhead_jsp.java,markupHeader
@@ -83,6 +87,7 @@ file=html/portal/render_005fportlet_jsp.java,1723,entry.getValue()
 file=html/portal/render_005fportlet_jsp.java,1844,entry.getKey()
 file=html/portal/render_005fportlet_jsp.java,1848,entry.getValue()
 file=html/portal/render_005fportlet_jsp.java,renderRequestImpl.getAttribute(WebKeys.PORTLET_CONTENT)
+file=html/portal/render_005fportlet_jsp.java,closeRefreshPortletId
 file=html/portal/status_jsp.java,StringUtil.replace(te.getMessage(), new String[] {"<", "\n"}, new String[] {"&lt;", "<br />\n"})
 file=html/portal/terms_005fof_005fuse_jsp.java,company.getName()
 file=html/portal/terms_005fof_005fuse_jsp.java,company.getEmailAddress()
@@ -106,8 +111,10 @@ file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,selectS
 file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,selectScope
 file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,conversion
 file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,emailParam + "Subject_" + currentLanguageId
-file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,4308,value
-file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,4315,value
+#String value = DDMIndexerUtil.encodeName((Long)classTypeFieldName.getObject(3), (String)classTypeFieldName.getObject(1));
+file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,4109,value
+#String value = DDMIndexerUtil.encodeName((Long)classTypeFieldName.getObject(3), (String)classTypeFieldName.getObject(1));
+file=html/portlet/asset_005fpublisher/configuration_005fdynamic_jsp.java,4116,value
 file=html/portlet/asset_005fpublisher/configuration_005fmanual_jsp.java,selectStyle
 file=html/portlet/asset_005fpublisher/configuration_005fmanual_jsp.java,selectScope
 file=html/portlet/asset_005fpublisher/configuration_005fmanual_jsp.java,assetRenderer.getIconPath(renderRequest)
@@ -125,7 +132,6 @@ file=html/portlet/asset_005fpublisher/display/title_005flist_jsp.java,assetRende
 file=html/portlet/asset_005fpublisher/display/title_005flist_jsp.java,"metadata-" + metadataFields[j]
 file=html/portlet/asset_005fpublisher/select_005fstructure_005ffield_jsp.java,renderResponse.getNamespace() + "applyButton" + name
 file=html/portlet/asset_005fpublisher/select_005fstructure_005ffield_jsp.java,renderResponse.getNamespace() + name + "fieldForm"
-file=html/portlet/asset_005fpublisher/view_jsp.java,1565,assetCategory.getTitle(locale)
 file=html/portlet/asset_005fpublisher/view_jsp.java,ResourceActionsUtil.getModelResource(locale, groupAssetRendererFactory.getClassName())
 file=html/portlet/asset_005ftag_005fadmin/view_005ftag_jsp.java,tagProperty.getKey()
 file=html/portlet/asset_005ftag_005fadmin/view_005ftag_jsp.java,tagProperty.getValue()
@@ -185,17 +191,11 @@ file=html/portlet/document_005flibrary/edit_005ffile_005fentry_005ftype_jsp.java
 file=html/portlet/document_005flibrary/edit_005ffile_005fentry_005ftype_jsp.java,removeStructureIcon
 file=html/portlet/document_005flibrary/edit_005ffolder_jsp.java,removeFileEntryTypeIcon
 file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,ResourceActionsUtil.getModelResource(locale, repository.getClassName())
-file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,1243,className
-file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,1287,className
-file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,LanguageUtil.get(pageContext, StringUtil.replace(StringUtil.toLowerCase(supportedParameter), CharPool.UNDERLINE, CharPool.DASH))
-file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,supportedConfiguration
-file=html/portlet/document_005flibrary/edit_005frepository_jsp.java,supportedParameterValue
 file=html/portlet/document_005flibrary/file_005fentry_005faction_jsp.java,iconMenu
 file=html/portlet/document_005flibrary/folder_005faction_jsp.java,iconMenu
 file=html/portlet/document_005flibrary/folder_005faction_jsp.java,viewSlideShowURL
 file=html/portlet/document_005flibrary/folder_005faction_jsp.java,iconMenuId
-     [java] file=html/portlet/document_005flibrary/move_005fentries_jsp.java,1226,fileShortcut.getToTitle() + " (" + LanguageUtil.get(themeDisplay.getLocale(), "shortcut") + ")"
-     [java] file=html/portlet/document_005flibrary/move_005fentries_jsp.java,1256,fileShortcut.getToTitle() + " (" + LanguageUtil.get(themeDisplay.getLocale(), "shortcut") + ")"
+file=html/portlet/document_005flibrary/move_005fentries_jsp.java,fileShortcut.getToTitle() + " (" + LanguageUtil.get(themeDisplay.getLocale(), "shortcut") + ")"
 file=html/portlet/document_005flibrary/search_005fresources_jsp.java,searchInfo
 file=html/portlet/document_005flibrary/search_005fresources_jsp.java,searchResults
 file=html/portlet/document_005flibrary/upload_005fmultiple_005ffile_005fentries_jsp.java,uploadMultipleFileEntries
@@ -204,35 +204,40 @@ file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,thumbnai
 file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,previewFileURL
 file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,previewFileURL + "1"
 file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,DLUtil.getWebDavURL(themeDisplay, fileEntry.getFolder(), fileEntry, PropsValues.DL_FILE_ENTRY_OPEN_IN_MS_OFFICE_MANUAL_CHECK_IN_REQUIRED)
-     [java] file=html/portlet/document_005flibrary/view_005ffolders_jsp.java,1423,mountFolder.getName()
-file=html/portlet/document_005flibrary/view_jsp.java,1367,uploadURL
-     [java] file=html/portlet/document_005flibrary/view_jsp.java,1351,mountFolder.getName()
+file=html/portlet/document_005flibrary/view_005ffolders_jsp.java,1423,mountFolder.getName()
+file=html/portlet/document_005flibrary/view_jsp.java,StringUtil.merge(escapedEntryColumns, "','")
+file=html/portlet/document_005flibrary/view_jsp.java,StringUtil.merge(escapedDisplayViews, "','")
+# Root mounted folders can be created only via UI - no dangerous chars allowed - List<Folder> mountFolders = DLAppServiceUtil.getMountFolders(repositoryId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+file=html/portlet/document_005flibrary/view_jsp.java,1363,mountFolder.getName()
+#<liferay-util:buffer var="uploadURL"><liferay-portlet:actionURL><portlet:param name="struts_action" value="/document_library/view_file_entry" /><portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD_DYNAMIC %>" /><portlet:param name="folderId" value="{folderId}" /><portlet:param name="repositoryId" value="<%= String.valueOf(repositoryId) %>" /></liferay-portlet:actionURL><liferay-ui:input-permissions-params modelName="<%= DLFileEntryConstants.getClassName() %>" /></liferay-util:buffer>
+file=html/portlet/document_005flibrary/view_jsp.java,1379,uploadURL
 file=html/portlet/document_005flibrary_005fdisplay/view_jsp.java,thumbnailSrc
 file=html/portlet/document_005flibrary_005fdisplay/view_jsp.java,((repositoryId == scopeGroupId) && TrashUtil.isTrashEnabled(scopeGroupId))
 file=html/portlet/dynamic_005fdata_005flists/view_005fspreadsheet_005frecords_jsp.java,DDMXSDUtil.getJSONArray(ddmStructure.getXsd())
 file=html/portlet/dynamic_005fdata_005flists/view_005fspreadsheet_005frecords_jsp.java,DDLUtil.getRecordSetJSONArray(recordSet)
 file=html/portlet/dynamic_005fdata_005flists/view_005fspreadsheet_005frecords_jsp.java,DDLUtil.getRecordsJSONArray(records, !editable)
 file=html/portlet/dynamic_005fdata_005flists/view_005ftemplate_005frecords_jsp.java,DDLUtil.getTemplateContent(displayDDMTemplateId, recordSet, themeDisplay, renderRequest, renderResponse)
+# locale in custom_fields.jspf defined by <liferay-theme:defineObjects />
+file=html/portlet/dynamic_005fdata_005fmapping/edit_005fstructure_jsp.java,1859,locale
 file=html/portlet/dynamic_005fdata_005fmapping/edit_005ftemplate_jsp.java,DDMTemplateHelperUtil.getAutocompleteJSON(request, language)
 file=html/portlet/dynamic_005fdata_005fmapping/edit_005ftemplate_jsp.java,EditorUtil.getEditorMode(langType)
+# locale in custom_fields.jspf defined by <liferay-theme:defineObjects />
+file=html/portlet/dynamic_005fdata_005fmapping/edit_005ftemplate_jsp.java,2608,locale
 file=html/portlet/dynamic_005fdata_005fmapping/template_005fdescription_jsp.java,rowHREF
 file=html/portlet/group_005fstatistics/view_jsp.java,ResourceActionsUtil.getModelResource(locale, activityCounter.getClassName())
 file=html/portlet/group_005fstatistics/view_jsp.java,displayHeight - 2
-
 file=html/portlet/image_005fgallery_005fdisplay/view_005fimages_jsp.java,(hasAudio || hasVideo) ? "data-options=\"height=" + playerHeight + "&thumbnailURL=" + HtmlUtil.escapeURL(DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&videoThumbnail=1")) + "&width=640" + dataOptions + "\"" : StringPool.BLANK
 file=html/portlet/image_005fgallery_005fdisplay/view_005fimages_jsp.java,DLUtil.getThumbnailStyle(false, 4)
 file=html/portlet/image_005fgallery_005fdisplay/view_005fimages_jsp.java,818,src
 file=html/portlet/image_005fgallery_005fdisplay/view_005fslide_005fshow_jsp.java,765,largeSrc
 file=html/portlet/image_005fgallery_005fdisplay/view_005fslide_005fshow_jsp.java,797,i
 file=html/portlet/image_005fgallery_005fdisplay/view_005fslide_005fshow_jsp.java,799,largeSrc
-
 file=html/portlet/journal/article/categorization_jsp.java,defaultLanguageId
 file=html/portlet/journal/article/content_jsp.java,LanguageUtil.format(pageContext, "translating-web-content-to-x", languageLabel)
 file=html/portlet/journal/article/content_jsp.java,translations[i]
 file=html/portlet/journal/article/display_005fpage_jsp.java,layoutBreadcrumb
 file=html/portlet/journal/article/display_005fpage_jsp.java,parentGroup.getPublicLayoutsPageCount() > 0
 file=html/portlet/journal/article/display_005fpage_jsp.java,urlViewInContext
-
 file=html/portlet/journal/asset/abstract_jsp.java,viewURL
 file=html/portlet/journal/edit_005farticle_jsp.java,htmlBottom
 file=html/portlet/journal/move_005fentries_jsp.java,folder.getName()
@@ -241,11 +246,45 @@ file=html/portlet/journal/raw_005farticle_005fcontent_jsp.java,request.getAttrib
 file=html/portlet/journal/search_005fresources_jsp.java,searchInfo
 file=html/portlet/journal/search_005fresources_jsp.java,searchResults
 file=html/portlet/journal/update_005ftranslation_005fredirect_jsp.java,WorkflowConstants.getStatusLabel(article.getStatus())
+file=html/portlet/journal/update_005ftranslation_005fredirect_jsp.java,toLanguageDisplayName
 file=html/portlet/journal/view_005farticle_005fcontent_jsp.java,request.getAttribute(WebKeys.JOURNAL_ARTICLE_CONTENT)
+file=html/portlet/journal/view_jsp.java,StringUtil.merge(escapedDisplayViews, "','")
 file=html/portlet/journal_005fcontent/configuration_jsp.java,conversion
 file=html/portlet/journal_005fcontent/configuration_jsp.java,StringUtil.toUpperCase(conversion)
-
-
+file=html/portlet/layout_005fprototypes/view_jsp.java,783,layoutPrototype.getName(locale)
+file=html/portlet/layout_005fset_005fprototypes/view_jsp.java,726,layoutSetPrototype.getName(locale)
+file=html/portlet/layouts_005fadmin/add_005flayout_jsp.java,layoutTemplate.getStaticResourcePath()
+file=html/portlet/layouts_005fadmin/add_005flayout_jsp.java,navItem.getName()
+file=html/portlet/layouts_005fadmin/add_005flayout_jsp.java,navItem.getURL()
+file=html/portlet/layouts_005fadmin/edit_005flayout_jsp.java,HttpUtil.setParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selLayout.getParentPlid())
+file=html/portlet/layouts_005fadmin/edit_005fpages_005fchildren_jsp.java,PortalUtil.getFirstPageLayoutTypes(pageContext)
+file=html/portlet/layouts_005fadmin/import_005flayouts_005fresources_jsp.java,ResourceActionsUtil.getModelResource(locale, layoutPrototypeClassName)
+file=html/portlet/layouts_005fadmin/layout/details_jsp.java,LanguageUtil.format(pageContext, "please-enter-a-friendly-url-that-does-not-conflict-with-the-keyword-x", lfurle.getKeywordConflict())
+file=html/portlet/layouts_005fadmin/layout/details_jsp.java,friendlyURLBase.toString()
+file=html/portlet/layouts_005fadmin/layout/details_jsp.java,friendlyURLBase.toString()
+file=html/portlet/layouts_005fadmin/layout/mobile_005fdevice_005frules_jsp.java,1434,sb.toString()
+file=html/portlet/layouts_005fadmin/layout/mobile_005frule_005fgroups_jsp.java,1437,sb.toString()
+file=html/portlet/layouts_005fadmin/layout_005fset/mobile_005fdevice_005frules_jsp.java,1220,sb.toString()
+file=html/portlet/layouts_005fadmin/layout_005fset/mobile_005frule_005fgroups_jsp.java,1223,sb.toString()
+file=html/portlet/layouts_005fadmin/look_005fand_005ffeel_005fthemes_jsp.java,editable ? device : StringPool.BLANK
+file=html/portlet/layouts_005fadmin/look_005fand_005ffeel_005fthemes_jsp.java,device
+file=html/portlet/layouts_005fadmin/look_005fand_005ffeel_005fthemes_jsp.java,StringUtil.replace(themeSetting.getScript(), "[@NAMESPACE@]", liferayPortletResponse.getNamespace())
+file=html/portlet/layouts_005fadmin/publish_005flayouts_jsp.java,ResourceActionsUtil.getModelResource(locale, layoutPrototypeClassName)
+     [java] file=html/portlet/layouts_005fadmin/publish_005flayouts_jsp.java,1181,layoutPrototypeUuid
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_005ftask_005fdetails_jsp.java,669,jsonObject.getString("message")
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_005ftask_005fdetails_jsp.java,691,messageListItemJSONArray.getString("type")
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_005ftask_005fdetails_jsp.java,693,messageListItemJSONArray.getString("name")
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_005ftask_005fdetails_jsp.java,704,messageListItemJSONArray.getString("info")
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_005ftask_005fdetails_jsp.java,757,warningMessageJSONArray.getString("type")
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_005ftask_005fdetails_jsp.java,759,warningMessageJSONArray.getString("size")
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_005ftask_005fdetails_jsp.java,770,warningMessageJSONArray.getString("info")
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_jsp.java,564,BackgroundTaskConstants.getStatusLabel(backgroundTask.getStatus())
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_jsp.java,566,BackgroundTaskConstants.getStatusCssClass(backgroundTask.getStatus())
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_jsp.java,685,ResourceActionsUtil.getModelResource(locale, stagedModelType)
+     [java] file=html/portlet/layouts_005fadmin/publish_005fprocess_005fmessage_jsp.java,687,stagedModelName
+     [java] file=html/portlet/layouts_005fadmin/tree_005fjs_jsp.java,1080,checkedNodesJSONArray.toString()
+     [java] file=html/portlet/layouts_005fadmin/tree_005fjs_jsp.java,1410,layoutsJSON
+     [java] file=html/portlet/layouts_005fadmin/tree_005fjs_jsp.java,1466,layoutsJSON.getJSONArray("layouts").length()
 #
 # Prefix based whitelist
 #
@@ -277,17 +316,14 @@ simple=!
 simple=AssetPublisherUtil.getClassName(
 simple=portletDisplay.getId(
 simple=portletDisplay.getURL
-simple=dateFormatDateTime.format(
 simple=renderResponse.createRenderURL(
 simple=renderResponse.createActionURL(
 simple=facet.getFieldName()
-simple=currencyFormat.format(
 simple=company.getVirtualHostname(
 simple=clusterNode.getClusterNodeId()
 simple=PropsUtil.get
 simple=PrefsPropsUtil.get
 simple=portletConfig.getInitParameter(
-simple=dateFormatDate.format(
 simple=Math.
 simple=(IntegerWrapper)request
 simple=renderResponse.create
@@ -319,10 +355,6 @@ simple=themeDisplay.getPathJavaScript()
 simple=themeDisplay.getPathTheme
 simple=themeDisplay.getURLUpdateManager()
 
-simple=numberFormat.format(
-simple=decimalFormat.format(
-simple=timeFormat.format(
-simple=format.format(
 simple=FastDateFormatFactoryUtil.getTime(locale).format(Time.getDate(CalendarFactoryUtil.getCalendar(timeZone)))
 simple=portlet.getPortletId()
 simple=portlet.getPortletName()
@@ -333,6 +365,9 @@ simple=localesMapJSONObject.toString()
 simple=System.currentTimeMillis()
 simple=LanguageUtil.get(pageContext, "")
 simple=LanguageUtil.format(pageContext, "", "", "")
+simple=PortletURLUtil.clone(
+simple=CustomJspRegistryUtil.getDisplayName(servletContextName)
+simple=LDAPSettingsUtil.getPropertyPostfix(ldapServerId)
 
 #
 # Regural expression whitelists
@@ -352,7 +387,7 @@ pattern=^new (byte|short|int|long|float|double|boolean|(java.lang.)?(Byte|Short|
 pattern=^[\w]+[tT]heme\.get.+$
 # math operation
 #pattern=^[^ ]+ ?[\-\*/] ?[^ ]+$
-#pattern=^[\w]*[Ff]ormat\.format\(.*$
+pattern=^[\w]*[Ff]ormat(Date|DateTime)?\.format\([\w\._]+(\([\w]*\))?\)$
 # boolean expr
 pattern=^[^ ]+ ?(==|!=) ?[^ ]+$
 pattern=^[a-zA-Z\.]+(\(\))? ?&&[a-zA-Z\.]+(\(\))? ?$
@@ -362,6 +397,7 @@ pattern=^PortletDisplayTemplateUtil\.renderDDMTemplate\([^,]+,[^,]+,[^,]+(,[^\)]
 pattern=^[a-zA-Z0-9\.]+\.equals\([a-zA-Z0-9\.]+\)$
 pattern=^WebServerServletTokenUtil\.getToken\([a-zA-Z\.]+(\(\))?\)$
 pattern=^PortletURLFactoryUtil.create\([\w_\.]+(\(\))?, [\w_\.]+(\(\))?, [\w_\.]+(\(\))?, [\w_\.]+(\(\))?\)$
+pattern=^[\w]+esponse\.create[\w]+URL\(\)$
 pattern=^PortalMessages\.get\(request, [\w_\.]+\)$
 pattern=^[\w]+\.getType\(\)\.getName\(\)$
 pattern=^AUIUtil\.buildData\([\w]+\)$
@@ -377,6 +413,9 @@ pattern=^[a-z_][a-zA-Z0-9_]+\.toEscapedModel\(\)$
 
 #RuntimePageUtil.processXML(request, response, articleDisplay.getContent())
 pattern=^RuntimePageUtil\.processXML\([\w]+, [\w]+, [\w\.]+(\(\))?\)$
+
+pattern=^new PortletURLImpl\([\w]+, [\w\._]+, [\w\._]+(\(\))?, [\w\._]+(\(\))?\)$
+pattern=^UnicodeLanguageUtil\.(get|format)\([\w\._]+(\(\))?, ([\w\._]+(\(\))?|"[^"]+"), ([\w\._\[\]\{\}]+(\(\))?|"[^"]*").*(, [\w\._\[\]\{\}]+(\(\))?|"[^"]*")?\)$
 
 
 #
@@ -414,19 +453,18 @@ reg-exp-cep=1=^LanguageUtil.get\(portletConfig, [^,]+, (.+)\)$
 reg-exp-cep=1,2=^LanguageUtil.get\([a-zA-Z\.\(\)]+, ([^,]+), (.+)\)$
 reg-exp-cep=1=^LanguageUtil.get\([a-zA-Z\.\(\)]+, (.+)\)$
 
-
-# String concat: asdf.get(XXX) + "asdf"
-reg-exp-cep=1,2=^([a-zA-Z_.()]+|"[^"]+") ?\+ ?([a-zA-Z_.()]+|"[^"]+")$
-
 # ResourceActionsUtil.getModelResource(locale, BlogsEntry.class.getName())
 reg-exp-cep=1=^ResourceActionsUtil.getModelResource\([^,]+, ?(.*)\)$
-
 
 # HttpUtil.addParameter(themeDisplay.getPathMain() + "/portal/setup_wizard", "defaultDatabase", false)
 reg-exp-cep=1,2=^HttpUtil\.addParameter\(([^,]+), ([^,]+), [^\)]+\)$
 
 # (java.lang.String) xasdf.awad("asda")
 reg-exp-cep=1=^\([\w\._0-9]+\) ?(.*)$
+
+# StringUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms)
+reg-exp-cep=1=^StringUtil\.highlight\(([^,]+), [\w\._0-9]+\)$
+
 
 # remove String constants and number operations
 reg-exp-replace-cep=$1$2=^(.*) ?\+ ?"[^"]+"(.*)$

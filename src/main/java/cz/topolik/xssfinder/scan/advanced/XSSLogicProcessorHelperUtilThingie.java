@@ -6,10 +6,7 @@ import cz.topolik.xssfinder.FileContent;
 import cz.topolik.xssfinder.FileLoader;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -22,27 +19,13 @@ public class XSSLogicProcessorHelperUtilThingie {
     public static List<String> RESULT_DONT_KNOW = new ArrayList<String>();
     public static List<String> RESULT_SAFE = new ArrayList<String>();
 
-    List<Pattern> SAFE_XSS_RE = new ArrayList<Pattern>();
-    List<String> SAFE_API_CALLS = new ArrayList<String>();
     List<ComplexExpressionParser> complexExpressionParsers = new ArrayList<ComplexExpressionParser>();
     List<WhitelistExpressionParser> whitelistExpressionParsers = new ArrayList<WhitelistExpressionParser>();
-    List<Long> SAFE_HASHES = new Vector<Long>();
+    List<String> SAFE_HASHES = new Vector<String>();
 
     static final String SAFE_VARIABLE_DECLARATION_START = ".*(byte|short|int|long|float|double|boolean|(java.lang.)?(Byte|Short|Integer|Long|Float|Double|Boolean))(\\[\\])? ";
-    static final Pattern JAVA_VARIABLE_PATTERN = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9]+");
+    static final Pattern JAVA_VARIABLE_PATTERN = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9]*");
     static final String ESCAPED_QUOTE = Matcher.quoteReplacement("\\\"");
-    static final char[] SIMPLE_EXPRESSION_WHITELIST = {
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-            'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-            'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-            'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F',
-            'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-            'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
-            'W', 'X', 'Y', 'Z', '0', '1', '2', '3',
-            '4', '5', '6', '7', '8', '9', ' ', '_',
-            ',', '(', ')', '.', '!', '[', ']'
-    };
-
     private XSSEnvironment environment;
 
     public XSSLogicProcessorHelperUtilThingie(XSSEnvironment environment) {
@@ -56,7 +39,8 @@ public class XSSLogicProcessorHelperUtilThingie {
             try {
                 BufferedWriter sw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(safeHashesFile)));
                 try {
-                    for (Long hash : SAFE_HASHES) {
+                    TreeSet<String> sortedHashes = new TreeSet<String>(SAFE_HASHES);
+                    for (String hash : sortedHashes) {
                         sw.write(hash.toString());
                         sw.newLine();
                     }
@@ -73,12 +57,33 @@ public class XSSLogicProcessorHelperUtilThingie {
     }
 
     protected void init(){
-        Logger.log("... loading safe-expressions.txt");
+        Logger.log("... loading built-in safe-expressions.txt");
         InputStream in = getClass().getResourceAsStream("/safe_expressions.txt");
         try {
             Scanner s = new Scanner(in);
             while (s.hasNextLine()) {
                 String line = s.nextLine();
+                if(line.startsWith("file=")){
+                    String fileLine = line.substring(line.indexOf("=")+1);
+                    int pos = fileLine.indexOf(",");
+                    String fileName = fileLine.substring(0, pos);
+                    String content = fileLine.substring(pos + 1);
+                    // line num?
+                    int lineNum = -1;
+                    if (content.charAt(0) >= 48 && content.charAt(0) <= 57) {
+                        pos = content.indexOf(",");
+                        if (pos > 0) {
+                            try {
+                                lineNum = Integer.parseInt(content.substring(0, pos));
+                                content = content.substring(pos + 1);
+
+                                // indexes start from 0
+                                lineNum--;
+                            } catch (NumberFormatException e) {}
+                        }
+                    }
+                    whitelistExpressionParsers.add(new FileContentCEP(fileName, content, lineNum));
+                } else
                 if(line.startsWith("simple=")){
                     String arg = line.substring(line.indexOf("=") + 1);
                     whitelistExpressionParsers.add(new SimplePrefixedWEP(arg));
@@ -109,27 +114,6 @@ public class XSSLogicProcessorHelperUtilThingie {
                     int regExpStart = replacementEnd + 1;
                     String regExp = line.substring(regExpStart);
                     complexExpressionParsers.add(new RegExpReplaceCEP(regExp, replacement, environment));
-                } else
-                if(line.startsWith("file=")){
-                    String fileLine = line.substring(line.indexOf("=")+1);
-                    int pos = fileLine.indexOf(",");
-                    String fileName = fileLine.substring(0, pos);
-                    String content = fileLine.substring(pos + 1);
-                    // line num?
-                    int lineNum = -1;
-                    if (content.charAt(0) >= 48 && content.charAt(0) <= 57) {
-                        pos = content.indexOf(",");
-                        if (pos > 0) {
-                            try {
-                                lineNum = Integer.parseInt(content.substring(0, pos));
-                                content = content.substring(pos + 1);
-
-                                // indexes start from 0
-                                lineNum--;
-                            } catch (NumberFormatException e) {}
-                        }
-                    }
-                    whitelistExpressionParsers.add(new FileContentCEP(fileName, content, lineNum));
                 }
             }
         } finally {
@@ -140,21 +124,23 @@ public class XSSLogicProcessorHelperUtilThingie {
             }
         }
 
+        whitelistExpressionParsers.add(new EscapedModelWEP(environment));
+
         complexExpressionParsers.add(new ParenthesesCEP(environment));
         complexExpressionParsers.add(new BeanCallCEP(environment));
         complexExpressionParsers.add(new StringConcatCEP(environment));
         complexExpressionParsers.add(new JSPContextAttributeFinderCEP(environment));
 
 
-        Logger.log("... loading safe CRC32 hashes");
         File safeHashesFile = new File(System.getProperty("java.io.tmpdir"), "LFRXSSFinder.safe-hashes.txt");
+        Logger.log("... loading safe hashes from " + safeHashesFile);
         if(safeHashesFile.exists() && safeHashesFile.canRead()){
             try {
                 in = new FileInputStream(safeHashesFile);
                 try {
                     Scanner s = new Scanner(in);
                     while (s.hasNextLine()) {
-                        SAFE_HASHES.add(Long.parseLong(s.nextLine()));
+                        SAFE_HASHES.add(s.nextLine());
                     }
                 } finally {
                     if(in != null){
@@ -172,22 +158,20 @@ public class XSSLogicProcessorHelperUtilThingie {
         while (argument.endsWith(";")) {
             argument = argument.substring(0, argument.length() - 1);
         }
-        argument = argument.replaceAll(ESCAPED_QUOTE, "");
+        String nonQuotedArgument = argument.replaceAll(ESCAPED_QUOTE, "");
 
-        CRC32 crc32 = new CRC32();
-        crc32.update(arg.getBytes());
-        long hash = crc32.getValue();
+        String hash = f.getFile().getAbsolutePath().substring(loader.getPortalSourcesDir().getAbsolutePath().length()) + "," + lineNum + "," + argument;
         if(SAFE_HASHES.contains(hash)){
             return RESULT_SAFE;
         }
 
-        if (isExpressionSimpleAndSafe(argument, lineNum, line, f, loader)) {
+        if (isExpressionSimpleAndSafe(nonQuotedArgument, lineNum, line, f, loader)) {
             SAFE_HASHES.add(hash);
             return RESULT_SAFE;
         }
 
         // Try to break it using intelligent parsers
-        List<String> complexResult = breakComplexExpression(argument, lineNum, line, f, loader);
+        List<String> complexResult = breakComplexExpression(nonQuotedArgument, lineNum, line, f, loader);
         if (complexResult == RESULT_SAFE) {
             // huh, it's safe
             SAFE_HASHES.add(hash);
@@ -195,7 +179,7 @@ public class XSSLogicProcessorHelperUtilThingie {
         }
 
         // OK, perhaps a variable assignment?
-        List<String> simpleVariableResult = findVariableDeclaration(lineNum, argument, f, loader);
+        List<String> simpleVariableResult = findVariableDeclaration(lineNum, nonQuotedArgument, f, loader);
         if (simpleVariableResult == RESULT_SAFE) {
             // it's safe :)
             SAFE_HASHES.add(hash);
@@ -221,6 +205,10 @@ public class XSSLogicProcessorHelperUtilThingie {
 
     }
 
+    public Pattern buildVariableDeclaration(String variable) {
+        return Pattern.compile("^.*(private |public |protected |static |final |volatile )*([a-z\\.]+\\.)?[A-Z][\\w0-9]+(<.+>)?(\\[\\])? " + variable + " ?(=|:).*$");
+    }
+
     /**
      * Tries to find declaration and usage of the variable. <br />
      *
@@ -232,15 +220,7 @@ public class XSSLogicProcessorHelperUtilThingie {
         }
 
         if (!JAVA_VARIABLE_PATTERN.matcher(vulnerableVariable).matches()) {
-            int pos = vulnerableVariable.indexOf('.');
-            // use only lower case variables which are defined by programmers, not by Jasper
-            boolean isVariableStart = vulnerableVariable.charAt(0) >= 97 && vulnerableVariable.charAt(0) <= 122;
-            if (pos > 0 && isVariableStart) {
-                String variableOnly = vulnerableVariable.substring(0, pos);
-                return findVariableDeclaration(lineNum, variableOnly, f, loader);
-            }
-
-            return RESULT_DONT_KNOW; // don't know if it's safe or not, all I know is this isn't variable :)
+            return RESULT_DONT_KNOW; // don't know if it's safe or not. All I know is that it isn't valid variable :)
         }
 
         List<String> result = new ArrayList<String>();
@@ -251,9 +231,8 @@ public class XSSLogicProcessorHelperUtilThingie {
         int declarationLineLineNum = 0;
 
         Pattern safeDeclaration = Pattern.compile(SAFE_VARIABLE_DECLARATION_START + vulnerableVariable + " ?(=|:).*$");
-        Pattern variableDeclaration = Pattern.compile("^.*(private |public |protected |static |final |volatile )*([a-z\\.]+\\.)?[A-Z][\\w0-9]+(<.+>)?(\\[\\])? " + vulnerableVariable + " ?(=|:).*$");
+        Pattern variableDeclaration = buildVariableDeclaration(vulnerableVariable);
         String variableAssignment = vulnerableVariable + " = ";
-        String escapedModel = vulnerableVariable + ".toEscapedModel();";
 
         // GO UP from current line to find:
         // 1, if variable is safe
@@ -264,9 +243,6 @@ public class XSSLogicProcessorHelperUtilThingie {
             // safe lines without declarations
             if (fileLine.startsWith("out.write") || fileLine.startsWith("out.print")) {
                 continue;
-            }
-            if(escapedModel.equals(fileLine)) {
-                return RESULT_SAFE;
             }
             if (safeDeclaration.matcher(fileLine).matches()) {
                 return RESULT_SAFE;
@@ -323,14 +299,10 @@ public class XSSLogicProcessorHelperUtilThingie {
             return result;
         }
 
-        return RESULT_DONT_KNOW; // can't decide
+        return RESULT_DONT_KNOW; // unable to decide
     }
 
     protected boolean isExpressionSimpleAndSafe(String expression, int lineNum, String line, FileContent f, FileLoader loader) {
-        if (!isExpressionSimple(expression)) {
-            return false;
-        }
-
         for (WhitelistExpressionParser wep : whitelistExpressionParsers) {
             if (wep.isSafe(expression, lineNum, line, f, loader)) {
                 return true;
@@ -338,36 +310,6 @@ public class XSSLogicProcessorHelperUtilThingie {
         }
 
         return environment.getPortalAPICallsProcessor().isExpressionSafe(expression);
-    }
-
-    protected boolean isExpressionSimple(String expression) {
-        boolean insideString = false;
-        for (int i = 0; i < expression.length(); i++) {
-            char c = expression.charAt(i);
-            if (c == '"'){
-                if(!insideString) {
-                    insideString = true;
-                }
-                else if (i > 0 && expression.charAt(i-1) != '\\') {
-                    insideString = false;
-                }
-                continue;
-            }
-            if (insideString) {
-                continue;
-            }
-
-            boolean insideWhitelist = false;
-            for (int j = 0; j < SIMPLE_EXPRESSION_WHITELIST.length && !insideWhitelist; j++) {
-                insideWhitelist = c == SIMPLE_EXPRESSION_WHITELIST[j];
-            }
-
-            if (!insideWhitelist) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     protected List<String> breakComplexExpression(String expression, int lineNum, String line, FileContent f, FileLoader loader) {

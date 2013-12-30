@@ -46,6 +46,7 @@ public class ParenthesesCEP implements ComplexExpressionParser {
         }
 
         boolean executed = false;
+        List<String> result = new ArrayList<String>();
 
         List<StringBuffer> stack = new ArrayList<StringBuffer>();
         List<InsideMethodState> insideMethodStack = new ArrayList<InsideMethodState>();
@@ -53,7 +54,7 @@ public class ParenthesesCEP implements ComplexExpressionParser {
         int insideArray = 0;
 
         stack.add(new StringBuffer());
-        insideMethodStack.add(InsideMethodState.FALSE);
+        insideMethodStack.add(new InsideMethodState(false));
 
         for (int i = 0; i < expression.length(); i++) {
             char ch = expression.charAt(i);
@@ -79,7 +80,7 @@ public class ParenthesesCEP implements ComplexExpressionParser {
                         stack.add(0, new StringBuffer());
                         continue;
                     } else {
-                        insideMethodStack.add(0, InsideMethodState.FALSE);
+                        insideMethodStack.add(0, new InsideMethodState(false));
                     }
 
                     stack.add(0, new StringBuffer());
@@ -91,7 +92,7 @@ public class ParenthesesCEP implements ComplexExpressionParser {
                     }
 
                     if (insideMethodStack.get(0).isIn()) {
-                        executed |= processMethodParameter(stack, insideMethodStack, lineNum, line, f, loader);
+                        executed |= processMethodParameter(stack, insideMethodStack, result, lineNum, line, f, loader);
 
                         stack.get(1).append(stack.remove(0));
                         insideMethodStack.remove(0);
@@ -108,6 +109,9 @@ public class ParenthesesCEP implements ComplexExpressionParser {
                         List<String> subExpressionResult = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(subExpression, lineNum, line, f, loader);
                         if (subExpressionResult == RESULT_SAFE) {
                             subExpression = SAFE_EXPRESSION;
+                        } else {
+                            result.add(subExpression);
+                            result.addAll(subExpressionResult);
                         }
 
                         executed = true;
@@ -152,7 +156,7 @@ public class ParenthesesCEP implements ComplexExpressionParser {
                         break;
                     }
 
-                    executed |= processMethodParameter(stack, insideMethodStack, lineNum, line, f, loader);
+                    executed |= processMethodParameter(stack, insideMethodStack, result, lineNum, line, f, loader);
                     break;
                 }
                 case '|':
@@ -169,25 +173,34 @@ public class ParenthesesCEP implements ComplexExpressionParser {
                         break;
                     }
 
-                    int startPos = 0;
+                    int startPos = insideMethodStack.get(0).sentenceStart;
+                    insideMethodStack.get(0).sentenceStart = stack.get(0).toString().length() + 1;
 
-                    if (insideMethodStack.get(0).isIn()) {
-                        startPos = insideMethodStack.get(0).actualParameterStartPos;
+                    String subExpression = stack.get(0).toString().substring(startPos).trim();
+                    List<String> subExpressionResult = null;
+
+                    if(subExpression.length() == 0 || subExpression.equals(SAFE_EXPRESSION)) {
+                        subExpressionResult = RESULT_SAFE;
+                    } else {
+                        subExpressionResult = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(subExpression, lineNum, line, f, loader);
                     }
 
-                    String subExpression = stack.get(0).toString().substring(startPos);
-                    if(needsProcessing(subExpression)){
-                        List<String> subExpressionResult = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(subExpression, lineNum, line, f, loader);
-                        if (subExpressionResult == RESULT_SAFE) {
-                            // expression is safe - we can cut it out
-                            executed = true;
-                            stack.get(0).setLength(startPos);
-                            // skip && and || when we removed the expression
-                            if (ch == '|' || ch == '&') {
-                                i++;
-                            }
-                            continue;
+                    if (subExpressionResult == RESULT_SAFE) {
+                        // expression is safe - we can cut it out
+                        executed = true;
+                        stack.get(0).setLength(startPos);
+                        insideMethodStack.get(0).sentenceStart = startPos;
+
+                        // skip && and || when we removed the expression
+                        if (ch == '|' || ch == '&') {
+                            i++;
                         }
+
+                        continue;
+                    }
+                    else if(subExpressionResult != null) {
+                        result.add(subExpression);
+                        result.addAll(subExpressionResult);
                     }
 
                     break;
@@ -199,19 +212,26 @@ public class ParenthesesCEP implements ComplexExpressionParser {
 
         if (executed) {
             String simplifiedExpression = stack.get(0).toString();
-            return environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(simplifiedExpression, lineNum, line, f, loader);
+            List<String> seResult = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(simplifiedExpression, lineNum, line, f, loader);
+            if (seResult == RESULT_SAFE) {
+                return RESULT_SAFE;
+            }
+
+            result.add(simplifiedExpression);
+            result.addAll(seResult);
+            return result;
         }
 
         return RESULT_DONT_KNOW;
     }
 
 
-    protected boolean processMethodParameter(List<StringBuffer> stack, List<InsideMethodState> insideMethodStack, int lineNum, String line, FileContent f, FileLoader loader){
+    protected boolean processMethodParameter(List<StringBuffer> stack, List<InsideMethodState> insideMethodStack, List<String> result, int lineNum, String line, FileContent f, FileLoader loader){
         boolean executed = false;
 
         StringBuffer buffer = stack.get(0);
-        int startPos = insideMethodStack.get(0).actualParameterStartPos;
-        insideMethodStack.get(0).actualParameterStartPos = buffer.length() + 1;
+        int startPos = insideMethodStack.get(0).sentenceStart;
+        insideMethodStack.get(0).sentenceStart = buffer.length() + 1;
 
         String actualParam = buffer.toString().substring(startPos);
 
@@ -223,9 +243,12 @@ public class ParenthesesCEP implements ComplexExpressionParser {
         if (subExpressionResult == RESULT_SAFE) {
             buffer.setLength(startPos);
             buffer.append(SAFE_EXPRESSION);
-            insideMethodStack.get(0).actualParameterStartPos = buffer.length() + 1;
+            insideMethodStack.get(0).sentenceStart = buffer.length() + 1;
 
             executed = true;
+        } else {
+            result.add(actualParam);
+            result.addAll(subExpressionResult);
         }
 
         return executed;
@@ -240,6 +263,7 @@ public class ParenthesesCEP implements ComplexExpressionParser {
 
     protected boolean isValid(String expression) {
         boolean hasParenthesis = false;
+        boolean hasSpecialChar = false;
         int check = 0;
         boolean insideString = false;
 
@@ -274,17 +298,23 @@ public class ParenthesesCEP implements ComplexExpressionParser {
                     break;
                 }
                 case ')': if(!insideString) check--; break;
+                case '-':
+                case '+':
+                case '*':
+                case '/':
+                case '|':
+                case '&': if(!insideString) hasSpecialChar = true; break;
+
             }
         }
 
-        return hasParenthesis && check == 0 && !insideString;
+        return (hasParenthesis || hasSpecialChar) && check == 0 && !insideString;
     }
 }
 
 class InsideMethodState {
-    public static final InsideMethodState FALSE = new InsideMethodState(false);
     boolean in = false;
-    int actualParameterStartPos = 0;
+    int sentenceStart = 0;
 
     public InsideMethodState(boolean insideMethod) {
         this.in = insideMethod;
@@ -298,7 +328,7 @@ class InsideMethodState {
     public String toString() {
         return "InsideMethodState{" +
                 "in=" + in +
-                ", actualParameterStartPos=" + actualParameterStartPos +
+                ", sentenceStart=" + sentenceStart +
                 '}';
     }
 }
