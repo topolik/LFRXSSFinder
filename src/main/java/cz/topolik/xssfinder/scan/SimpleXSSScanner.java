@@ -56,8 +56,24 @@ public class SimpleXSSScanner implements XSSScanner {
     protected Set<PossibleXSSLine> scan(FileContent f, FileLoader loader) {
         Set<PossibleXSSLine> result = new HashSet<PossibleXSSLine>();
         List<String> lines = f.getContent();
+        boolean insideComment = false;
         for (int lineNum = 0; lineNum < lines.size(); lineNum++) {
-            String[] suspectedLineStacktrace = isLineSuspected(lineNum, lines.get(lineNum), f, loader);
+            String line = lines.get(lineNum).trim();
+
+            if (line.startsWith("/*")){
+                insideComment = true;
+            }
+            if (insideComment){
+                if (line.endsWith("*/")) {
+                    insideComment = false;
+                }
+                continue;
+            }
+            if (line.startsWith("//")) {
+                continue;
+            }
+
+            String[] suspectedLineStacktrace = isLineSuspected(lineNum, line, f, loader);
             if (suspectedLineStacktrace != null) {
                 result.add(new PossibleXSSLine(f, lineNum + 1, lines.get(lineNum), suspectedLineStacktrace));
             }

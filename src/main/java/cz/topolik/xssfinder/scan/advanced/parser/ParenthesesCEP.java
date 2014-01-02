@@ -163,6 +163,8 @@ public class ParenthesesCEP implements ComplexExpressionParser {
                 case '&':
                 case '+':
                 case '-':
+                case '<':
+                case '>':
                 case '*':
                 case '/': {
                     if(insideString) {
@@ -300,6 +302,8 @@ public class ParenthesesCEP implements ComplexExpressionParser {
                 case ')': if(!insideString) check--; break;
                 case '-':
                 case '+':
+                case '<':
+                case '>':
                 case '*':
                 case '/':
                 case '|':

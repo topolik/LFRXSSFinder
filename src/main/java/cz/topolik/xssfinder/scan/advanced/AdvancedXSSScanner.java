@@ -7,6 +7,8 @@ import cz.topolik.xssfinder.PossibleXSSLine;
 import cz.topolik.xssfinder.scan.SimpleXSSScanner;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static cz.topolik.xssfinder.scan.advanced.Constants.*;
 
@@ -16,6 +18,8 @@ import static cz.topolik.xssfinder.scan.advanced.Constants.*;
  */
 public class AdvancedXSSScanner extends SimpleXSSScanner {
     static final String OUT_WRITE = "out.write(";
+    static final String ROW_ADDTEXT = "row.addText(";
+    static final Pattern ROW_URL_PATTERN =  Pattern.compile("^(.*), row[A-Z]+$");
     private XSSEnvironment environment;
 
 
@@ -33,6 +37,16 @@ public class AdvancedXSSScanner extends SimpleXSSScanner {
     public void destroy(){
         environment.destroy();
     }
+
+    public static String parseSearchContainerRowExpression(String line){
+        String argument = line.substring(ROW_ADDTEXT.length(), line.length() - 2);
+        Matcher m = ROW_URL_PATTERN.matcher(argument);
+        if (m.matches()) {
+            argument =  m.group(1);
+        }
+        return argument;
+    }
+
     @Override
     protected String[] isLineSuspected(int lineNum, String line, FileContent f, FileLoader loader) {
         String trimmed = line.trim();
@@ -54,6 +68,19 @@ public class AdvancedXSSScanner extends SimpleXSSScanner {
             return result == XSSLogicProcessorHelperUtilThingie.RESULT_SAFE ? null : result.toArray(new String[0]);
         }
 
+        // vulnerable search container
+        /*
+        if (trimmed.startsWith(ROW_ADDTEXT)) {
+            String argument = trimmed;
+            int i = lineNum + 1;
+            while(!argument.endsWith(";")){
+                argument += f.getContent().get(i++).trim();
+            }
+            argument = parseSearchContainerRowExpression(argument);
+            List<String> result = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(argument, lineNum, trimmed, f, loader);
+            return result == XSSLogicProcessorHelperUtilThingie.RESULT_SAFE ? null : result.toArray(new String[0]);
+        }
+*/
         // so we know there is no direct XSS
         // but there can be vulnerable taglib call
 

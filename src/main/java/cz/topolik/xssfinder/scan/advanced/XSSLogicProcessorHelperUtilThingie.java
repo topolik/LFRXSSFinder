@@ -271,7 +271,7 @@ public class XSSLogicProcessorHelperUtilThingie {
                 // for (a : b) {
                 if (declarationLine.contains(":")) {
                     int startIndex = declarationLine.indexOf(":");
-                    int endIndex = declarationLine.indexOf(")", startIndex);
+                    int endIndex = declarationLine.lastIndexOf(")");
                     assignmentContent = declarationLine.substring(startIndex + 1, endIndex).trim();
                 } else {
                     assignmentContent = declarationLine.substring(declarationLine.indexOf("=") + 1).trim();
