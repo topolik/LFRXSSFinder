@@ -30,6 +30,8 @@ public class XSSLogicProcessorHelperUtilThingie {
 
     public XSSLogicProcessorHelperUtilThingie(XSSEnvironment environment) {
         this.environment = environment;
+        environment.setXSSLogicProcessorHelperUtilThingie(this);
+
         init();
     }
 
@@ -130,6 +132,7 @@ public class XSSLogicProcessorHelperUtilThingie {
         complexExpressionParsers.add(new BeanCallCEP(environment));
         complexExpressionParsers.add(new StringConcatCEP(environment));
         complexExpressionParsers.add(new JSPContextAttributeFinderCEP(environment));
+        complexExpressionParsers.add(new StringBundlerCEP(environment));
 
 
         File safeHashesFile = new File(System.getProperty("java.io.tmpdir"), "LFRXSSFinder.safe-hashes.txt");

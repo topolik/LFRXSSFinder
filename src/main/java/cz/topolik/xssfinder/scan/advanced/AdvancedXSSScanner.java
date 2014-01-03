@@ -18,8 +18,8 @@ import static cz.topolik.xssfinder.scan.advanced.Constants.*;
  */
 public class AdvancedXSSScanner extends SimpleXSSScanner {
     static final String OUT_WRITE = "out.write(";
-    static final String ROW_ADDTEXT = "row.addText(";
-    static final Pattern ROW_URL_PATTERN =  Pattern.compile("^(.*), row[A-Z]+$");
+    public static final String ROW_ADDTEXT = "row.addText(";
+    static final Pattern ROW_URL_PATTERN =  Pattern.compile("^(.*), (row[A-Z]+)$");
     private XSSEnvironment environment;
 
 
@@ -38,13 +38,19 @@ public class AdvancedXSSScanner extends SimpleXSSScanner {
         environment.destroy();
     }
 
-    public static String parseSearchContainerRowExpression(String line){
-        String argument = line.substring(ROW_ADDTEXT.length(), line.length() - 2);
+    public static String[] parseSearchContainerRowExpression(int lineNum, String line, FileContent f){
+        String argument = line.trim();
+        int i = lineNum + 1;
+        while(!argument.endsWith(";")){
+            argument += f.getContent().get(i++).trim();
+        }
+
+        argument = argument.substring(ROW_ADDTEXT.length(), argument.length() - 2);
         Matcher m = ROW_URL_PATTERN.matcher(argument);
         if (m.matches()) {
-            argument =  m.group(1);
+            return new String[] {m.group(1), m.group(2)};
         }
-        return argument;
+        return new String[]{argument};
     }
 
     @Override
@@ -69,18 +75,26 @@ public class AdvancedXSSScanner extends SimpleXSSScanner {
         }
 
         // vulnerable search container
-        /*
         if (trimmed.startsWith(ROW_ADDTEXT)) {
-            String argument = trimmed;
-            int i = lineNum + 1;
-            while(!argument.endsWith(";")){
-                argument += f.getContent().get(i++).trim();
+            String[] argument = parseSearchContainerRowExpression(lineNum, trimmed, f);
+            List<String> result = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(argument[0], lineNum, trimmed, f, loader);
+            if(argument.length > 1) {
+                List<String> result1 = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(argument[1], lineNum, trimmed, f, loader);
+                if(result == XSSLogicProcessorHelperUtilThingie.RESULT_SAFE){
+                    result = result1;
+                }
+                else if(result1 != XSSLogicProcessorHelperUtilThingie.RESULT_SAFE){
+                    result.addAll(result1);
+                }
             }
-            argument = parseSearchContainerRowExpression(argument);
-            List<String> result = environment.getXSSLogicProcessorHelperUtilThingie().isCallArgumentSuspected(argument, lineNum, trimmed, f, loader);
+
             return result == XSSLogicProcessorHelperUtilThingie.RESULT_SAFE ? null : result.toArray(new String[0]);
         }
-*/
+
+        /*
+        TODO: Search container Row Checker (and co.) + ResultRow attrs
+         */
+
         // so we know there is no direct XSS
         // but there can be vulnerable taglib call
 

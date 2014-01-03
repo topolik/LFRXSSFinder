@@ -53,7 +53,18 @@ public class App {
             System.out.print(line.getLineNum());
             System.out.print(",");
             String vuln = line.getLineContent().trim();
-            System.out.println(vuln.substring(10, vuln.length() - 2).trim());
+            if(vuln.startsWith(AdvancedXSSScanner.ROW_ADDTEXT)){
+                String arg[] = AdvancedXSSScanner.parseSearchContainerRowExpression((int) line.getLineNum(), vuln, line.getSourceFile());
+                System.out.print(arg[0]);
+                if(arg.length > 1) {
+                    System.out.print(" || <- OR -> || ");
+                    System.out.print(arg[1]);
+                }
+                System.out.println();
+            }
+            else {
+                System.out.println(vuln.substring(10, vuln.length() - 2).trim());
+            }
             System.out.println("---------------------------------------------");
 
             boolean found = false;
@@ -88,7 +99,18 @@ public class App {
             System.out.print(line.getLineNum());
             System.out.print(",");
             String vuln = line.getLineContent().trim();
-            System.out.println(vuln.substring(10, vuln.length() - 2).trim());
+            if(vuln.startsWith(AdvancedXSSScanner.ROW_ADDTEXT)){
+                String arg[] = AdvancedXSSScanner.parseSearchContainerRowExpression((int) line.getLineNum(), vuln, line.getSourceFile());
+                System.out.print(arg[0]);
+                if(arg.length > 1) {
+                    System.out.print(" || <- OR -> || ");
+                    System.out.print(arg[1]);
+                }
+                System.out.println();
+            }
+            else {
+                System.out.println(vuln.substring(10, vuln.length() - 2).trim());
+            }
         }
 
 

@@ -1,5 +1,9 @@
+##
+## File based whitelist (file name suffix[,line],string)
+##
+
 #
-# File based whitelist (file name suffix[,line],string)
+# out.write XSS whitelist
 #
 file=errors/code_jsp.java,uri
 file=html/common/themes/bottom_jsp.java,GetterUtil.getString(layoutSetSettings.getProperty("javascript"))
@@ -21,8 +25,6 @@ file=html/common/themes/top_005fhead_jsp.java,path
 file=html/common/themes/top_005fhead_jsp.java,_escapeCssBlock(layout.getCssText())
 file=html/common/themes/top_005fhead_jsp.java,_escapeCssBlock(finalCSSString)
 file=html/common/themes/top_005fhead_jsp.java,_escapeCssBlock(customCSS)
-# Liferay.Portlet.list = ['<%= sb.toString() %>'];
-file=html/common/themes/top_005fhead_jsp.java,1271,sb.toString()
 file=html/common/themes/top_005fhead_jsp.java,javaScriptRootPath
 file=html/common/themes/top_005fhead_jsp.java,javaScriptfile
 file=html/common/themes/top_005fhead_jsp.java,markupHeader
@@ -58,9 +60,7 @@ file=html/portal/error_jsp.java,LanguageUtil.format(pageContext, "your-account-w
 file=html/portal/flash_jsp.java,themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript()
 file=html/portal/j_005flogin_jsp.java,themeDisplay.getCDNHost() + themeDisplay.getPathJavaScript()
 file=html/portal/layout/edit/panel_jsp.java,portletsJSON
-file=html/portal/layout/edit/portlet_jsp.java,layoutTemplate.getStaticResourcePath()
 file=html/portal/layout/edit/portlet_jsp.java,layoutTemplate.getThumbnailPath()
-file=html/portal/layout/edit/portlet_jsp.java,layoutTemplate.getName()
 file=html/portal/layout/view/article_jsp.java,461,content
 file=html/portal/layout/view/control_005fpanel_jsp.java,844,backURL
 file=html/portal/layout/view/view_005fcategory_jsp.java,548,portletURL
@@ -250,7 +250,6 @@ file=html/portlet/journal_005fcontent/configuration_jsp.java,conversion
 file=html/portlet/journal_005fcontent/configuration_jsp.java,StringUtil.toUpperCase(conversion)
 file=html/portlet/layout_005fprototypes/view_jsp.java,783,layoutPrototype.getName(locale)
 file=html/portlet/layout_005fset_005fprototypes/view_jsp.java,726,layoutSetPrototype.getName(locale)
-file=html/portlet/layouts_005fadmin/add_005flayout_jsp.java,layoutTemplate.getStaticResourcePath()
 file=html/portlet/layouts_005fadmin/add_005flayout_jsp.java,navItem.getName()
 file=html/portlet/layouts_005fadmin/add_005flayout_jsp.java,navItem.getURL()
 file=html/portlet/layouts_005fadmin/edit_005flayout_jsp.java,HttpUtil.setParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selLayout.getParentPlid())
@@ -259,12 +258,7 @@ file=html/portlet/layouts_005fadmin/import_005flayouts_005fresources_jsp.java,Re
 file=html/portlet/layouts_005fadmin/layout/details_jsp.java,LanguageUtil.format(pageContext, "please-enter-a-friendly-url-that-does-not-conflict-with-the-keyword-x", lfurle.getKeywordConflict())
 file=html/portlet/layouts_005fadmin/layout/details_jsp.java,friendlyURLBase.toString()
 file=html/portlet/layouts_005fadmin/layout/details_jsp.java,friendlyURLBase.toString()
-file=html/portlet/layouts_005fadmin/layout/mobile_005fdevice_005frules_jsp.java,1434,sb.toString()
 # sb.append(HtmlUtil.escape(mdrAction.getName(locale)));
-file=html/portlet/layouts_005fadmin/layout/mobile_005fdevice_005frules_005frule_005fgroup_005finstances_jsp.java,1303,sb.toString()
-file=html/portlet/layouts_005fadmin/layout/mobile_005frule_005fgroups_jsp.java,1437,sb.toString()
-file=html/portlet/layouts_005fadmin/layout_005fset/mobile_005fdevice_005frules_jsp.java,1220,sb.toString()
-file=html/portlet/layouts_005fadmin/layout_005fset/mobile_005frule_005fgroups_jsp.java,1223,sb.toString()
 file=html/portlet/layouts_005fadmin/look_005fand_005ffeel_005fthemes_jsp.java,editable ? device : StringPool.BLANK
 file=html/portlet/layouts_005fadmin/look_005fand_005ffeel_005fthemes_jsp.java,device
 file=html/portlet/layouts_005fadmin/look_005fand_005ffeel_005fthemes_jsp.java,StringUtil.replace(themeSetting.getScript(), "[@NAMESPACE@]", liferayPortletResponse.getNamespace())
@@ -282,7 +276,6 @@ file=html/portlet/layouts_005fadmin/tree_005fjs_jsp.java,layoutsJSON.getJSONArra
 file=html/portlet/login/navigation_jsp.java,663,navigation
 file=html/portlet/message_005fboards/asset/discussion_005ffull_005fcontent_jsp.java,message.getBody()
 # javascript:_ppid_trashAttachment(...
-file=html/portlet/message_005fboards/edit_005fmessage_jsp.java,2091,sb.toString()
 file=html/portlet/message_005fboards/last_005fpost_005fquestion_jsp.java,userDisplay.getDisplayURL(themeDisplay)
 file=html/portlet/message_005fboards/last_005fpost_005fquestion_jsp.java,userDisplay.getPortraitURL(themeDisplay)
 file=html/portlet/message_005fboards/message_005fsummary_005fquestion_jsp.java,StringUtil.shorten(msgBody, 250)
@@ -296,12 +289,10 @@ file=html/portlet/message_005fboards/view_005fthread_005fmessage_jsp.java,Portle
 file=html/portlet/message_005fboards/view_005fthread_005fshortcut_jsp.java,depth > 0 ? depth * 10 : 5
 # _buildCategoryBreadcrumb(request, curCategory, sb);
 file=html/portlet/message_005fboards/view_jsp.java,2460,sb.toString()
-file=html/portlet/mobile_005fdevice_005frules/action/layout_005ftpl_jsp.java,layoutTemplate.getStaticResourcePath()
 file=html/portlet/mobile_005fdevice_005frules/action/theme_jsp.java,selTheme.getStaticResourcePath()
 file=html/portlet/mobile_005fdevice_005frules/action/theme_jsp.java,curTheme.getStaticResourcePath()
 file=html/portlet/monitoring/edit_005fsession_jsp.java,(user2 != null) ? user2.getEmailAddress() : LanguageUtil.get(pageContext, "not-available")
 file=html/portlet/monitoring/edit_005fsession_jsp.java,812,StringUtil.replace(userTrackerPath.getPath(), "&", "& ")
-file=html/portlet/nested_005fportlets/configuration_jsp.java,layoutTemplate.getStaticResourcePath()
 file=html/portlet/network/view_jsp.java,dnsLookup.getResults()
 file=html/portlet/network/view_jsp.java,whois.getResults()
 file=html/portlet/portal_005fsettings/test_005fcas_005fconfiguration_jsp.java,casLoginURLCssClass
@@ -329,7 +320,8 @@ file=html/portlet/search/facets/asset_005fentries_jsp.java,assetRendererFactory.
 file=html/portlet/search/facets/calendar_jsp.java,dateString
 file=html/portlet/search/facets/calendar_jsp.java,locale
 file=html/portlet/search/facets/modified_jsp.java,locale
-file=html/portlet/search/facets/asset_005fvocabulary_jsp.java,sb.toString()
+# _buildCategoriesNavigation(assetCategoryIdsOrNames, matchByName, facetCollector, assetCategories, clearFields, pageContext, locale, sb);
+file=html/portlet/search/facets/asset_005fvocabulary_jsp.java,781,sb.toString()
 file=html/portlet/search/main_005fsearch_005fdocument_005fform_jsp.java,ResourceActionsUtil.getModelResource(locale, entryClassName)
 file=html/portlet/search/main_005fsearch_005fdocument_005fform_jsp.java,assetRenderer.getIconPath(renderRequest)
 file=html/portlet/search/main_005fsearch_005fdocument_005fform_jsp.java,assetTagName
@@ -340,8 +332,6 @@ file=html/portlet/search/main_005fsearch_005fresult_005fform_jsp.java,assetTagNa
 file=html/portlet/search/main_005fsearch_005fresult_005fform_jsp.java,_buildAssetCategoryPath(assetCategory, locale)
 file=html/portlet/search/main_005fsearch_005fresult_005fform_jsp.java,viewURL
 file=html/portlet/search/search_jsp.java,StringUtil.merge(portletTitles, StringPool.COMMA_AND_SPACE)
-# open_search.jspf
-file=html/portlet/search/search_jsp.java,1900,sb.toString()
 file=html/portlet/shopping/add_005fbook_005fitems_jsp.java,ShoppingUtil.getBreadcrumbs(categoryId, pageContext, renderRequest, renderResponse)
 file=html/portlet/shopping/checkout_005fsecond_jsp.java,CalendarUtil.getMonths(locale)[order.getCcExpMonth()]
 file=html/portlet/shopping/edit_005fcategory_jsp.java,ShoppingUtil.getBreadcrumbs(parentCategoryId, pageContext, renderRequest, renderResponse)
@@ -354,7 +344,7 @@ file=html/portlet/shopping/view_jsp.java,ShoppingUtil.getBreadcrumbs(category, p
 file=html/portlet/shopping/view_005fitem_jsp.java,922,propsKey
 file=html/portlet/shopping/view_005fitem_jsp.java,925,propsValue
 # _buildSiteMap(layout, rootLayouts, rootLayout, includeRootInTree, displayDepth, showCurrentPage, useHtmlTitle, showHiddenPages, 1, themeDisplay, sb);
-file=html/portlet/site_005fmap/view_jsp.java,sb.toString()
+file=html/portlet/site_005fmap/view_jsp.java,650,sb.toString()
 # escapedModel="<%= true %>"
 file=html/portlet/sites_005fadmin/edit_005fsite_005fassignments_005forganizations_jsp.java,824,organization.getName()
 # <liferay-util:buffer var="formButton">
@@ -409,6 +399,58 @@ file=html/portlet/workflow_005ftasks/edit_005fworkflow_005ftask_jsp.java,workflo
 file=html/portlet/workflow_005ftasks/edit_005fworkflow_005ftask_jsp.java,LanguageUtil.get(pageContext, workflowTask.getName())
 file=html/portlet/xsl_005fcontent/view_jsp.java,content
 file=wap/portal/status_jsp.java,StringUtil.replace(te.getMessage(), new String[] {"<", "\n"}, new String[] {"&lt;", "<br />\n"})
+
+
+#
+# Search Container's row.addText() XSS whitelist
+#
+
+#server.jspf - all sb.toString() are safe
+file=html/portlet/admin/view_jsp.java,1323,sb.toString()
+file=html/portlet/admin/view_jsp.java,4908,sb.toString()
+file=html/portlet/admin/view_jsp.java,5079,sb.toString()
+file=html/portlet/admin/view_jsp.java,5294,sb.toString()
+file=html/portlet/admin/view_jsp.java,5316,sb.toString()
+file=html/portlet/admin/view_jsp.java,curCompany.getVirtualHostname()
+file=html/portlet/admin/view_jsp.java,curCompany.getMx()
+file=html/portlet/admin/view_jsp.java,LanguageUtil.get(pageContext, curCompany.getShardName())
+# plugins_admin/ layout_templates.jspf & themes.jspf & portlets.jspf
+file=html/portlet/document_005flibrary/view_005fentries_jsp.java,TextFormatter.formatStorageSize(latestFileVersion.getSize(), locale)
+file=html/portlet/document_005flibrary/view_005ffile_005fentry_jsp.java,TextFormatter.formatStorageSize(curFileVersion.getSize(), locale)
+# dynamic_data_mapping/select_document_library_search_results.jspf
+file=html/portlet/dynamic_005fdata_005fmapping/select_005fdocument_005flibrary_jsp.java,TextFormatter.formatKB(fileEntry.getSize(), locale) + "k"
+file=html/portlet/dynamic_005fdata_005fmapping/select_005fdocument_005flibrary_jsp.java,1389,sb.toString()
+file=html/portlet/dynamic_005fdata_005fmapping/select_005fdocument_005flibrary_jsp.java,1530,sb.toString()
+file=html/portlet/journal/view_005farticle_005fhistory_jsp.java,PortalUtil.getUserName(articleVersion)
+file=html/portlet/journal_005farticles/view_jsp.java,rowTextEntry
+# plugins_admin/ layout_templates.jspf & themes.jspf & portlets.jspf
+file=html/portlet/plugins_005fadmin/view_jsp.java,704,sb.toString()
+file=html/portlet/plugins_005fadmin/view_jsp.java,875,sb.toString()
+file=html/portlet/plugins_005fadmin/view_jsp.java,1090,sb.toString()
+file=html/portlet/plugins_005fadmin/view_jsp.java,1112,sb.toString()
+file=html/portlet/roles_005fadmin/edit_005frole_005fpermissions_005fform_jsp.java,PortalUtil.getPortletLongTitle(curPortlet, application, locale) + ": " + _getActionLabel(pageContext, themeDisplay, resource, actionId)
+file=html/portlet/roles_005fadmin/edit_005frole_005fpermissions_005fresource_jsp.java,_getActionLabel(pageContext, themeDisplay, curResource, actionId)
+file=html/portlet/roles_005fadmin/edit_005frole_005fpermissions_005fsummary_jsp.java,767,sb.toString()
+file=html/portlet/search/search_jsp.java,1830,rowSB.toString()
+file=html/portlet/shopping/cart_jsp.java,currencyFormat.format(ShoppingUtil.calculateActualPrice(item, count.intValue()) / count.intValue())
+file=html/portlet/shopping/checkout_005fsecond_jsp.java,currencyFormat.format(ShoppingUtil.calculateActualPrice(item, count.intValue()) / count.intValue())
+file=html/portlet/shopping/edit_005forder_jsp.java,currencyFormat.format(orderItem.getPrice() * quantity)
+# escaped props
+file=html/portlet/shopping/search_jsp.java,851,sb.toString()
+file=html/portlet/shopping/search_jsp.java,880,sb.toString()
+file=html/portlet/shopping/view_jsp.java,1399,sb.toString()
+file=html/portlet/shopping/view_jsp.java,1428,sb.toString()
+file=html/portlet/shopping/view_jsp.java,currencyFormat.format(ShoppingUtil.calculateActualPrice(item)) +"</div>",rowURL
+file=html/portlet/shopping/view_jsp.java,ShoppingUtil.getPpPaymentStatus(order, pageContext)
+file=html/portlet/software_005fcatalog/view_005fproduct_005fentry_jsp.java,_getFrameworkVersions(curProductVersion.getFrameworkVersions())
+file=html/portlet/software_005fcatalog/view_jsp.java,1302,rowTextEntry
+file=html/portlet/software_005fcatalog/view_jsp.java,1310,rowTextEntry
+file=html/portlet/software_005fcatalog/view_jsp.java,1318,rowTextEntry
+file=html/portlet/software_005fcatalog/view_jsp.java,1549,rowTextEntry
+file=html/portlet/software_005fcatalog/view_jsp.java,1557,rowTextEntry
+file=html/portlet/software_005fcatalog/view_jsp.java,1565,rowTextEntry
+file=html/portlet/software_005fcatalog/view_jsp.java,1573,rowTextEntry
+file=html/portlet/software_005fcatalog/view_jsp.java,1581,rowTextEntry
 
 #
 # Prefix based whitelist
@@ -492,15 +534,19 @@ simple=scriptJSONArray.toString()
 simple=availableLocalesJSONArray.toString()
 simple=localesMapJSONObject.toString()
 simple=System.currentTimeMillis()
+# output of ParenthesesCEP - the ""
 simple=LanguageUtil.get(pageContext, "")
 simple=LanguageUtil.format(pageContext, "", "", "")
+simple=new Integer("")
 simple=PortletURLUtil.clone(
 simple=CustomJspRegistryUtil.getDisplayName(servletContextName)
 simple=LDAPSettingsUtil.getPropertyPostfix(ldapServerId)
 simple=dateFormatDateTime.format(
 simple=format.format(
 simple=PluginPackageUtil.getSupportedTypes()
-
+simple=user2.getEmailAddress()
+simple=layoutTemplate.getStaticResourcePath()
+simple=DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK, false, true)
 
 #
 # Regural expression whitelists
@@ -601,6 +647,8 @@ reg-exp-cep=1=^\([\w\._0-9]+\) ?(.*)$
 # StringUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms)
 reg-exp-cep=1=^StringUtil\.highlight\(([^,]+), [\w\._0-9]+\)$
 
+# PortalUtil.getUserName(curArticle)
+reg-exp-cep=1=^PortalUtil\.getUserName\(([\w_0-9]+)\)$
 
 # remove String constants and number operations
 reg-exp-replace-cep=$1 + $2=^(.*)\.concat(.*)$
