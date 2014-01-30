@@ -6,6 +6,7 @@ import java.io.File;
  * @author Tomas Polesovsky
  */
 public class Wind {
+
     public Forest explore(File... continents) {
         Forest trees = new Forest();
 
@@ -28,7 +29,7 @@ public class Wind {
     }
 
     protected void plant(Forest trees, File tree, File continent) {
-        if (!tree.isDirectory()) {
+        if (Tree.isTree(tree)) {
             trees.add(new Tree(tree, continent));
         }
     }

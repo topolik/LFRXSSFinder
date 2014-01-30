@@ -1,5 +1,7 @@
 package cz.topolik.xssfinder;
 
+import cz.topolik.xssfinder.v2.water.Droplet;
+
 import java.util.Arrays;
 
 /**
@@ -16,6 +18,15 @@ public class PossibleXSSLine implements Comparable<PossibleXSSLine>{
         this.sourceFile = sourceFile;
         this.lineNum = lineNum;
         this.lineContent = lineContent;
+        this.stackTrace = stackTrace;
+    }
+
+    public PossibleXSSLine(Droplet droplet, String[] stackTrace) {
+        this.sourceFile = new FileContent();
+        sourceFile.setFile(droplet.getTree().getRoot());
+        sourceFile.getContent().addAll(droplet.getTree().getGrowthRings());
+        this.lineNum = droplet.getGrowthRingNum();
+        this.lineContent = droplet.getGrowthRing();
         this.stackTrace = stackTrace;
     }
 
