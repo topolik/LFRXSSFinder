@@ -1,18 +1,14 @@
 package cz.topolik.xssfinder.v2.butterfly;
 
-import cz.topolik.xssfinder.FileContent;
-import cz.topolik.xssfinder.FileLoader;
-import cz.topolik.xssfinder.scan.advanced.XSSEnvironment;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
  */
-public class EscapedModelWEP implements WhiteButterfly {
+public class EscapeWhiteButterfly implements WhiteButterfly {
     /*
      * Use only variables that don't start with underscore
      */
@@ -20,10 +16,8 @@ public class EscapedModelWEP implements WhiteButterfly {
 
     @Override
     public boolean isSafe(Droplet droplet) {
-        return isSafe(droplet.getExpression(), droplet.getGrowthRingNum(), droplet.getGrowthRing(), droplet.getFileContent());
-    }
+        String expression = droplet.getExpression();
 
-    public boolean isSafe(String expression, int lineNum, String line, FileContent f) {
         boolean isVariableStart = expression.charAt(0) >= 97 && expression.charAt(0) <= 122;
         if (!isVariableStart) {
             return false;
@@ -41,14 +35,14 @@ public class EscapedModelWEP implements WhiteButterfly {
         Pattern variableDeclaration = World.see().river().buildVariableDeclaration(expression);
         String escapedModel = expression + " = " + expression + ".toEscapedModel();";
 
-        for (int i = lineNum - 1; i >= 0; i--) {
-            String fileLine = f.getContent().get(i).trim();
+        for (int i = droplet.getGrowthRingNum() - 1; i >= 0; i--) {
+            String fileLine = droplet.getTree().getGrowthRings().get(i).trim();
 
             if (escapedModel.equals(fileLine)) {
                 return true;
             }
 
-            if (variableDeclaration.matcher(fileLine).matches()){
+            if (variableDeclaration.matcher(fileLine).matches()) {
                 // stop searching to avoid collision with another variable with the same name
                 return false;
             }

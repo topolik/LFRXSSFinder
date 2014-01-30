@@ -1,7 +1,5 @@
 package cz.topolik.xssfinder.v2.butterfly;
 
-import cz.topolik.xssfinder.FileContent;
-import cz.topolik.xssfinder.FileLoader;
 import cz.topolik.xssfinder.v2.water.Droplet;
 
 /**
@@ -28,26 +26,21 @@ public class SimpleWhiteButtefly implements WhiteButterfly {
 
     @Override
     public boolean isSafe(Droplet droplet) {
-        return isSafe(droplet.getExpression(), droplet.getGrowthRingNum(), droplet.getGrowthRing(), droplet.getFileContent());
-    }
-
-    public boolean isSafe(String expression, int lineNum, String line, FileContent f) {
-        if (!isExpressionSimple(expression)) {
+        if (!isExpressionSimple(droplet.getExpression())) {
             return false;
         }
 
-        return expression != null && expression.startsWith(prefix);
+        return droplet.getExpression() != null && droplet.getExpression().startsWith(prefix);
     }
 
     protected boolean isExpressionSimple(String expression) {
         boolean insideString = false;
         for (int i = 0; i < expression.length(); i++) {
             char c = expression.charAt(i);
-            if (c == '"'){
-                if(!insideString) {
+            if (c == '"') {
+                if (!insideString) {
                     insideString = true;
-                }
-                else if (i > 0 && expression.charAt(i-1) != '\\') {
+                } else if (i > 0 && expression.charAt(i - 1) != '\\') {
                     insideString = false;
                 }
                 continue;

@@ -1,6 +1,5 @@
 package cz.topolik.xssfinder.v2.water;
 
-import cz.topolik.xssfinder.FileContent;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
 /**
@@ -12,9 +11,6 @@ public class Droplet {
     private String growthRing;
     private Tree tree;
 
-    /* TODO: DEPRECATE */
-    private FileContent fileContent;
-
     public Droplet(String expression, int growthRingNum, String growthRing, Tree tree) {
         this.expression = expression;
         this.growthRingNum = growthRingNum;
@@ -22,23 +18,16 @@ public class Droplet {
         this.tree = tree;
     }
 
-    public Droplet(String expression, int growthRingNum, String growthRing, FileContent fileContent) {
-        this.expression = expression;
-        this.growthRingNum = growthRingNum;
-        this.growthRing = growthRing;
-        this.fileContent = fileContent;
+    public Droplet droppy(String newExpression) {
+        return new Droplet(newExpression, growthRingNum, growthRing, tree);
     }
 
-    public Droplet droppy(String newExpression){
-        return new Droplet(newExpression, growthRingNum, growthRing, fileContent);
+    public Droplet droppy(String newExpression, int newGrowthRingNum) {
+        return new Droplet(newExpression, newGrowthRingNum, growthRing, tree);
     }
 
-    public Droplet droppy(String newExpression, int newGrowthRingNum){
-        return new Droplet(newExpression, newGrowthRingNum, growthRing, fileContent);
-    }
-
-    public Droplet droppy(String newExpression, int newGrowthRingNum, String newGrowthRing){
-        return new Droplet(newExpression, newGrowthRingNum, newGrowthRing, fileContent);
+    public Droplet droppy(String newExpression, int newGrowthRingNum, String newGrowthRing) {
+        return new Droplet(newExpression, newGrowthRingNum, newGrowthRing, tree);
     }
 
     public String getExpression() {
@@ -57,7 +46,4 @@ public class Droplet {
         return tree;
     }
 
-    public FileContent getFileContent() {
-        return fileContent;
-    }
 }

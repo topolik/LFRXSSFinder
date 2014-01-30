@@ -1,12 +1,7 @@
 package cz.topolik.xssfinder.v2.water;
 
-import cz.topolik.xssfinder.FileContent;
-import cz.topolik.xssfinder.FileLoader;
 import cz.topolik.xssfinder.scan.Logger;
-import cz.topolik.xssfinder.scan.advanced.XSSEnvironment;
-import cz.topolik.xssfinder.scan.advanced.XSSLogicProcessorHelperUtilThingie;
 import cz.topolik.xssfinder.v2.World;
-import cz.topolik.xssfinder.v2.wood.Forest;
 import cz.topolik.xssfinder.v2.wood.Tree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -32,18 +27,18 @@ public class Snow {
     private static final Pattern TAGLIB_CALL_PATTERN = Pattern.compile("^(_jspx_th_[\\w]+)\\.set([\\w]+)\\((.*)\\);$");
     //[String id = (String)request.getAttribute("liferay-ui:upload-progress:id");]
     private static final Pattern VULNERABLE_TAGLIB_LINE_PATTERN = Pattern.compile("^.*request.getAttribute\\(\"([a-zA-Z-]+):([a-zA-Z-]+):([a-zA-Z-]+)\"\\).*$");
-    private static final String TLD_DIR = FileLoader.DIR_UTILTAGLIB + "/META-INF";
     private static final String TLD_DIR_JSP = "/html/taglib/";
     private static final String TLD_DIR_JS_EDITOR = "/html/js/editor/";
 
     private Map<String, Set<String>> vulnerableTaglibs = new HashMap<String, Set<String>>();
 
-    public boolean isTagLibJSP(Tree tree){
+    public boolean isTagLibJSP(Tree tree) {
         String absPath = tree.getRoot().getAbsolutePath();
         return absPath.contains(TLD_DIR_JSP) || absPath.contains(TLD_DIR_JS_EDITOR);
     }
+
     public String[] isLineVulnerableTaglib(Droplet droplet) {
-        if(isTagLibJSP(droplet.getTree())){
+        if (isTagLibJSP(droplet.getTree())) {
             return null;
         }
 
@@ -82,16 +77,16 @@ public class Snow {
         return null;
     }
 
-    public void flyThru(Forest forest) {
+    public void fly() {
         /*  TODO: taglibs are temporarily disabled */
-        if(true)return;
+        if (true) return;
 
 
         /** Taglib: shortName -> (tagName, tagClass)<br /> e.g. <code>liferay-ui -> asset-categories-error -> com.liferay.taglib.ui.AssetCategoriesErrorTag</code> */
         Map<String, Map<String, String>> taglibStructure = null;
 
         try {
-            taglibStructure = loadTaglibTLDs(forest);
+            taglibStructure = loadTaglibTLDs();
         } catch (Exception ex) {
             throw new RuntimeException("Cannot parse TLDs: " + ex.getMessage(), ex);
         }
@@ -102,7 +97,7 @@ public class Snow {
         Logger.log(" ... recognizing vulnerable taglibs ... finished with " + vulnerableTaglibs.size() + " entries");
     }
 
-    protected Map<String, Map<String, String>> loadTaglibTLDs(Forest forest) throws ParserConfigurationException, SAXException, IOException {
+    protected Map<String, Map<String, String>> loadTaglibTLDs() throws ParserConfigurationException, SAXException, IOException {
         Map<String, Map<String, String>> taglibStructure = new HashMap<String, Map<String, String>>();
 
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
@@ -118,7 +113,7 @@ public class Snow {
         //    <name>asset-categories-navigation</name>
         //    <tag-class>com.liferay.taglib.ui.AssetCategoriesNavigationTag</tag-class>
 
-        for (Tree chestnut : forest.chestnuts()) {
+        for (Tree chestnut : World.see().forest().chestnuts()) {
             Document doc = builder.parse(new ByteArrayInputStream(chestnut.melt().getBytes()));
             String shortName = doc.getElementsByTagName("short-name").item(0).getTextContent();
             if (!taglibStructure.containsKey(shortName)) {
@@ -159,7 +154,7 @@ public class Snow {
 
                     List<String> declaration = World.see().river().isCallArgumentSuspected(new Droplet(functionArgument, lineNum, functionArgument, linden));
 
-                    if (declaration != XSSLogicProcessorHelperUtilThingie.RESULT_SAFE && declaration.size() > 0) {
+                    if (declaration != River.RESULT_SAFE && declaration.size() > 0) {
                         // the last line in the stack should be variable declaration
                         String declarationLine = declaration.get(declaration.size() - 1);
 
@@ -178,7 +173,7 @@ public class Snow {
                                     vulnerableTaglibs.put(taglibClassName, new HashSet<String>());
                                 }
                                 vulnerableTaglibs.get(taglibClassName).add(normalizedAttrName);
-                            } catch (NullPointerException e){
+                            } catch (NullPointerException e) {
                                 throw new RuntimeException("Cannot find " + taglibShortName, e);
                             }
                         }

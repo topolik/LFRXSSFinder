@@ -1,11 +1,8 @@
 package cz.topolik.xssfinder.v2.water;
 
-import cz.topolik.xssfinder.FileContent;
-import cz.topolik.xssfinder.FileLoader;
 import cz.topolik.xssfinder.scan.Logger;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.butterfly.*;
-import cz.topolik.xssfinder.v2.wood.Forest;
 
 import java.io.*;
 import java.util.*;
@@ -13,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
  * @author Tomas Polesovsky
  */
 public class River {
@@ -30,7 +26,7 @@ public class River {
 
     public void dryUp() {
         File safeHashesFile = new File(System.getProperty("java.io.tmpdir"), "LFRXSSFinder.safe-hashes.txt");
-        if(!safeHashesFile.exists() || safeHashesFile.canWrite()){
+        if (!safeHashesFile.exists() || safeHashesFile.canWrite()) {
             try {
                 BufferedWriter sw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(safeHashesFile)));
                 try {
@@ -39,27 +35,29 @@ public class River {
                         sw.write(hash.toString());
                         sw.newLine();
                     }
-                } catch (IOException e){
+                } catch (IOException e) {
                 } finally {
-                    if(sw != null){
+                    if (sw != null) {
                         try {
                             sw.close();
-                        } catch (IOException ex) {}
+                        } catch (IOException ex) {
+                        }
                     }
                 }
-            } catch (FileNotFoundException e){}
+            } catch (FileNotFoundException e) {
+            }
         }
     }
 
-    public void flowThru(Forest forest){
+    public void flow() {
         Logger.log("... loading built-in safe-expressions.txt");
         InputStream in = getClass().getResourceAsStream("/safe_expressions.txt");
         try {
             Scanner s = new Scanner(in);
             while (s.hasNextLine()) {
                 String line = s.nextLine();
-                if(line.startsWith("file=")){
-                    String fileLine = line.substring(line.indexOf("=")+1);
+                if (line.startsWith("file=")) {
+                    String fileLine = line.substring(line.indexOf("=") + 1);
                     int pos = fileLine.indexOf(",");
                     String fileName = fileLine.substring(0, pos);
                     String content = fileLine.substring(pos + 1);
@@ -74,35 +72,32 @@ public class River {
 
                                 // indexes start from 0
                                 growthRingNum--;
-                            } catch (NumberFormatException e) {}
+                            } catch (NumberFormatException e) {
+                            }
                         }
                     }
                     whiteButterflies.add(new TreeWhiteButterfly(fileName, content, growthRingNum));
-                } else
-                if(line.startsWith("simple=")){
+                } else if (line.startsWith("simple=")) {
                     String arg = line.substring(line.indexOf("=") + 1);
                     whiteButterflies.add(new SimpleWhiteButtefly(arg));
-                } else
-                if(line.startsWith("pattern=")){
-                    String arg = line.substring(line.indexOf("=")+1);
+                } else if (line.startsWith("pattern=")) {
+                    String arg = line.substring(line.indexOf("=") + 1);
                     whiteButterflies.add(new PatternWhiteButtefly(arg));
-                } else
-                if(line.startsWith("reg-exp-cep=")){
-                    int groupsStart = line.indexOf("=")+1;
+                } else if (line.startsWith("reg-exp-cep=")) {
+                    int groupsStart = line.indexOf("=") + 1;
                     int groupsEnd = line.indexOf("=", groupsStart);
                     int reStart = groupsEnd + 1;
                     String[] groupsStr = line.substring(groupsStart, groupsEnd).split(",");
                     String regExp = line.substring(reStart);
                     int[] groups = new int[groupsStr.length];
-                    for(int i = 0; i < groupsStr.length; i++){
+                    for (int i = 0; i < groupsStr.length; i++) {
                         groups[i] = Integer.parseInt(groupsStr[i]);
                     }
                     coloredButterflies.add(new REColoredButterfly(regExp, groups));
-                } else
-                if(line.startsWith("reg-exp-replace-cep=")){
-                    int replacementStart = line.indexOf("=")+1;
+                } else if (line.startsWith("reg-exp-replace-cep=")) {
+                    int replacementStart = line.indexOf("=") + 1;
                     int replacementEnd = line.indexOf("=", replacementStart);
-                    while(line.charAt(replacementEnd - 1) == '\\'){
+                    while (line.charAt(replacementEnd - 1) == '\\') {
                         replacementEnd = line.indexOf("=", replacementEnd);
                     }
                     String replacement = line.substring(replacementStart, replacementEnd);
@@ -112,25 +107,26 @@ public class River {
                 }
             }
         } finally {
-            if(in != null){
+            if (in != null) {
                 try {
                     in.close();
-                } catch (IOException ex) {}
+                } catch (IOException ex) {
+                }
             }
         }
 
-        whiteButterflies.add(new EscapedModelWEP());
+        whiteButterflies.add(new EscapeWhiteButterfly());
 
-        coloredButterflies.add(new ParenthesesCEP());
-        coloredButterflies.add(new BeanCallCEP());
-        coloredButterflies.add(new StringConcatCEP());
-        coloredButterflies.add(new JSPContextAttributeFinderCEP());
-        coloredButterflies.add(new StringBundlerCEP());
+        coloredButterflies.add(new BigRareColoredButterfly());
+        coloredButterflies.add(new BeanColoredButterfly());
+        coloredButterflies.add(new StringGlueColoredButterfly());
+        coloredButterflies.add(new JSPContextAttributeFinderColoredButterfly());
+        coloredButterflies.add(new SBColoredButterfly());
 
 
         File safeHashesFile = new File(System.getProperty("java.io.tmpdir"), "LFRXSSFinder.safe-hashes.txt");
         Logger.log("... loading safe hashes from " + safeHashesFile);
-        if(safeHashesFile.exists() && safeHashesFile.canRead()){
+        if (safeHashesFile.exists() && safeHashesFile.canRead()) {
             try {
                 in = new FileInputStream(safeHashesFile);
                 try {
@@ -139,13 +135,15 @@ public class River {
                         SAFE_HASHES.add(s.nextLine());
                     }
                 } finally {
-                    if(in != null){
+                    if (in != null) {
                         try {
                             in.close();
-                        } catch (IOException ex) {}
+                        } catch (IOException ex) {
+                        }
                     }
                 }
-            } catch (FileNotFoundException e){}
+            } catch (FileNotFoundException e) {
+            }
         }
     }
 
@@ -157,7 +155,7 @@ public class River {
         String nonQuotedArgument = argument.replaceAll(ESCAPED_QUOTE, "");
 
         String hash = droplet.getTree().getRoot().getAbsolutePath().substring(droplet.getTree().getContinent().getAbsolutePath().length()) + "," + droplet.getGrowthRingNum() + "," + argument;
-        if(SAFE_HASHES.contains(hash)){
+        if (SAFE_HASHES.contains(hash)) {
             return RESULT_SAFE;
         }
 
@@ -181,7 +179,7 @@ public class River {
             SAFE_HASHES.add(hash);
             return RESULT_SAFE;
         }
-        if(simpleVariableResult != RESULT_DONT_KNOW){
+        if (simpleVariableResult != RESULT_DONT_KNOW) {
             // OK, it was a variable we don't need to continue
             return simpleVariableResult;
         }
@@ -193,7 +191,7 @@ public class River {
         List<String> result = new ArrayList<String>();
         result.addAll(simpleVariableResult);
         result.addAll(complexResult);
-        if(result.size() > 0){
+        if (result.size() > 0) {
             return result;
         }
 
@@ -312,9 +310,9 @@ public class River {
 
     protected List<String> breakComplexExpression(Droplet droplet) {
         List<String> result = new ArrayList<String>();
-        for(ColoredButterfly butterfly : coloredButterflies){
+        for (ColoredButterfly butterfly : coloredButterflies) {
             List<String> callResult = butterfly.execute(droplet);
-            if(callResult == RESULT_SAFE){
+            if (callResult == RESULT_SAFE) {
                 return RESULT_SAFE;
             }
             result.addAll(callResult);

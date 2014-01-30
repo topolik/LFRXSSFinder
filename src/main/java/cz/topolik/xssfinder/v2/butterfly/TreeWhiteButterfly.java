@@ -1,7 +1,5 @@
 package cz.topolik.xssfinder.v2.butterfly;
 
-import cz.topolik.xssfinder.FileContent;
-import cz.topolik.xssfinder.FileLoader;
 import cz.topolik.xssfinder.v2.water.Droplet;
 
 /**
@@ -20,9 +18,9 @@ public class TreeWhiteButterfly implements WhiteButterfly {
 
     @Override
     public boolean isSafe(Droplet droplet) {
-        if((this.growthRingNum == -1 || this.growthRingNum == droplet.getGrowthRingNum()) &&
+        if ((this.growthRingNum == -1 || this.growthRingNum == droplet.getGrowthRingNum()) &&
                 droplet.getTree().getRoot().toString().endsWith(treeName) &&
-                droplet.getExpression().equalsIgnoreCase(content)){
+                droplet.getExpression().equalsIgnoreCase(content)) {
 
             return true;
         }

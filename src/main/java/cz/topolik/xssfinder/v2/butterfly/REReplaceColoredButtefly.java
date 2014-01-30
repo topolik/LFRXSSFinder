@@ -1,8 +1,5 @@
 package cz.topolik.xssfinder.v2.butterfly;
 
-import cz.topolik.xssfinder.FileContent;
-import cz.topolik.xssfinder.FileLoader;
-import cz.topolik.xssfinder.scan.advanced.XSSEnvironment;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
 
@@ -24,18 +21,14 @@ public class REReplaceColoredButtefly implements ColoredButterfly {
 
     @Override
     public List<String> execute(Droplet droplet) {
-        return execute(droplet, droplet.getExpression(), droplet.getGrowthRingNum(), droplet.getGrowthRing(), droplet.getFileContent());
-    }
-
-    public List<String> execute(Droplet droplet, String expression, int lineNum, String line, FileContent f) {
-        Matcher m = regExp.matcher(expression);
-        if(!m.matches()){
+        Matcher m = regExp.matcher(droplet.getExpression());
+        if (!m.matches()) {
             return RESULT_DONT_KNOW;
         }
 
         String newReplacement = m.replaceAll(replacement);
 
-        return World.see().river().isCallArgumentSuspected(new Droplet(newReplacement, lineNum, line, f));
+        return World.see().river().isCallArgumentSuspected(droplet.droppy(newReplacement));
     }
 
 }

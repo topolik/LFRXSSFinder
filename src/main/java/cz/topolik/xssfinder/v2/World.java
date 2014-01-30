@@ -1,14 +1,14 @@
 package cz.topolik.xssfinder.v2;
 
+import cz.topolik.xssfinder.v2.water.Rain;
 import cz.topolik.xssfinder.v2.water.River;
 import cz.topolik.xssfinder.v2.water.Snow;
-import cz.topolik.xssfinder.v2.water.Rain;
 import cz.topolik.xssfinder.v2.wood.Forest;
+import cz.topolik.xssfinder.v2.wood.Wind;
 
 import java.io.File;
 
 /**
- *
  * @author Tomas Polesovsky
  */
 public class World {
@@ -19,7 +19,7 @@ public class World {
     private Wind wind = new Wind();
     private static final World world = new World();
 
-    public static World see(){
+    public static World see() {
         return world;
     }
 
@@ -28,9 +28,9 @@ public class World {
 
         forest.callAntsToExplore();
 
-        rain.fallDownOn(forest);
-		snow.flyThru(forest);
-        river.flowThru(forest);
+        rain.fallDown();
+        snow.fly();
+        river.flow();
     }
 
     public void jDay() {

@@ -1,8 +1,5 @@
 package cz.topolik.xssfinder.v2.butterfly;
 
-import cz.topolik.xssfinder.FileContent;
-import cz.topolik.xssfinder.FileLoader;
-import cz.topolik.xssfinder.scan.advanced.XSSEnvironment;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
 
@@ -12,19 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
  * @author Tomas Polesovsky
  */
-public class BeanCallCEP implements ColoredButterfly {
+public class BeanColoredButterfly implements ColoredButterfly {
     static final Pattern EXPRESSION = Pattern.compile("^([a-z][\\w]+)\\.([\\w]+)\\(.*\\)$");
 
     @Override
     public List<String> execute(Droplet droplet) {
-        return execute(droplet.getExpression(), droplet.getGrowthRingNum(), droplet.getGrowthRing(), droplet.getFileContent());
-    }
-
-    public List<String> execute(String expression, int lineNum, String line, FileContent f) {
-        Matcher m = EXPRESSION.matcher(expression);
+        Matcher m = EXPRESSION.matcher(droplet.getExpression());
         if (!m.matches()) {
             return RESULT_DONT_KNOW;
         }
@@ -35,8 +27,8 @@ public class BeanCallCEP implements ColoredButterfly {
 
         Pattern variableDeclaration = Pattern.compile("^(for ?\\()?([^\\s]+) " + beanName + " (=|:).*$");
         String declarationLine = null;
-        for (int i = lineNum - 1; i >= 0 && declarationLine == null; i--) {
-            String fileLine = f.getContent().get(i).trim();
+        for (int i = droplet.getGrowthRingNum() - 1; i >= 0 && declarationLine == null; i--) {
+            String fileLine = droplet.getTree().getGrowthRings().get(i).trim();
             if (fileLine.startsWith("out.write") || fileLine.startsWith("out.print")) {
                 continue;
             }

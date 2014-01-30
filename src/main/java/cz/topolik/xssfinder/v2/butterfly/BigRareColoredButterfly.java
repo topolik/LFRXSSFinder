@@ -1,6 +1,5 @@
 package cz.topolik.xssfinder.v2.butterfly;
 
-import cz.topolik.xssfinder.FileContent;
 import cz.topolik.xssfinder.scan.Logger;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
@@ -12,29 +11,22 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class ParenthesesCEP implements ColoredButterfly {
+public class BigRareColoredButterfly implements ColoredButterfly {
     private static final String SAFE_EXPRESSION = "\"\"";
     private static final ThreadLocal<Boolean> EXECUTED = new ThreadLocal<Boolean>();
 
-    public ParenthesesCEP() {
-    }
-
     @Override
     public List<String> execute(Droplet droplet) {
-        return execute(droplet, droplet.getExpression(), droplet.getGrowthRingNum(), droplet.getGrowthRing(), droplet.getFileContent());
-    }
-
-    public List<String> execute(Droplet droplet, String expression, int lineNum, String line, FileContent f) {
         // execute only once
-        if(EXECUTED.get() != null) {
+        if (EXECUTED.get() != null) {
             return RESULT_DONT_KNOW;
         }
 
         try {
             EXECUTED.set(Boolean.TRUE);
-            return execute2(droplet, expression, lineNum, line, f);
+            return execute2(droplet);
         } catch (Throwable e) {
-            Logger.log("Exception while processing: "+expression+"\n\t"+f.getFile()+':'+lineNum+"\n\t"+line);
+            Logger.log("Exception while processing: " + droplet.getExpression() + "\n\t" + droplet.getTree().getRoot() + ':' + droplet.getGrowthRingNum() + "\n\t" + droplet.getGrowthRing());
             e.printStackTrace();
             return RESULT_DONT_KNOW;
         } finally {
@@ -42,8 +34,10 @@ public class ParenthesesCEP implements ColoredButterfly {
         }
     }
 
-    private List<String> execute2(Droplet droplet, String expression, int lineNum, String line, FileContent f) {
-        if(!isValid(expression)){
+    private List<String> execute2(Droplet droplet) {
+        String expression = droplet.getExpression();
+
+        if (!isValid(expression)) {
             return RESULT_DONT_KNOW;
         }
 
@@ -60,18 +54,17 @@ public class ParenthesesCEP implements ColoredButterfly {
 
         for (int i = 0; i < expression.length(); i++) {
             char ch = expression.charAt(i);
-            switch(ch) {
+            switch (ch) {
                 case '"': {
-                    if(!insideString) {
+                    if (!insideString) {
                         insideString = true;
-                    }
-                    else if(i > 0 && expression.charAt(i-1)!= '\\') {
+                    } else if (i > 0 && expression.charAt(i - 1) != '\\') {
                         insideString = false;
                     }
                     break;
                 }
                 case '(': {
-                    if(insideString) {
+                    if (insideString) {
                         break;
                     }
 
@@ -89,7 +82,7 @@ public class ParenthesesCEP implements ColoredButterfly {
                     continue;
                 }
                 case ')': {
-                    if(insideString) {
+                    if (insideString) {
                         break;
                     }
 
@@ -107,8 +100,8 @@ public class ParenthesesCEP implements ColoredButterfly {
                     String subExpression = sb.toString();
 
                     // did we already processed the content?
-                    if(needsProcessing(subExpression)){
-                        List<String> subExpressionResult = World.see().river().isCallArgumentSuspected(new Droplet(subExpression, lineNum, line, f));
+                    if (needsProcessing(subExpression)) {
+                        List<String> subExpressionResult = World.see().river().isCallArgumentSuspected(droplet.droppy(subExpression));
                         if (subExpressionResult == RESULT_SAFE) {
                             subExpression = SAFE_EXPRESSION;
                         } else {
@@ -169,11 +162,11 @@ public class ParenthesesCEP implements ColoredButterfly {
                 case '>':
                 case '*':
                 case '/': {
-                    if(insideString) {
+                    if (insideString) {
                         break;
                     }
 
-                    if((ch == '|' || ch == '&') && i > 0 && expression.charAt(i - 1) == ch) {
+                    if ((ch == '|' || ch == '&') && i > 0 && expression.charAt(i - 1) == ch) {
                         break;
                     }
 
@@ -183,10 +176,10 @@ public class ParenthesesCEP implements ColoredButterfly {
                     String subExpression = stack.get(0).toString().substring(startPos).trim();
                     List<String> subExpressionResult = null;
 
-                    if(subExpression.length() == 0 || subExpression.equals(SAFE_EXPRESSION)) {
+                    if (subExpression.length() == 0 || subExpression.equals(SAFE_EXPRESSION)) {
                         subExpressionResult = RESULT_SAFE;
                     } else {
-                        subExpressionResult = World.see().river().isCallArgumentSuspected(new Droplet(subExpression, lineNum, line, f));
+                        subExpressionResult = World.see().river().isCallArgumentSuspected(droplet.droppy(subExpression));
                     }
 
                     if (subExpressionResult == RESULT_SAFE) {
@@ -201,8 +194,7 @@ public class ParenthesesCEP implements ColoredButterfly {
                         }
 
                         continue;
-                    }
-                    else if(subExpressionResult != null) {
+                    } else if (subExpressionResult != null) {
                         result.add(subExpression);
                         result.addAll(subExpressionResult);
                     }
@@ -216,7 +208,7 @@ public class ParenthesesCEP implements ColoredButterfly {
 
         if (executed) {
             String simplifiedExpression = stack.get(0).toString();
-            List<String> seResult = World.see().river().isCallArgumentSuspected(new Droplet(simplifiedExpression, lineNum, line, f));
+            List<String> seResult = World.see().river().isCallArgumentSuspected(droplet.droppy(simplifiedExpression));
             if (seResult == RESULT_SAFE) {
                 return RESULT_SAFE;
             }
@@ -230,7 +222,7 @@ public class ParenthesesCEP implements ColoredButterfly {
     }
 
 
-    protected boolean processMethodParameter(List<StringBuffer> stack, List<InsideMethodState> insideMethodStack, List<String> result, Droplet droplet){
+    protected boolean processMethodParameter(List<StringBuffer> stack, List<InsideMethodState> insideMethodStack, List<String> result, Droplet droplet) {
         boolean executed = false;
 
         StringBuffer buffer = stack.get(0);
@@ -239,7 +231,7 @@ public class ParenthesesCEP implements ColoredButterfly {
 
         String actualParam = buffer.toString().substring(startPos);
 
-        if(!needsProcessing(actualParam)){
+        if (!needsProcessing(actualParam)) {
             return false;
         }
 
@@ -260,6 +252,7 @@ public class ParenthesesCEP implements ColoredButterfly {
 
 
     Pattern PATT = Pattern.compile("^([\\w]*|\"[^\"]*\")$");
+
     protected boolean needsProcessing(String arg) {
         arg = arg.trim();
         return arg.length() > 0 && !PATT.matcher(arg).matches();
@@ -272,17 +265,16 @@ public class ParenthesesCEP implements ColoredButterfly {
         boolean insideString = false;
 
         for (int i = 0; i < expression.length(); i++) {
-            if(check < 0) {
+            if (check < 0) {
                 return false;
             }
 
             char ch = expression.charAt(i);
             switch (ch) {
                 case '"': {
-                    if(!insideString) {
+                    if (!insideString) {
                         insideString = true;
-                    }
-                    else if(i > 0 && expression.charAt(i-1)!= '\\') {
+                    } else if (i > 0 && expression.charAt(i - 1) != '\\') {
                         insideString = false;
                     }
                     break;
@@ -301,7 +293,9 @@ public class ParenthesesCEP implements ColoredButterfly {
                     hasParenthesis = true;
                     break;
                 }
-                case ')': if(!insideString) check--; break;
+                case ')':
+                    if (!insideString) check--;
+                    break;
                 case '-':
                 case '+':
                 case '<':
@@ -309,7 +303,9 @@ public class ParenthesesCEP implements ColoredButterfly {
                 case '*':
                 case '/':
                 case '|':
-                case '&': if(!insideString) hasSpecialChar = true; break;
+                case '&':
+                    if (!insideString) hasSpecialChar = true;
+                    break;
 
             }
         }
