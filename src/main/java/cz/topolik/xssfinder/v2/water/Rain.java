@@ -1,6 +1,5 @@
 package cz.topolik.xssfinder.v2.water;
 
-import cz.topolik.xssfinder.scan.Logger;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
@@ -26,22 +25,22 @@ public class Rain {
     public void fallDown() {
         initRegistry();
 
-        Logger.log("Wiring " + parsedClasses.size() + " classes together by inheritance ....");
+        World.announce("Wiring " + parsedClasses.size() + " classes together by inheritance ....");
         wireClasses();
-        Logger.log(" ... finished");
+        World.announce(" ... finished");
 
-        Logger.log("Creating list of all safe methods ....");
+        World.announce("Creating list of all safe methods ....");
         createSafeMethodsList();
-        Logger.log(" ... finished");
+        World.announce(" ... finished");
     }
 
     protected void initRegistry() {
         List<Tree> trees = World.see().forest().birches();
-        Logger.log("PortalAPICallsProcessor is registering " + trees.size() + " files ....");
+        World.announce("PortalAPICallsProcessor is registering " + trees.size() + " files ....");
         for (Tree tree : trees) {
             water(tree);
         }
-        Logger.log(" ... finished");
+        World.announce(" ... finished");
     }
 
     protected void wireClasses() {

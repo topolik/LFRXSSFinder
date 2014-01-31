@@ -1,6 +1,5 @@
 package cz.topolik.xssfinder.v2.water;
 
-import cz.topolik.xssfinder.scan.Logger;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.butterfly.*;
 
@@ -50,7 +49,7 @@ public class River {
     }
 
     public void flow() {
-        Logger.log("... loading built-in safe-expressions.txt");
+        World.announce("... loading built-in safe-expressions.txt");
         InputStream in = getClass().getResourceAsStream("/safe_expressions.txt");
         try {
             Scanner s = new Scanner(in);
@@ -125,7 +124,7 @@ public class River {
 
 
         File safeHashesFile = new File(System.getProperty("java.io.tmpdir"), "LFRXSSFinder.safe-hashes.txt");
-        Logger.log("... loading safe hashes from " + safeHashesFile);
+        World.announce("... loading safe hashes from " + safeHashesFile);
         if (safeHashesFile.exists() && safeHashesFile.canRead()) {
             try {
                 in = new FileInputStream(safeHashesFile);

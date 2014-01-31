@@ -1,13 +1,15 @@
 package cz.topolik.xssfinder.v2.sun;
 
 import cz.topolik.xssfinder.PossibleXSSLine;
-import cz.topolik.xssfinder.scan.Logger;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
 import java.text.DateFormat;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -19,20 +21,20 @@ public class Sun {
     private long shineStartTime;
 
     public Sun(int beams) {
-        Logger.log("Sun's going to have " + beams + " beams.");
+        World.announce("Sun's going to have " + beams + " beams.");
         this.beams = Executors.newFixedThreadPool(beams);
     }
 
     public Set<PossibleXSSLine> shine()  {
         shineStartTime = System.currentTimeMillis();
 
-        Logger.log("Let The Sunshine In ... @ " + DateFormat.getTimeInstance().format(new Date()));
+        World.announce("Let The Sunshine In ... @ " + DateFormat.getTimeInstance().format(new Date()));
 
         List<Future<Collection<PossibleXSSLine>>> enlightening = enlighten(World.see().forest().linden());
 
         waitForEnlightenment(enlightening);
 
-        Logger.log("... was enlightened @ " + DateFormat.getTimeInstance().format(new Date()));
+        World.announce("... was enlightened @ " + DateFormat.getTimeInstance().format(new Date()));
 
         return pickUpBeatles(enlightening);
     }
@@ -58,7 +60,7 @@ public class Sun {
             while (!beams.awaitTermination(10, TimeUnit.SECONDS)) {
                 long shiningTime = (System.currentTimeMillis() - shineStartTime) / 1000;
 
-                Logger.log("... after " + shiningTime +" secs there are still " + treesToShineOn.get() + " trees in the dark");
+                World.announce("... after " + shiningTime + " secs there are still " + treesToShineOn.get() + " trees in the dark");
             }
         } catch (InterruptedException e) {
             throw new SunShineException("Too impatient to wait for enlightenment :(", e);

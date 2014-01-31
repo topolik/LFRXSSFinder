@@ -1,6 +1,5 @@
 package cz.topolik.xssfinder.v2.water;
 
-import cz.topolik.xssfinder.scan.Logger;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.wood.Tree;
 import org.w3c.dom.Document;
@@ -92,9 +91,9 @@ public class Snow {
         }
 
 
-        Logger.log(" ... recognizing vulnerable taglibs ... ");
+        World.announce(" ... recognizing vulnerable taglibs ... ");
         getVulnerableTaglibs(taglibStructure);
-        Logger.log(" ... recognizing vulnerable taglibs ... finished with " + vulnerableTaglibs.size() + " entries");
+        World.announce(" ... recognizing vulnerable taglibs ... finished with " + vulnerableTaglibs.size() + " entries");
     }
 
     protected Map<String, Map<String, String>> loadTaglibTLDs() throws ParserConfigurationException, SAXException, IOException {

@@ -26,8 +26,20 @@ public class World {
         return world;
     }
 
+    public static void announce(String prophecy) {
+        System.out.println(prophecy);
+        System.out.flush();
+    }
+
+
+    public static void announce(String prophecy, Throwable wrath) {
+        System.out.println(prophecy);
+        wrath.printStackTrace(System.out);
+        System.out.flush();
+    }
+
     private World() {
-        // only God can create World
+        // only God is able to create the World
     }
 
     public void explore(File... continents) {

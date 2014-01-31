@@ -1,6 +1,6 @@
 package cz.topolik.xssfinder.v2.wood;
 
-import cz.topolik.xssfinder.scan.Logger;
+import cz.topolik.xssfinder.v2.World;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +14,7 @@ public class Forest extends TreeSet<Tree> {
     boolean antsAreTired = false;
 
     public void callAntsToExamine() {
-        Logger.log("Calling ants to examine forest ... ");
+        World.announce("Calling ants to examine the forest ... ");
 
         Iterator<Tree> ant = iterator();
         int pos = 0;
@@ -23,11 +23,11 @@ public class Forest extends TreeSet<Tree> {
 
             pos++;
             if (pos % 100 == 0) {
-                Logger.log(" ... ants climbed " + pos + " trees so far");
+                World.announce(" ... ants climbed " + pos + " trees so far");
             }
         }
 
-        Logger.log(" ... Ants are tired after exploring " + pos + " trees");
+        World.announce(" ... Ants are tired after exploring " + pos + " trees, celebrating :)");
         antsAreTired = true;
     }
 

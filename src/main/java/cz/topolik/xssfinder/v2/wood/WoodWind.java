@@ -1,6 +1,6 @@
 package cz.topolik.xssfinder.v2.wood;
 
-import cz.topolik.xssfinder.scan.Logger;
+import cz.topolik.xssfinder.v2.World;
 
 import java.io.File;
 
@@ -10,7 +10,7 @@ import java.io.File;
 public class WoodWind {
 
     public Forest explore(File... continents) {
-        Logger.log("Wind explores " + continents.length + " continents ...");
+        World.announce("Wind explores " + continents.length + " continents ...");
 
         Forest trees = new Forest();
 
@@ -18,7 +18,7 @@ public class WoodWind {
             breezeThru(continent, trees, continent);
         }
 
-        Logger.log(" ... the wind revealed " + trees.size() + " trees");
+        World.announce(" ... the wind revealed " + trees.size() + " trees");
         return trees;
     }
 
@@ -38,7 +38,7 @@ public class WoodWind {
             trees.add(new Tree(tree, continent));
 
             if (trees.size() % 100 == 0) {
-                Logger.log("... there are " + trees.size() + " trees plant so far");
+                World.announce("... there are " + trees.size() + " trees plant so far");
             }
         }
     }

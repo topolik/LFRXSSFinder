@@ -1,6 +1,5 @@
 package cz.topolik.xssfinder.v2.butterfly;
 
-import cz.topolik.xssfinder.scan.Logger;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
 
@@ -26,8 +25,7 @@ public class BigRareColoredButterfly implements ColoredButterfly {
             EXECUTED.set(Boolean.TRUE);
             return execute2(droplet);
         } catch (Throwable e) {
-            Logger.log("Exception while processing: " + droplet.getExpression() + "\n\t" + droplet.getTree().getRoot() + ':' + droplet.getGrowthRingNum() + "\n\t" + droplet.getGrowthRing());
-            e.printStackTrace();
+            World.announce("Exception while processing: " + droplet.getExpression() + "\n\t" + droplet.getTree().getRoot() + ':' + droplet.getGrowthRingNum() + "\n\t" + droplet.getGrowthRing(), e);
             return RESULT_DONT_KNOW;
         } finally {
             EXECUTED.set(null);
