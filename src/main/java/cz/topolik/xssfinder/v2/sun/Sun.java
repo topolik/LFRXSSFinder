@@ -1,6 +1,6 @@
 package cz.topolik.xssfinder.v2.sun;
 
-import cz.topolik.xssfinder.PossibleXSSLine;
+import cz.topolik.xssfinder.v2.animal.LadyBug;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
@@ -25,12 +25,12 @@ public class Sun {
         this.beams = Executors.newFixedThreadPool(beams);
     }
 
-    public Set<PossibleXSSLine> shine()  {
+    public Set<LadyBug> shine()  {
         shineStartTime = System.currentTimeMillis();
 
         World.announce("Let The Sunshine In ... @ " + DateFormat.getTimeInstance().format(new Date()));
 
-        List<Future<Collection<PossibleXSSLine>>> enlightening = enlighten(World.see().forest().linden());
+        List<Future<Collection<LadyBug>>> enlightening = enlighten(World.see().forest().linden());
 
         waitForEnlightenment(enlightening);
 
@@ -39,10 +39,10 @@ public class Sun {
         return pickUpBeatles(enlightening);
     }
 
-    private HashSet<PossibleXSSLine> pickUpBeatles(List<Future<Collection<PossibleXSSLine>>> enlightenment) {
-        HashSet<PossibleXSSLine> beetles = new HashSet<PossibleXSSLine>();
+    private HashSet<LadyBug> pickUpBeatles(List<Future<Collection<LadyBug>>> enlightenment) {
+        HashSet<LadyBug> beetles = new HashSet<LadyBug>();
 
-        for (Future<Collection<PossibleXSSLine>> enlightedTree : enlightenment){
+        for (Future<Collection<LadyBug>> enlightedTree : enlightenment){
             try {
                 beetles.addAll(enlightedTree.get());
             } catch (Exception e) {
@@ -53,7 +53,7 @@ public class Sun {
         return beetles;
     }
 
-    private void waitForEnlightenment(List<Future<Collection<PossibleXSSLine>>> enlighting) {
+    private void waitForEnlightenment(List<Future<Collection<LadyBug>>> enlighting) {
         beams.shutdown();
 
         try {
@@ -68,7 +68,7 @@ public class Sun {
     }
 
 
-    private List<Future<Collection<PossibleXSSLine>>> enlighten(List<Tree> trees) {
+    private List<Future<Collection<LadyBug>>> enlighten(List<Tree> trees) {
         treesToShineOn.set(trees.size());
 
         List<Ray> rayTrees = new ArrayList<Ray>(trees.size());

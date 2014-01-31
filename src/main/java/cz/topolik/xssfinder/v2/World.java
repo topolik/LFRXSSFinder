@@ -1,6 +1,6 @@
 package cz.topolik.xssfinder.v2;
 
-import cz.topolik.xssfinder.PossibleXSSLine;
+import cz.topolik.xssfinder.v2.animal.LadyBug;
 import cz.topolik.xssfinder.v2.sun.Sun;
 import cz.topolik.xssfinder.v2.water.Rain;
 import cz.topolik.xssfinder.v2.water.River;
@@ -52,7 +52,7 @@ public class World {
         river.flow();
     }
 
-    public Set<PossibleXSSLine> rotate(int speed) {
+    public Set<LadyBug> rotate(int speed) {
         return new Sun(speed).shine();
     }
 

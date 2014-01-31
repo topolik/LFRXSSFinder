@@ -1,6 +1,6 @@
 package cz.topolik.xssfinder.v2.sun;
 
-import cz.topolik.xssfinder.PossibleXSSLine;
+import cz.topolik.xssfinder.v2.animal.LadyBug;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.River;
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class Ray implements Callable<Collection<PossibleXSSLine>> {
+public class Ray implements Callable<Collection<LadyBug>> {
     private Tree tree;
     private AtomicInteger treesTotal;
 
@@ -34,8 +34,8 @@ public class Ray implements Callable<Collection<PossibleXSSLine>> {
     }
 
     @Override
-    public Collection<PossibleXSSLine> call() {
-        Set<PossibleXSSLine> result = new HashSet<PossibleXSSLine>();
+    public Collection<LadyBug> call() {
+        Set<LadyBug> result = new HashSet<LadyBug>();
         List<String> lines = tree.getGrowthRings();
         boolean insideComment = false;
         for (int lineNum = 0; lineNum < lines.size(); lineNum++) {
@@ -58,7 +58,7 @@ public class Ray implements Callable<Collection<PossibleXSSLine>> {
 
             String[] suspectedLineStacktrace = isLineSuspected(droplet);
             if (suspectedLineStacktrace != null) {
-                result.add(new PossibleXSSLine(droplet, suspectedLineStacktrace));
+                result.add(new LadyBug(droplet, suspectedLineStacktrace));
             }
         }
 

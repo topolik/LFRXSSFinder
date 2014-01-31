@@ -1,4 +1,4 @@
-package cz.topolik.xssfinder.v2.butterfly;
+package cz.topolik.xssfinder.v2.animals.butterfly;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;

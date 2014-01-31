@@ -4,6 +4,8 @@ import cz.topolik.xssfinder.scan.XSSScanner;
 import cz.topolik.xssfinder.scan.advanced.AdvancedXSSScanner;
 import cz.topolik.xssfinder.scan.threaded.ThreadedXSSScanner;
 import cz.topolik.xssfinder.v2.World;
+import cz.topolik.xssfinder.v2.animal.LadyBug;
+import cz.topolik.xssfinder.v2.sun.Ray;
 
 import java.io.File;
 import java.util.*;
@@ -15,41 +17,37 @@ public class App {
             printSyntax();
             args = new String[]{"/opt/liferay.git/portal", "8"};
         }
-        Set<PossibleXSSLine> xsss = null;
+        Set<LadyBug> ladyBugs = null;
 
-        boolean version1 = false;
-        if (version1) {
-            FileLoader loader = new FileLoader(new File(args[0]));
+//            FileLoader loader = new FileLoader(new File(args[0]));
+//
+//            XSSScanner scanner = new ThreadedXSSScanner(Integer.parseInt(args[1]));
+//
+//            xsss = new TreeSet<LadyBug>(scanner.scan(loader));
+//
+//            scanner.destroy();
 
-            XSSScanner scanner = new ThreadedXSSScanner(Integer.parseInt(args[1]));
+        File[] continents = new File[]{
+                new File(args[0], "jsp-precompile"),
+                new File(args[0], "portal-impl/src"),
+                new File(args[0], "portal-service/src"),
+                new File(args[0], "util-bridges"),
+                new File(args[0], "util-java/src"),
+                new File(args[0], "util-taglib/src")
+        };
 
-            xsss = new TreeSet<PossibleXSSLine>(scanner.scan(loader));
-
-            scanner.destroy();
-        }
-        else {
-            File[] continents = new File[]{
-                    new File(args[0], "jsp-precompile"),
-                    new File(args[0], "portal-impl/src"),
-                    new File(args[0], "portal-service/src"),
-                    new File(args[0], "util-bridges"),
-                    new File(args[0], "util-java/src"),
-                    new File(args[0], "util-taglib/src")
-            };
-
-            World.see().explore(continents);
-            xsss = World.see().rotate(Integer.parseInt(args[1]));
-            World.see().jDay();
-        }
+        World.see().explore(continents);
+        ladyBugs = World.see().rotate(Integer.parseInt(args[1]));
+        World.see().jDay();
 
         List<Occurence> occurences = new ArrayList<Occurence>();
         int i = 0;
-        for (PossibleXSSLine line : xsss) {
-            String relevantLines = Arrays.asList(line.getStackTrace()).toString();
+        for (LadyBug ladyBug : ladyBugs) {
+            String relevantLines = Arrays.asList(ladyBug.getStackTrace()).toString();
 //            System.out.println("Problem " + ++i + ":");
-            System.out.print(line.getSourceFile().getFile().getAbsolutePath() + " ");
-            System.out.print(line.getLineNum() + ": ");
-            System.out.println(line.getLineContent().trim());
+            System.out.print(ladyBug.getTree().getRoot().getAbsolutePath() + " ");
+            System.out.print(ladyBug.getLineNum() + ": ");
+            System.out.println(ladyBug.getLineContent().trim());
             System.out.println("Relevant lines:");
             System.out.println(relevantLines);
             if (relevantLines.contains("ParamUtil.getString(req") ||
@@ -60,14 +58,14 @@ public class App {
             }
             System.out.println("Format for whitelist:");
             System.out.print("file=");
-            int pos = line.getSourceFile().getFile().toString().indexOf("src/org/apache/jsp/") + 19;
-            System.out.print(line.getSourceFile().getFile().toString().substring(pos));
+            int pos = ladyBug.getTree().getRoot().toString().indexOf("src/org/apache/jsp/") + 19;
+            System.out.print(ladyBug.getTree().getRoot().toString().substring(pos));
             System.out.print(",");
-            System.out.print(line.getLineNum());
+            System.out.print(ladyBug.getLineNum());
             System.out.print(",");
-            String vuln = line.getLineContent().trim();
-            if (vuln.startsWith(AdvancedXSSScanner.ROW_ADDTEXT)) {
-                String arg[] = AdvancedXSSScanner.parseSearchContainerRowExpression((int) line.getLineNum(), vuln, line.getSourceFile());
+            String vuln = ladyBug.getLineContent().trim();
+            if (vuln.startsWith(Ray.ROW_ADDTEXT)) {
+                String arg[] = Ray.parseSearchContainerRowExpression(ladyBug.getDroplet());
                 System.out.print(arg[0]);
                 if (arg.length > 1) {
                     System.out.print(" || <- OR -> || ");
@@ -80,7 +78,7 @@ public class App {
             System.out.println("---------------------------------------------");
 
             boolean found = false;
-            String lineContent = line.getLineContent().trim();
+            String lineContent = ladyBug.getLineContent().trim();
             for (Occurence o1 : occurences) {
                 if (o1.getLine().equals(lineContent)) {
                     found = true;
@@ -92,7 +90,7 @@ public class App {
             }
         }
 
-        int possibleXSS = xsss.size();
+        int possibleXSS = ladyBugs.size();
         System.out.println("Total possible XSS: " + possibleXSS);
 
         int counter = 0;
@@ -103,16 +101,16 @@ public class App {
         }
 
         System.out.println("==============================================================");
-        for (PossibleXSSLine line : xsss) {
+        for (LadyBug ladyBug : ladyBugs) {
             System.out.print("file=");
-            int pos = line.getSourceFile().getFile().toString().indexOf("src/org/apache/jsp/") + 19;
-            System.out.print(line.getSourceFile().getFile().toString().substring(pos));
+            int pos = ladyBug.getTree().getRoot().toString().indexOf("src/org/apache/jsp/") + 19;
+            System.out.print(ladyBug.getTree().getRoot().toString().substring(pos));
             System.out.print(",");
-            System.out.print(line.getLineNum());
+            System.out.print(ladyBug.getLineNum());
             System.out.print(",");
-            String vuln = line.getLineContent().trim();
-            if (vuln.startsWith(AdvancedXSSScanner.ROW_ADDTEXT)) {
-                String arg[] = AdvancedXSSScanner.parseSearchContainerRowExpression((int) line.getLineNum(), vuln, line.getSourceFile());
+            String vuln = ladyBug.getLineContent().trim();
+            if (vuln.startsWith(Ray.ROW_ADDTEXT)) {
+                String arg[] = Ray.parseSearchContainerRowExpression(ladyBug.getDroplet());
                 System.out.print(arg[0]);
                 if (arg.length > 1) {
                     System.out.print(" || <- OR -> || ");

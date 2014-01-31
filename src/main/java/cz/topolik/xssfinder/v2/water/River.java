@@ -1,7 +1,7 @@
 package cz.topolik.xssfinder.v2.water;
 
 import cz.topolik.xssfinder.v2.World;
-import cz.topolik.xssfinder.v2.butterfly.*;
+import cz.topolik.xssfinder.v2.animals.butterfly.*;
 
 import java.io.*;
 import java.util.*;
