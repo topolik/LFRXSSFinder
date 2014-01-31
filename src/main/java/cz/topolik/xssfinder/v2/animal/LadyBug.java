@@ -19,11 +19,11 @@ public class LadyBug implements Comparable<LadyBug>{
     }
 
     public String getLineContent() {
-        return droplet.getGrowthRing();
+        return droplet.getRing();
     }
 
     public long getLineNum() {
-        return droplet.getGrowthRingNum();
+        return droplet.getRingNum();
     }
 
     public Tree getTree() {

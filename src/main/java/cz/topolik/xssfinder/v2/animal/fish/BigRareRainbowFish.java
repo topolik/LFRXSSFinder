@@ -1,4 +1,4 @@
-package cz.topolik.xssfinder.v2.animals.butterfly;
+package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
@@ -10,23 +10,23 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class BigRareColoredButterfly implements ColoredButterfly {
+public class BigRareRainbowFish implements RainbowFish {
     private static final String SAFE_EXPRESSION = "\"\"";
     private static final ThreadLocal<Boolean> EXECUTED = new ThreadLocal<Boolean>();
 
     @Override
-    public List<String> execute(Droplet droplet) {
+    public List<String> swallow(Droplet droplet) {
         // execute only once
         if (EXECUTED.get() != null) {
-            return RESULT_DONT_KNOW;
+            return UNEATABLE;
         }
 
         try {
             EXECUTED.set(Boolean.TRUE);
             return execute2(droplet);
         } catch (Throwable e) {
-            World.announce("Exception while processing: " + droplet.getExpression() + "\n\t" + droplet.getTree().getRoot() + ':' + droplet.getGrowthRingNum() + "\n\t" + droplet.getGrowthRing(), e);
-            return RESULT_DONT_KNOW;
+            World.announce("Exception while processing: " + droplet.getExpression() + "\n\t" + droplet.getTreeRoot() + ':' + droplet.getRingNum() + "\n\t" + droplet.getRing(), e);
+            return UNEATABLE;
         } finally {
             EXECUTED.set(null);
         }
@@ -36,7 +36,7 @@ public class BigRareColoredButterfly implements ColoredButterfly {
         String expression = droplet.getExpression();
 
         if (!isValid(expression)) {
-            return RESULT_DONT_KNOW;
+            return UNEATABLE;
         }
 
         boolean executed = false;
@@ -100,7 +100,7 @@ public class BigRareColoredButterfly implements ColoredButterfly {
                     // did we already processed the content?
                     if (needsProcessing(subExpression)) {
                         List<String> subExpressionResult = World.see().river().isCallArgumentSuspected(droplet.droppy(subExpression));
-                        if (subExpressionResult == RESULT_SAFE) {
+                        if (subExpressionResult == TASTY) {
                             subExpression = SAFE_EXPRESSION;
                         } else {
                             result.add(subExpression);
@@ -175,12 +175,12 @@ public class BigRareColoredButterfly implements ColoredButterfly {
                     List<String> subExpressionResult = null;
 
                     if (subExpression.length() == 0 || subExpression.equals(SAFE_EXPRESSION)) {
-                        subExpressionResult = RESULT_SAFE;
+                        subExpressionResult = TASTY;
                     } else {
                         subExpressionResult = World.see().river().isCallArgumentSuspected(droplet.droppy(subExpression));
                     }
 
-                    if (subExpressionResult == RESULT_SAFE) {
+                    if (subExpressionResult == TASTY) {
                         // expression is safe - we can cut it out
                         executed = true;
                         stack.get(0).setLength(startPos);
@@ -207,8 +207,8 @@ public class BigRareColoredButterfly implements ColoredButterfly {
         if (executed) {
             String simplifiedExpression = stack.get(0).toString();
             List<String> seResult = World.see().river().isCallArgumentSuspected(droplet.droppy(simplifiedExpression));
-            if (seResult == RESULT_SAFE) {
-                return RESULT_SAFE;
+            if (seResult == TASTY) {
+                return TASTY;
             }
 
             result.add(simplifiedExpression);
@@ -216,7 +216,7 @@ public class BigRareColoredButterfly implements ColoredButterfly {
             return result;
         }
 
-        return RESULT_DONT_KNOW;
+        return UNEATABLE;
     }
 
 
@@ -234,7 +234,7 @@ public class BigRareColoredButterfly implements ColoredButterfly {
         }
 
         List<String> subExpressionResult = World.see().river().isCallArgumentSuspected(droplet.droppy(actualParam));
-        if (subExpressionResult == RESULT_SAFE) {
+        if (subExpressionResult == TASTY) {
             buffer.setLength(startPos);
             buffer.append(SAFE_EXPRESSION);
             insideMethodStack.get(0).sentenceStart = buffer.length() + 1;

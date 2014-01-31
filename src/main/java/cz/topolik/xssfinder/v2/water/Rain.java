@@ -82,8 +82,8 @@ public class Rain {
         ParsedClass result = null;
         List<String> vulnerableMethods = new ArrayList<String>();
 
-        for (int i = 0; i < tree.getGrowthRings().size(); i++) {
-            String line = tree.getGrowthRings().get(i);
+        for (int i = 0; i < tree.getRings().size(); i++) {
+            String line = tree.getRing(i);
             if (result == null) {
                 Matcher m = CLASS_DECLARATION.matcher(line);
                 if (m.matches()) {
@@ -98,7 +98,7 @@ public class Rain {
                     String classDeclarationLine = line;
                     int j = i + 1;
                     while (!classDeclarationLine.contains("{")) {
-                        classDeclarationLine += " " + tree.getGrowthRings().get(j++).replaceAll("\t", " ") + " ";
+                        classDeclarationLine += " " + tree.getRing(j++).replaceAll("\t", " ") + " ";
                     }
 
                     if (classDeclarationLine.contains(" extends ")) {

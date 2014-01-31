@@ -1,4 +1,4 @@
-package cz.topolik.xssfinder.v2.animals.butterfly;
+package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
@@ -11,25 +11,25 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class SBColoredButterfly implements ColoredButterfly {
+public class SBRainbowFish implements RainbowFish {
     Pattern variableDeclaration;
     Pattern SB_APPEND = Pattern.compile("sb\\.append\\((.*)\\);");
 
-    public SBColoredButterfly() {
+    public SBRainbowFish() {
         variableDeclaration = World.see().river().buildVariableDeclaration("sb");
     }
 
     @Override
-    public List<String> execute(Droplet droplet) {
+    public List<String> swallow(Droplet droplet) {
         if (!droplet.getExpression().equals("sb.toString()")) {
-            return RESULT_DONT_KNOW;
+            return UNEATABLE;
         }
 
         List<String> result = new ArrayList<String>();
         boolean everythingOK = true;
         boolean insideComment = false;
-        for (int i = droplet.getGrowthRingNum() - 1; i >= 0; i--) {
-            String fileLine = droplet.getTree().getGrowthRings().get(i).trim();
+        for (int i = droplet.getRingNum() - 1; i >= 0; i--) {
+            String fileLine = droplet.getRing(i);
 
             if (fileLine.endsWith("*/")) {
                 insideComment = true;
@@ -47,7 +47,7 @@ public class SBColoredButterfly implements ColoredButterfly {
                 String arg = m.group(1);
 
                 List<String> callResult = World.see().river().isCallArgumentSuspected(droplet.droppy(arg));
-                if (callResult != RESULT_SAFE) {
+                if (callResult != TASTY) {
                     everythingOK = false;
                     result.add(fileLine);
                     if (callResult.size() > 0) {
@@ -59,7 +59,7 @@ public class SBColoredButterfly implements ColoredButterfly {
 
             if (variableDeclaration.matcher(fileLine).matches() || fileLine.startsWith("sb = new ")) {
                 // stop searching to avoid collision with another variable with the same name
-                return everythingOK ? RESULT_SAFE : result;
+                return everythingOK ? TASTY : result;
             }
 
             if (fileLine.contains("sb") && !fileLine.contains("sb.setIndex(") && !fileLine.contains("sb.index()") && !fileLine.contains("sb.toString()")) {
@@ -68,6 +68,6 @@ public class SBColoredButterfly implements ColoredButterfly {
             }
         }
 
-        return everythingOK ? RESULT_SAFE : result;
+        return everythingOK ? TASTY : result;
     }
 }

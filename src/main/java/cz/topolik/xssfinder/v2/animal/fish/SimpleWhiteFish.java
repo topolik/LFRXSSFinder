@@ -1,11 +1,11 @@
-package cz.topolik.xssfinder.v2.animals.butterfly;
+package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.water.Droplet;
 
 /**
  * @author Tomas Polesovsky
  */
-public class SimpleWhiteButtefly implements WhiteButterfly {
+public class SimpleWhiteFish implements WhiteFish {
     private static final char[] SIMPLE_EXPRESSION_WHITELIST = {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
             'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
@@ -20,12 +20,12 @@ public class SimpleWhiteButtefly implements WhiteButterfly {
 
     private String prefix;
 
-    public SimpleWhiteButtefly(String prefix) {
+    public SimpleWhiteFish(String prefix) {
         this.prefix = prefix;
     }
 
     @Override
-    public boolean isSafe(Droplet droplet) {
+    public boolean likes(Droplet droplet) {
         if (!isExpressionSimple(droplet.getExpression())) {
             return false;
         }

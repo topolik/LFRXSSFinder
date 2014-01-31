@@ -1,4 +1,4 @@
-package cz.topolik.xssfinder.v2.animals.butterfly;
+package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
@@ -11,21 +11,21 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class REColoredButterfly implements ColoredButterfly {
+public class RERainbowFish implements RainbowFish {
     Pattern regExp;
     int[] groups;
 
 
-    public REColoredButterfly(String regExp, int[] groups) {
+    public RERainbowFish(String regExp, int[] groups) {
         this.regExp = Pattern.compile(regExp);
         this.groups = groups;
     }
 
     @Override
-    public List<String> execute(Droplet droplet) {
+    public List<String> swallow(Droplet droplet) {
         Matcher m = regExp.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return RESULT_DONT_KNOW;
+            return UNEATABLE;
         }
 
         List<String> result = new ArrayList<String>();
@@ -37,7 +37,7 @@ public class REColoredButterfly implements ColoredButterfly {
 
             String arg = m.group(groups[i]);
             List<String> callResult = World.see().river().isCallArgumentSuspected(droplet.droppy(arg));
-            if (callResult != RESULT_SAFE) {
+            if (callResult != TASTY) {
                 everythingOK = false;
                 if (callResult.size() > 0) {
                     result.addAll(callResult);
@@ -49,7 +49,7 @@ public class REColoredButterfly implements ColoredButterfly {
 
         if (everythingOK) {
             // it's safe dude
-            return RESULT_SAFE;
+            return TASTY;
         }
 
         return result;

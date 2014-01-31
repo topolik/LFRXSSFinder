@@ -1,4 +1,4 @@
-package cz.topolik.xssfinder.v2.animals.butterfly;
+package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
@@ -10,20 +10,20 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class REReplaceColoredButtefly implements ColoredButterfly {
+public class REReplaceRainbowFish implements RainbowFish {
     Pattern regExp;
     String replacement;
 
-    public REReplaceColoredButtefly(String regExp, String replaceRegExp) {
+    public REReplaceRainbowFish(String regExp, String replaceRegExp) {
         this.regExp = Pattern.compile(regExp);
         this.replacement = replaceRegExp;
     }
 
     @Override
-    public List<String> execute(Droplet droplet) {
+    public List<String> swallow(Droplet droplet) {
         Matcher m = regExp.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return RESULT_DONT_KNOW;
+            return UNEATABLE;
         }
 
         String newReplacement = m.replaceAll(replacement);

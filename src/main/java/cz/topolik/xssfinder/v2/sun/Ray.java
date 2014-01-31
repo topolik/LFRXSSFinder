@@ -22,11 +22,11 @@ public class Ray implements Callable<Collection<LadyBug>> {
     private Tree tree;
     private AtomicInteger treesTotal;
 
-    static final String OUT_WRITE = "out.write(";
+    public static final String OUT_WRITE = "out.write(";
+    public static final String OUT_PRINT = "out.print(";
+
     public static final String ROW_ADDTEXT = "row.addText(";
     static final Pattern ROW_URL_PATTERN = Pattern.compile("^(.*), (row[A-Z]+)$");
-
-    static final String OUT_PRINT = "out.print(";
 
     public Ray(Tree tree, AtomicInteger treesTotal) {
         this.tree = tree;
@@ -36,10 +36,10 @@ public class Ray implements Callable<Collection<LadyBug>> {
     @Override
     public Collection<LadyBug> call() {
         Set<LadyBug> result = new HashSet<LadyBug>();
-        List<String> lines = tree.getGrowthRings();
+        List<String> lines = tree.getRings();
         boolean insideComment = false;
         for (int lineNum = 0; lineNum < lines.size(); lineNum++) {
-            String line = lines.get(lineNum).trim();
+            String line = lines.get(lineNum);
 
             if (line.startsWith("/*")) {
                 insideComment = true;
@@ -69,7 +69,7 @@ public class Ray implements Callable<Collection<LadyBug>> {
 
 
     protected String[] isLineSuspected(Droplet droplet) {
-        String line = droplet.getGrowthRing();
+        String line = droplet.getRing();
 
         // we have taglibs already processed
         // TODO: we have it processed but only to find vulnerable params, we don't save all threats
@@ -85,7 +85,7 @@ public class Ray implements Callable<Collection<LadyBug>> {
         if (line.startsWith(OUT_PRINT)) {
             String argument = line.substring(OUT_PRINT.length(), line.length() - 2);
             List<String> result = World.see().river().isCallArgumentSuspected(droplet.droppy(argument));
-            return result == River.RESULT_SAFE ? null : result.toArray(new String[0]);
+            return result == River.TASTY ? null : result.toArray(new String[0]);
         }
 
         // vulnerable search container
@@ -94,14 +94,14 @@ public class Ray implements Callable<Collection<LadyBug>> {
             List<String> result = World.see().river().isCallArgumentSuspected(droplet.droppy(argument[0]));
             if (argument.length > 1) {
                 List<String> result1 = World.see().river().isCallArgumentSuspected(droplet.droppy(argument[1]));
-                if (result == River.RESULT_SAFE) {
+                if (result == River.TASTY) {
                     result = result1;
-                } else if (result1 != River.RESULT_SAFE) {
+                } else if (result1 != River.TASTY) {
                     result.addAll(result1);
                 }
             }
 
-            return result == River.RESULT_SAFE ? null : result.toArray(new String[0]);
+            return result == River.TASTY ? null : result.toArray(new String[0]);
         }
 
         /*
@@ -118,7 +118,7 @@ public class Ray implements Callable<Collection<LadyBug>> {
         }
         String argument = taglibResult[0].trim();
         List<String> callArgumentResult = World.see().river().isCallArgumentSuspected(droplet.droppy(argument));
-        if (callArgumentResult == River.RESULT_SAFE) {
+        if (callArgumentResult == River.TASTY) {
             // it's safe
             return null;
         }
@@ -129,10 +129,10 @@ public class Ray implements Callable<Collection<LadyBug>> {
     }
 
     public static String[] parseSearchContainerRowExpression(Droplet droplet) {
-        String argument = droplet.getGrowthRing().trim();
-        int i = droplet.getGrowthRingNum() + 1;
+        String argument = droplet.getRing();
+        int i = droplet.getRingNum() + 1;
         while (!argument.endsWith(";")) {
-            argument += droplet.getTree().getGrowthRings().get(i++).trim();
+            argument += droplet.getRing(i++);
         }
 
         argument = argument.substring(ROW_ADDTEXT.length(), argument.length() - 2);

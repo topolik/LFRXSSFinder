@@ -1,6 +1,7 @@
 package cz.topolik.xssfinder.v2.water;
 
 import cz.topolik.xssfinder.v2.World;
+import cz.topolik.xssfinder.v2.sun.Ray;
 import cz.topolik.xssfinder.v2.wood.Tree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -15,8 +16,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static cz.topolik.xssfinder.scan.advanced.Constants.OUT_PRINT;
 
 /**
  * @author Tomas Polesovsky
@@ -41,7 +40,7 @@ public class Snow {
             return null;
         }
 
-        Matcher m = TAGLIB_CALL_PATTERN.matcher(droplet.getGrowthRing());
+        Matcher m = TAGLIB_CALL_PATTERN.matcher(droplet.getRing());
         if (!m.matches()) {
             return null;
         }
@@ -54,8 +53,8 @@ public class Snow {
         // find declaration of the used taglib
         String declarationLine = null;
         Pattern taglibDeclaration = Pattern.compile("^.*(com.liferay.taglib.[^ ]+) " + taglibVariableName + " (=|:).*$");
-        for (int i = droplet.getGrowthRingNum(); i >= 0 && taglibClassName == null; i--) {
-            String fileLine = droplet.getTree().getGrowthRings().get(i).trim();
+        for (int i = droplet.getRingNum(); i >= 0 && taglibClassName == null; i--) {
+            String fileLine = droplet.getRing(i);
             Matcher declM = taglibDeclaration.matcher(fileLine);
             if (!declM.matches()) {
                 continue;
@@ -67,7 +66,7 @@ public class Snow {
             if (vulnerableTaglibs.containsKey(taglibClassName)) {
                 for (String vulnerableProperty : vulnerableTaglibs.get(taglibClassName)) {
                     if (vulnerableProperty.equals(normalizedFieldName)) {
-                        return new String[]{argument, droplet.getGrowthRing(), declarationLine};
+                        return new String[]{argument, droplet.getRing(), declarationLine};
                     }
                 }
             }
@@ -142,18 +141,17 @@ public class Snow {
     protected void getVulnerableTaglibs(Map<String, Map<String, String>> taglibStructure) {
         for (Tree linden : World.see().forest().linden()) {
             if (isTagLibJSP(linden)) {
-                for (int lineNum = 0; lineNum < linden.getGrowthRings().size(); lineNum++) {
-                    String line = linden.getGrowthRings().get(lineNum);
+                for (int lineNum = 0; lineNum < linden.getRings().size(); lineNum++) {
+                    String line = linden.getRing(lineNum);
 
-                    String trimmed = line.trim();
-                    if (!trimmed.startsWith(OUT_PRINT)) {
+                    if (!line.startsWith(Ray.OUT_PRINT)) {
                         continue;
                     }
-                    String functionArgument = trimmed.substring(OUT_PRINT.length(), trimmed.length() - 2).trim();
+                    String functionArgument = line.substring(Ray.OUT_PRINT.length(), line.length() - 2).trim();
 
                     List<String> declaration = World.see().river().isCallArgumentSuspected(new Droplet(functionArgument, lineNum, functionArgument, linden));
 
-                    if (declaration != River.RESULT_SAFE && declaration.size() > 0) {
+                    if (declaration != River.TASTY && declaration.size() > 0) {
                         // the last line in the stack should be variable declaration
                         String declarationLine = declaration.get(declaration.size() - 1);
 
@@ -177,7 +175,6 @@ public class Snow {
                             }
                         }
                     }
-
                 }
             }
         }

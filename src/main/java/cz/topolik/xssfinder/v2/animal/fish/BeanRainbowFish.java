@@ -1,4 +1,4 @@
-package cz.topolik.xssfinder.v2.animals.butterfly;
+package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
@@ -11,14 +11,14 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class BeanColoredButterfly implements ColoredButterfly {
+public class BeanRainbowFish implements RainbowFish {
     static final Pattern EXPRESSION = Pattern.compile("^([a-z][\\w]+)\\.([\\w]+)\\(.*\\)$");
 
     @Override
-    public List<String> execute(Droplet droplet) {
+    public List<String> swallow(Droplet droplet) {
         Matcher m = EXPRESSION.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return RESULT_DONT_KNOW;
+            return UNEATABLE;
         }
 
         String beanName = m.group(1).trim();
@@ -27,8 +27,8 @@ public class BeanColoredButterfly implements ColoredButterfly {
 
         Pattern variableDeclaration = Pattern.compile("^(for ?\\()?([^\\s]+) " + beanName + " (=|:).*$");
         String declarationLine = null;
-        for (int i = droplet.getGrowthRingNum() - 1; i >= 0 && declarationLine == null; i--) {
-            String fileLine = droplet.getTree().getGrowthRings().get(i).trim();
+        for (int i = droplet.getRingNum() - 1; i >= 0 && declarationLine == null; i--) {
+            String fileLine = droplet.getRing(i);
             if (fileLine.startsWith("out.write") || fileLine.startsWith("out.print")) {
                 continue;
             }
@@ -42,12 +42,12 @@ public class BeanColoredButterfly implements ColoredButterfly {
         if (fullClassName != null) {
             String simpleName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
             if (World.see().rain().isExpressionSafe(simpleName + "." + methodName + "(")) {
-                return RESULT_SAFE;
+                return TASTY;
             } else {
                 return Arrays.asList(new String[]{declarationLine});
             }
         }
 
-        return RESULT_DONT_KNOW;
+        return UNEATABLE;
     }
 }

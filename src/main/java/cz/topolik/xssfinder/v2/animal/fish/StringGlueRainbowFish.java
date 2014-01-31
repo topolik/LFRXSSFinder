@@ -1,4 +1,4 @@
-package cz.topolik.xssfinder.v2.animals.butterfly;
+package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
@@ -11,15 +11,15 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class StringGlueColoredButterfly implements ColoredButterfly {
+public class StringGlueRainbowFish implements RainbowFish {
     static final Pattern EXPRESSION = Pattern.compile("^([^\\+]+\\+)+([^\\+]+)$");
 
     @Override
-    public List<String> execute(Droplet droplet) {
+    public List<String> swallow(Droplet droplet) {
 
         Matcher m = EXPRESSION.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return RESULT_DONT_KNOW;
+            return UNEATABLE;
         }
 
         String[] args = droplet.getExpression().split("\\+");
@@ -27,7 +27,7 @@ public class StringGlueColoredButterfly implements ColoredButterfly {
         boolean everythingOK = true;
         for (String arg : args) {
             List<String> callResult = World.see().river().isCallArgumentSuspected(droplet.droppy(arg));
-            if (callResult != RESULT_SAFE) {
+            if (callResult != TASTY) {
                 everythingOK = false;
                 if (callResult.size() > 0) {
                     results.addAll(callResult);
@@ -38,7 +38,7 @@ public class StringGlueColoredButterfly implements ColoredButterfly {
         }
 
         if (everythingOK) {
-            return RESULT_SAFE;
+            return TASTY;
         }
 
         return results;

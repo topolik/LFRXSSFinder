@@ -1,4 +1,4 @@
-package cz.topolik.xssfinder.v2.animals.butterfly;
+package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.water.Droplet;
 
@@ -9,15 +9,15 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class JSPContextAttributeFinderColoredButterfly implements ColoredButterfly {
+public class JSPContextAttributeFinderRainbowFish implements RainbowFish {
     Pattern findAttributeRE = Pattern.compile("^_jspx_page_context\\.findAttribute\\((\"[^\\\"]+\")\\)");
     String replacement = "([\\w0-9_]+).setVar\\($1\\)";
 
     @Override
-    public List<String> execute(Droplet droplet) {
+    public List<String> swallow(Droplet droplet) {
         Matcher m = findAttributeRE.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return RESULT_DONT_KNOW;
+            return UNEATABLE;
         }
 
         String newReplacement = replacement;
@@ -26,21 +26,21 @@ public class JSPContextAttributeFinderColoredButterfly implements ColoredButterf
             newReplacement = replacement.replaceAll(Pattern.quote("$" + i), Matcher.quoteReplacement(Pattern.quote(group)));
         }
 
-        REColoredButterfly replacementRegExpCEP = new REColoredButterfly(newReplacement, new int[]{1});
+        RERainbowFish replacementRegExpCEP = new RERainbowFish(newReplacement, new int[]{1});
 
         // GO UP from current line to find the variable
-        for (int i = droplet.getGrowthRingNum() - 1; i >= 0; i--) {
-            String fileLine = droplet.getTree().getGrowthRings().get(i).trim().replaceAll(";", "");
+        for (int i = droplet.getRingNum() - 1; i >= 0; i--) {
+            String fileLine = droplet.getRing(i).replaceAll(";", "");
 
-            List<String> replacementResult = replacementRegExpCEP.execute(droplet.droppy(fileLine, i, fileLine));
-            if (replacementResult == RESULT_DONT_KNOW) {
+            List<String> replacementResult = replacementRegExpCEP.swallow(droplet.droppy(fileLine, i, fileLine));
+            if (replacementResult == UNEATABLE) {
                 continue;
             }
 
             return replacementResult;
         }
 
-        return RESULT_DONT_KNOW;
+        return UNEATABLE;
     }
 
 
