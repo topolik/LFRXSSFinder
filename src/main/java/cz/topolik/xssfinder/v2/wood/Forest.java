@@ -13,18 +13,21 @@ import java.util.TreeSet;
 public class Forest extends TreeSet<Tree> {
     boolean antsAreTired = false;
 
-    public void callAntsToExplore() {
+    public void callAntsToExamine() {
+        Logger.log("Calling ants to examine forest ... ");
+
         Iterator<Tree> ant = iterator();
         int pos = 0;
         while (ant.hasNext()) {
-            ant.next().explore();
+            ant.next().examineByAnt();
+
             pos++;
             if (pos % 100 == 0) {
-                Logger.log("Ants explored " + pos + " trees so far!");
+                Logger.log(" ... ants climbed " + pos + " trees so far");
             }
         }
 
-        Logger.log("Ants are tired after exploring " + pos + " trees.");
+        Logger.log(" ... Ants are tired after exploring " + pos + " trees");
         antsAreTired = true;
     }
 

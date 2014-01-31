@@ -17,7 +17,7 @@ public class App {
         }
         Set<PossibleXSSLine> xsss = null;
 
-        boolean version1 = true;
+        boolean version1 = false;
         if (version1) {
             FileLoader loader = new FileLoader(new File(args[0]));
 
