@@ -1,8 +1,5 @@
 package cz.topolik.xssfinder;
 
-import cz.topolik.xssfinder.scan.XSSScanner;
-import cz.topolik.xssfinder.scan.advanced.AdvancedXSSScanner;
-import cz.topolik.xssfinder.scan.threaded.ThreadedXSSScanner;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.animal.LadyBug;
 import cz.topolik.xssfinder.v2.sun.Ray;
@@ -17,15 +14,8 @@ public class App {
             printSyntax();
             args = new String[]{"/opt/liferay.git/portal", "8"};
         }
+        
         Set<LadyBug> ladyBugs = null;
-
-//            FileLoader loader = new FileLoader(new File(args[0]));
-//
-//            XSSScanner scanner = new ThreadedXSSScanner(Integer.parseInt(args[1]));
-//
-//            xsss = new TreeSet<LadyBug>(scanner.scan(loader));
-//
-//            scanner.destroy();
 
         File[] continents = new File[]{
                 new File(args[0], "jsp-precompile"),
