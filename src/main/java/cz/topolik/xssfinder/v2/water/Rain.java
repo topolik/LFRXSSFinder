@@ -133,8 +133,8 @@ public class Rain {
         }
     }
 
-    public boolean isExpressionSafe(String expression) {
-        String normalizedExpression = normalize(expression);
+    public boolean shed(Droplet droplet) {
+        String normalizedExpression = normalize(droplet.getExpression());
         for (String apiCall : safeMethodsString) {
             if (normalizedExpression.startsWith(apiCall)) {
                 return true;

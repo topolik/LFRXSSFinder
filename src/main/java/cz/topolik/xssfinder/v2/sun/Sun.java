@@ -1,7 +1,7 @@
 package cz.topolik.xssfinder.v2.sun;
 
-import cz.topolik.xssfinder.v2.animal.LadyBug;
 import cz.topolik.xssfinder.v2.World;
+import cz.topolik.xssfinder.v2.animal.bug.LadyBug;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
 import java.text.DateFormat;
@@ -21,7 +21,7 @@ public class Sun {
     private long shineStartTime;
 
     public Sun(int beams) {
-        World.announce("Sun's going to have " + beams + " beams.");
+        World.announce("Sun is going to have " + beams + " beams.");
         this.beams = Executors.newFixedThreadPool(beams);
     }
 

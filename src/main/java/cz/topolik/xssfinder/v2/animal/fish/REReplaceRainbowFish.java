@@ -1,9 +1,9 @@
 package cz.topolik.xssfinder.v2.animal.fish;
 
-import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
+import cz.topolik.xssfinder.v2.water.Water;
 
-import java.util.List;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,15 +20,15 @@ public class REReplaceRainbowFish implements RainbowFish {
     }
 
     @Override
-    public List<String> swallow(Droplet droplet) {
+    public Water swallow(Droplet droplet) {
         Matcher m = regExp.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         }
 
         String newReplacement = m.replaceAll(replacement);
 
-        return World.see().river().isCallArgumentSuspected(droplet.droppy(newReplacement));
+        return droplet.droppy(newReplacement).dryUp();
     }
 
 }

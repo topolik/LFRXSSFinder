@@ -1,7 +1,9 @@
 package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.water.Droplet;
+import cz.topolik.xssfinder.v2.water.Water;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,10 +16,10 @@ public class JSPContextAttributeFinderRainbowFish implements RainbowFish {
     String replacement = "([\\w0-9_]+).setVar\\($1\\)";
 
     @Override
-    public List<String> swallow(Droplet droplet) {
+    public Water swallow(Droplet droplet) {
         Matcher m = findAttributeRE.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         }
 
         String newReplacement = replacement;
@@ -32,16 +34,14 @@ public class JSPContextAttributeFinderRainbowFish implements RainbowFish {
         for (int i = droplet.getRingNum() - 1; i >= 0; i--) {
             String fileLine = droplet.getRing(i).replaceAll(";", "");
 
-            List<String> replacementResult = replacementRegExpCEP.swallow(droplet.droppy(fileLine, i, fileLine));
-            if (replacementResult == UNEATABLE) {
+            Water replacementResult = replacementRegExpCEP.swallow(droplet.droppy(fileLine, i, fileLine));
+            if (replacementResult.equals(Water.UNKNOWN_WATER)) {
                 continue;
             }
 
             return replacementResult;
         }
 
-        return UNEATABLE;
+        return Water.UNKNOWN_WATER;
     }
-
-
 }

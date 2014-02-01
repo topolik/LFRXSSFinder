@@ -1,7 +1,7 @@
 package cz.topolik.xssfinder.v2.water;
 
 import cz.topolik.xssfinder.v2.World;
-import cz.topolik.xssfinder.v2.sun.Ray;
+import cz.topolik.xssfinder.v2.animal.bug.LindenBurg;
 import cz.topolik.xssfinder.v2.wood.Tree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -35,14 +35,14 @@ public class Snow {
         return absPath.contains(TLD_DIR_JSP) || absPath.contains(TLD_DIR_JS_EDITOR);
     }
 
-    public String[] isLineVulnerableTaglib(Droplet droplet) {
+    public Water melt(Droplet droplet) {
         if (isTagLibJSP(droplet.getTree())) {
-            return null;
+            return Water.UNKNOWN_WATER;
         }
 
         Matcher m = TAGLIB_CALL_PATTERN.matcher(droplet.getRing());
         if (!m.matches()) {
-            return null;
+            return Water.UNKNOWN_WATER;
         }
         String taglibVariableName = m.group(1);
         String setFieldName = m.group(2);
@@ -66,13 +66,14 @@ public class Snow {
             if (vulnerableTaglibs.containsKey(taglibClassName)) {
                 for (String vulnerableProperty : vulnerableTaglibs.get(taglibClassName)) {
                     if (vulnerableProperty.equals(normalizedFieldName)) {
-                        return new String[]{argument, droplet.getRing(), declarationLine};
+                        return droplet.droppy(argument).dryUp();
                     }
                 }
             }
         }
+
         // line is taglib-safe
-        return null;
+        return Water.CLEAN_WATER;
     }
 
     public void fly() {
@@ -144,14 +145,14 @@ public class Snow {
                 for (int lineNum = 0; lineNum < linden.getRings().size(); lineNum++) {
                     String line = linden.getRing(lineNum);
 
-                    if (!line.startsWith(Ray.OUT_PRINT)) {
+                    if (!line.startsWith(LindenBurg.OUT_PRINT)) {
                         continue;
                     }
-                    String functionArgument = line.substring(Ray.OUT_PRINT.length(), line.length() - 2).trim();
+                    String functionArgument = line.substring(LindenBurg.OUT_PRINT.length(), line.length() - 2).trim();
 
-                    List<String> declaration = World.see().river().isCallArgumentSuspected(new Droplet(functionArgument, lineNum, functionArgument, linden));
+                    Water declaration = World.see().river().isEdible(new Droplet(functionArgument, lineNum, functionArgument, linden));
 
-                    if (declaration != River.TASTY && declaration.size() > 0) {
+                    if (!declaration.equals(Water.CLEAN_WATER) && declaration.size() > 0) {
                         // the last line in the stack should be variable declaration
                         String declarationLine = declaration.get(declaration.size() - 1);
 

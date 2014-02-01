@@ -1,8 +1,9 @@
 package cz.topolik.xssfinder;
 
 import cz.topolik.xssfinder.v2.World;
-import cz.topolik.xssfinder.v2.animal.LadyBug;
-import cz.topolik.xssfinder.v2.sun.Ray;
+import cz.topolik.xssfinder.v2.animal.bug.LadyBug;
+import cz.topolik.xssfinder.v2.animal.bug.LindenBurg;
+import cz.topolik.xssfinder.v2.water.Droplet;
 
 import java.io.File;
 import java.util.*;
@@ -33,7 +34,7 @@ public class App {
         List<Occurence> occurences = new ArrayList<Occurence>();
         int i = 0;
         for (LadyBug ladyBug : ladyBugs) {
-            String relevantLines = Arrays.asList(ladyBug.getStackTrace()).toString();
+            String relevantLines = Arrays.asList(ladyBug.getStackTrace().getWaves()).toString();
 //            System.out.println("Problem " + ++i + ":");
             System.out.print(ladyBug.getTree().getRoot().getAbsolutePath() + " ");
             System.out.print(ladyBug.getLineNum() + ": ");
@@ -54,8 +55,8 @@ public class App {
             System.out.print(ladyBug.getLineNum());
             System.out.print(",");
             String vuln = ladyBug.getLineContent().trim();
-            if (vuln.startsWith(Ray.ROW_ADDTEXT)) {
-                String arg[] = Ray.parseSearchContainerRowExpression(ladyBug.getDroplet());
+            if (vuln.startsWith(LindenBurg.ROW_ADDTEXT)) {
+                String arg[] = LindenBurg.parseSearchContainerRowExpression(ladyBug.getLineContent(), ladyBug.getLineNum(), ladyBug.getTree());
                 System.out.print(arg[0]);
                 if (arg.length > 1) {
                     System.out.print(" || <- OR -> || ");
@@ -99,8 +100,8 @@ public class App {
             System.out.print(ladyBug.getLineNum());
             System.out.print(",");
             String vuln = ladyBug.getLineContent().trim();
-            if (vuln.startsWith(Ray.ROW_ADDTEXT)) {
-                String arg[] = Ray.parseSearchContainerRowExpression(ladyBug.getDroplet());
+            if (vuln.startsWith(LindenBurg.ROW_ADDTEXT)) {
+                String arg[] = LindenBurg.parseSearchContainerRowExpression(ladyBug.getLineContent(), ladyBug.getLineNum(), ladyBug.getTree());
                 System.out.print(arg[0]);
                 if (arg.length > 1) {
                     System.out.print(" || <- OR -> || ");

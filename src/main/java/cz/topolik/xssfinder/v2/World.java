@@ -1,26 +1,37 @@
 package cz.topolik.xssfinder.v2;
 
-import cz.topolik.xssfinder.v2.animal.LadyBug;
+import cz.topolik.xssfinder.v2.animal.bug.LadyBug;
 import cz.topolik.xssfinder.v2.sun.Sun;
+import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.Rain;
 import cz.topolik.xssfinder.v2.water.River;
 import cz.topolik.xssfinder.v2.water.Snow;
 import cz.topolik.xssfinder.v2.wood.Forest;
 import cz.topolik.xssfinder.v2.wood.WoodWind;
 
-import java.io.File;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author Tomas Polesovsky
  */
 public class World {
+    private static final File DUST = new File(System.getProperty("java.io.tmpdir"), "world.memory.dust.txt");
+    private static final World world = new World();
+
     private Forest forest;
     private Snow snow = new Snow();
     private Rain rain = new Rain();
     private River river = new River();
     private WoodWind wind = new WoodWind();
-    private static final World world = new World();
+    private Set<String> memoriesFromDust = new HashSet<String>();
+    private List<String> memoriesToDust = new Vector<String>();
+
+    private World() {
+        // only God is able to create the World
+
+        fromDust();
+    }
 
     public static World see() {
         return world;
@@ -31,15 +42,14 @@ public class World {
         System.out.flush();
     }
 
+    public static void memorize(Droplet droplet) {
+        world.memoriesToDust.add(droplet.toString());
+    }
 
     public static void announce(String prophecy, Throwable wrath) {
         System.out.println(prophecy);
         wrath.printStackTrace(System.out);
         System.out.flush();
-    }
-
-    private World() {
-        // only God is able to create the World
     }
 
     public void explore(File... continents) {
@@ -57,7 +67,7 @@ public class World {
     }
 
     public void jDay() {
-        river.dryUp();
+        toDust();
     }
 
     public Forest forest() {
@@ -75,4 +85,57 @@ public class World {
     public Snow snow() {
         return snow;
     }
+
+    public boolean remembers(Droplet droplet) {
+        return memoriesFromDust.contains(droplet.toString());
+    }
+
+    protected void fromDust() {
+        if (DUST.exists() && DUST.canRead()) {
+            try {
+                InputStream in = new FileInputStream(DUST);
+                try {
+                    Scanner s = new Scanner(in);
+                    while (s.hasNextLine()) {
+                        memoriesFromDust.add(s.nextLine());
+                    }
+                } finally {
+                    if (in != null) {
+                        try {
+                            in.close();
+                        } catch (IOException ex) {
+                        }
+                    }
+                }
+            } catch (FileNotFoundException e) {
+            }
+        }
+
+        memoriesToDust.addAll(memoriesFromDust);
+    }
+
+    protected void toDust() {
+        if (!DUST.exists() || DUST.canWrite()) {
+            try {
+                BufferedWriter sw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(DUST)));
+                try {
+                    TreeSet<String> sortedHashes = new TreeSet<String>(memoriesToDust);
+                    for (String hash : sortedHashes) {
+                        sw.write(hash.toString());
+                        sw.newLine();
+                    }
+                } catch (IOException e) {
+                } finally {
+                    if (sw != null) {
+                        try {
+                            sw.close();
+                        } catch (IOException ex) {
+                        }
+                    }
+                }
+            } catch (FileNotFoundException e) {
+            }
+        }
+    }
+
 }

@@ -1,9 +1,10 @@
 package cz.topolik.xssfinder.v2.animal.fish;
 
-import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
+import cz.topolik.xssfinder.v2.water.Water;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,13 +23,13 @@ public class RERainbowFish implements RainbowFish {
     }
 
     @Override
-    public List<String> swallow(Droplet droplet) {
+    public Water swallow(Droplet droplet) {
         Matcher m = regExp.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         }
 
-        List<String> result = new ArrayList<String>();
+        Water result = new Water();
         boolean everythingOK = true;
         for (int i = 0; i < groups.length; i++) {
             if (groups[i] > m.groupCount()) {
@@ -36,11 +37,11 @@ public class RERainbowFish implements RainbowFish {
             }
 
             String arg = m.group(groups[i]);
-            List<String> callResult = World.see().river().isCallArgumentSuspected(droplet.droppy(arg));
-            if (callResult != TASTY) {
+            Water callResult = droplet.droppy(arg).dryUp();
+            if (!callResult.equals(Water.CLEAN_WATER)) {
                 everythingOK = false;
                 if (callResult.size() > 0) {
-                    result.addAll(callResult);
+                    result.add(callResult);
                 } else {
                     result.add(arg);
                 }
@@ -49,7 +50,7 @@ public class RERainbowFish implements RainbowFish {
 
         if (everythingOK) {
             // it's safe dude
-            return TASTY;
+            return Water.CLEAN_WATER;
         }
 
         return result;

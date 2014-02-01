@@ -1,19 +1,22 @@
-package cz.topolik.xssfinder.v2.animal;
+package cz.topolik.xssfinder.v2.animal.bug;
 
 import cz.topolik.xssfinder.v2.water.Droplet;
+import cz.topolik.xssfinder.v2.water.Water;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
-import java.util.Arrays;
+import java.io.File;
+import java.util.List;
 
 /**
  *
  * @author Tomas Polesovsky
  */
 public class LadyBug implements Comparable<LadyBug>{
+    public static final LadyBug NO_LADYBUG = new LadyBug(new Droplet("", -1, "", new Tree(new File(""), new File(""))), Water.CLEAN_WATER);
     private Droplet droplet;
-    private String[] stackTrace;
+    private Water stackTrace;
 
-    public LadyBug(Droplet droplet, String[] stackTrace) {
+    public LadyBug(Droplet droplet, Water stackTrace) {
         this.droplet = droplet;
         this.stackTrace = stackTrace;
     }
@@ -22,7 +25,7 @@ public class LadyBug implements Comparable<LadyBug>{
         return droplet.getRing();
     }
 
-    public long getLineNum() {
+    public int getLineNum() {
         return droplet.getRingNum();
     }
 
@@ -34,7 +37,7 @@ public class LadyBug implements Comparable<LadyBug>{
         return droplet;
     }
 
-    public String[] getStackTrace() {
+    public Water getStackTrace() {
         return stackTrace;
     }
 
@@ -46,7 +49,7 @@ public class LadyBug implements Comparable<LadyBug>{
         LadyBug ladyBug = (LadyBug) o;
 
         if (droplet != null ? !droplet.equals(ladyBug.droplet) : ladyBug.droplet != null) return false;
-        if (!Arrays.equals(stackTrace, ladyBug.stackTrace)) return false;
+        if (stackTrace != null ? !stackTrace.equals(ladyBug.stackTrace) : ladyBug.stackTrace != null) return false;
 
         return true;
     }
@@ -54,7 +57,7 @@ public class LadyBug implements Comparable<LadyBug>{
     @Override
     public int hashCode() {
         int result = droplet != null ? droplet.hashCode() : 0;
-        result = 31 * result + (stackTrace != null ? Arrays.hashCode(stackTrace) : 0);
+        result = 31 * result + (stackTrace != null ? stackTrace.hashCode() : 0);
         return result;
     }
 
@@ -76,7 +79,7 @@ public class LadyBug implements Comparable<LadyBug>{
         sb.append("\n");
         sb.append(getLineContent());
         sb.append("\n");
-        sb.append(Arrays.asList(stackTrace));
+        sb.append(stackTrace);
         return sb.toString();
     }
 }

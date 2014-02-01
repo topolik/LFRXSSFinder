@@ -2,9 +2,10 @@ package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
+import cz.topolik.xssfinder.v2.water.Water;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,10 +16,10 @@ public class BeanRainbowFish implements RainbowFish {
     static final Pattern EXPRESSION = Pattern.compile("^([a-z][\\w]+)\\.([\\w]+)\\(.*\\)$");
 
     @Override
-    public List<String> swallow(Droplet droplet) {
+    public Water swallow(Droplet droplet) {
         Matcher m = EXPRESSION.matcher(droplet.getExpression());
         if (!m.matches()) {
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         }
 
         String beanName = m.group(1).trim();
@@ -41,13 +42,15 @@ public class BeanRainbowFish implements RainbowFish {
 
         if (fullClassName != null) {
             String simpleName = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
-            if (World.see().rain().isExpressionSafe(simpleName + "." + methodName + "(")) {
-                return TASTY;
+            if (World.see().rain().shed(droplet.droppy(simpleName + "." + methodName + "("))) {
+                return Water.CLEAN_WATER;
             } else {
-                return Arrays.asList(new String[]{declarationLine});
+                Water result = new Water();
+                result.add(declarationLine);
+                return result;
             }
         }
 
-        return UNEATABLE;
+        return Water.UNKNOWN_WATER;
     }
 }

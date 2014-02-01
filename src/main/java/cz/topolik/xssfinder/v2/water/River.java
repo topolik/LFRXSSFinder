@@ -3,8 +3,12 @@ package cz.topolik.xssfinder.v2.water;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.animal.fish.*;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,14 +16,10 @@ import java.util.regex.Pattern;
  * @author Tomas Polesovsky
  */
 public class River {
-    public static final List<String> UNEATABLE = new ArrayList<String>();
-    public static final List<String> TASTY = new ArrayList<String>();
-    private static final File FISH_MEMORY = new File(System.getProperty("java.io.tmpdir"), "LFRXSSFinder.fish.memory.txt");
     private static final String FISH_EXPERIENCE = "/fish_experience.txt";
 
     List<RainbowFish> rainbowFishes = new ArrayList<RainbowFish>();
     List<WhiteFish> whiteFishes = new ArrayList<WhiteFish>();
-    List<String> SAFE_MEMORIES = new Vector<String>();
 
     static final String SAFE_VARIABLE_DECLARATION_START = ".*(byte|short|int|long|float|double|boolean|(java.lang.)?(Byte|Short|Integer|Long|Float|Double|Boolean))(\\[\\])? ";
     static final Pattern JAVA_VARIABLE_PATTERN = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9]*");
@@ -29,36 +29,6 @@ public class River {
         World.announce("Let's river flow ...");
         World.announce(" ... training fishes from " + FISH_EXPERIENCE);
         trainFishes();
-
-        World.announce(" ... recovering fishes' memory from " + FISH_MEMORY);
-        recoverFishesMemory();
-    }
-
-
-    public void dryUp() {
-        World.announce("Saving fishes' memory to " + FISH_MEMORY);
-
-        if (!FISH_MEMORY.exists() || FISH_MEMORY.canWrite()) {
-            try {
-                BufferedWriter sw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(FISH_MEMORY)));
-                try {
-                    TreeSet<String> sortedHashes = new TreeSet<String>(SAFE_MEMORIES);
-                    for (String hash : sortedHashes) {
-                        sw.write(hash.toString());
-                        sw.newLine();
-                    }
-                } catch (IOException e) {
-                } finally {
-                    if (sw != null) {
-                        try {
-                            sw.close();
-                        } catch (IOException ex) {
-                        }
-                    }
-                }
-            } catch (FileNotFoundException e) {
-            }
-        }
     }
 
     protected void trainFishes(){
@@ -135,78 +105,37 @@ public class River {
         rainbowFishes.add(new SBRainbowFish());
     }
 
-    protected void recoverFishesMemory() {
-        if (FISH_MEMORY.exists() && FISH_MEMORY.canRead()) {
-            try {
-                InputStream in = new FileInputStream(FISH_MEMORY);
-                try {
-                    Scanner s = new Scanner(in);
-                    while (s.hasNextLine()) {
-                        SAFE_MEMORIES.add(s.nextLine());
-                    }
-                } finally {
-                    if (in != null) {
-                        try {
-                            in.close();
-                        } catch (IOException ex) {
-                        }
-                    }
-                }
-            } catch (FileNotFoundException e) {
-            }
-        }
-    }
-
-    public List<String> isCallArgumentSuspected(Droplet droplet) {
+    public Water isEdible(Droplet droplet) {
         String argument = droplet.getExpression().trim();
         while (argument.endsWith(";")) {
             argument = argument.substring(0, argument.length() - 1);
         }
-        String nonQuotedArgument = argument.replaceAll(ESCAPED_QUOTE, "");
 
-        String memory = droplet.getTreeRoot().getAbsolutePath().substring(droplet.getTree().getContinent().getAbsolutePath().length()) + "," + droplet.getRingNum() + "," + argument;
-        if (SAFE_MEMORIES.contains(memory)) {
-            return TASTY;
+        Droplet unquotedDroplet = droplet.droppy(argument.replaceAll(ESCAPED_QUOTE, ""));
+
+        if (doWhiteFishesLikeIt(unquotedDroplet)) {
+            return Water.CLEAN_WATER;
         }
 
-        if (isExpressionSimpleAndSafe(droplet.droppy(nonQuotedArgument))) {
-            SAFE_MEMORIES.add(memory);
-            return TASTY;
-        }
-
-        // Try to break it using intelligent parsers
-        List<String> complexResult = breakComplexExpression(droplet.droppy(nonQuotedArgument));
-        if (complexResult == TASTY) {
-            // huh, it's safe
-            SAFE_MEMORIES.add(memory);
-            return TASTY;
+        Water complexResult = rainbowFishesOpinion(unquotedDroplet);
+        if (complexResult.equals(Water.CLEAN_WATER)) {
+            return Water.CLEAN_WATER;
         }
 
         // OK, perhaps a variable assignment?
-        List<String> simpleVariableResult = findVariableDeclaration(droplet.droppy(nonQuotedArgument));
-        if (simpleVariableResult == TASTY) {
-            // it's safe :)
-            SAFE_MEMORIES.add(memory);
-            return TASTY;
-        }
-        if (simpleVariableResult != UNEATABLE) {
-            // OK, it was a variable we don't need to continue
-            return simpleVariableResult;
+        Water simpleVariableResult = findVariableDeclaration(unquotedDroplet);
+        if (simpleVariableResult.equals(Water.CLEAN_WATER)) {
+            return Water.CLEAN_WATER;
         }
 
         /*
          * cannot semantically understand what's inside, so we leave it as a suspected :O
          */
 
-        List<String> result = new ArrayList<String>();
-        result.addAll(simpleVariableResult);
-        result.addAll(complexResult);
-        if (result.size() > 0) {
-            return result;
-        }
-
-        return UNEATABLE;
-
+        Water result = new Water();
+        result.add(simpleVariableResult);
+        result.add(complexResult);
+        return result;
     }
 
     public Pattern buildVariableDeclaration(String variable) {
@@ -216,20 +145,20 @@ public class River {
     /**
      * Tries to find declaration and usage of the variable. <br />
      *
-     * @return TASTY when I'm sure there is no XSS inside, UNEATABLE when I don't know, otherwise I suppose there might be a problem
+     * @return {@see Water.CLEAN_WATER} when I'm sure there is no XSS inside, {@see Water.DIRTY_UNKNOWN_WATER} when I don't know, otherwise I suppose there might be a problem
      */
-    public List<String> findVariableDeclaration(Droplet droplet) {
+    public Water findVariableDeclaration(Droplet droplet) {
         String vulnerableVariable = droplet.getExpression();
 
         if (vulnerableVariable.trim().length() == 0) {
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         }
 
         if (!JAVA_VARIABLE_PATTERN.matcher(vulnerableVariable).matches()) {
-            return UNEATABLE; // don't know if it's safe or not. All I know is that it isn't valid variable :)
+            return Water.UNKNOWN_WATER; // don't know if it's safe or not. All I know is that it isn't valid variable :)
         }
 
-        List<String> result = new ArrayList<String>();
+        Water result = new Water();
 
         String lastVariableAssignment = null;
         int lastVariableAssignmentRingNum = 0;
@@ -251,7 +180,7 @@ public class River {
                 continue;
             }
             if (safeDeclaration.matcher(fileLine).matches()) {
-                return TASTY;
+                return Water.CLEAN_WATER;
             }
             if (variableDeclaration.matcher(fileLine).matches()) {
                 declaration = fileLine;
@@ -286,46 +215,45 @@ public class River {
                 assignmentGrowthRing = declaration;
             }
 
-            List<String> assignmentResult = isCallArgumentSuspected(droplet.droppy(assignmentContent, assignmentGrowthRingNum, assignmentGrowthRing));
-            if (assignmentResult == TASTY) {
+            Water assignmentResult = droplet.droppy(assignmentContent, assignmentGrowthRingNum, assignmentGrowthRing).dryUp();
+            if (assignmentResult.equals(Water.CLEAN_WATER)) {
                 // it's safe
-                return TASTY;
+                return Water.CLEAN_WATER;
             }
 
             if (lastVariableAssignment != null && !declaration.equals(lastVariableAssignment)) {
                 result.add(lastVariableAssignment);
             }
             result.add(declaration);
-            result.addAll(assignmentResult);
+            result.add(assignmentResult);
             return result;
         }
 
         if (declaration != null) {
             result.add(declaration);
-            return result;
         }
 
-        return UNEATABLE; // unable to decide
+        return result;
     }
 
-    protected boolean isExpressionSimpleAndSafe(Droplet droplet) {
+    protected boolean doWhiteFishesLikeIt(Droplet droplet) {
         for (WhiteFish fish : whiteFishes) {
             if (fish.likes(droplet)) {
                 return true;
             }
         }
 
-        return World.see().rain().isExpressionSafe(droplet.getExpression());
+        return false;
     }
 
-    protected List<String> breakComplexExpression(Droplet droplet) {
-        List<String> result = new ArrayList<String>();
+    protected Water rainbowFishesOpinion(Droplet droplet) {
+        Water result = new Water();
         for (RainbowFish fish : rainbowFishes) {
-            List<String> callResult = fish.swallow(droplet);
-            if (callResult == TASTY) {
-                return TASTY;
+            Water callResult = fish.swallow(droplet);
+            if (callResult.equals(Water.CLEAN_WATER)) {
+                return Water.CLEAN_WATER;
             }
-            result.addAll(callResult);
+            result.add(callResult);
         }
         return result;
     }

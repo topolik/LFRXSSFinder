@@ -2,8 +2,10 @@ package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
+import cz.topolik.xssfinder.v2.water.Water;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -13,34 +15,37 @@ import java.util.regex.Pattern;
 public class BigRareRainbowFish implements RainbowFish {
     private static final String SAFE_EXPRESSION = "\"\"";
     private static final ThreadLocal<Boolean> EXECUTED = new ThreadLocal<Boolean>();
+    Pattern PATT = Pattern.compile("^([\\w]*|\"[^\"]*\")$");
 
     @Override
-    public List<String> swallow(Droplet droplet) {
+    public Water swallow(Droplet droplet) {
         // execute only once
         if (EXECUTED.get() != null) {
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         }
 
         try {
             EXECUTED.set(Boolean.TRUE);
-            return execute2(droplet);
+
+            return swallowCarefully(droplet);
+
         } catch (Throwable e) {
             World.announce("Exception while processing: " + droplet.getExpression() + "\n\t" + droplet.getTreeRoot() + ':' + droplet.getRingNum() + "\n\t" + droplet.getRing(), e);
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         } finally {
             EXECUTED.set(null);
         }
     }
 
-    private List<String> execute2(Droplet droplet) {
+    private Water swallowCarefully(Droplet droplet) {
         String expression = droplet.getExpression();
 
         if (!isValid(expression)) {
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         }
 
         boolean executed = false;
-        List<String> result = new ArrayList<String>();
+        Water result = new Water();
 
         List<StringBuffer> stack = new ArrayList<StringBuffer>();
         List<InsideMethodState> insideMethodStack = new ArrayList<InsideMethodState>();
@@ -99,12 +104,12 @@ public class BigRareRainbowFish implements RainbowFish {
 
                     // did we already processed the content?
                     if (needsProcessing(subExpression)) {
-                        List<String> subExpressionResult = World.see().river().isCallArgumentSuspected(droplet.droppy(subExpression));
-                        if (subExpressionResult == TASTY) {
+                        Water subExpressionResult = droplet.droppy(subExpression).dryUp();
+                        if (subExpressionResult.equals(Water.CLEAN_WATER)) {
                             subExpression = SAFE_EXPRESSION;
                         } else {
                             result.add(subExpression);
-                            result.addAll(subExpressionResult);
+                            result.add(subExpressionResult);
                         }
 
                         executed = true;
@@ -172,15 +177,15 @@ public class BigRareRainbowFish implements RainbowFish {
                     insideMethodStack.get(0).sentenceStart = stack.get(0).toString().length() + 1;
 
                     String subExpression = stack.get(0).toString().substring(startPos).trim();
-                    List<String> subExpressionResult = null;
+                    Water subExpressionResult = null;
 
                     if (subExpression.length() == 0 || subExpression.equals(SAFE_EXPRESSION)) {
-                        subExpressionResult = TASTY;
+                        subExpressionResult = Water.CLEAN_WATER;
                     } else {
-                        subExpressionResult = World.see().river().isCallArgumentSuspected(droplet.droppy(subExpression));
+                        subExpressionResult = droplet.droppy(subExpression).dryUp();
                     }
 
-                    if (subExpressionResult == TASTY) {
+                    if (subExpressionResult.equals(Water.CLEAN_WATER)) {
                         // expression is safe - we can cut it out
                         executed = true;
                         stack.get(0).setLength(startPos);
@@ -194,7 +199,7 @@ public class BigRareRainbowFish implements RainbowFish {
                         continue;
                     } else if (subExpressionResult != null) {
                         result.add(subExpression);
-                        result.addAll(subExpressionResult);
+                        result.add(subExpressionResult);
                     }
 
                     break;
@@ -206,21 +211,20 @@ public class BigRareRainbowFish implements RainbowFish {
 
         if (executed) {
             String simplifiedExpression = stack.get(0).toString();
-            List<String> seResult = World.see().river().isCallArgumentSuspected(droplet.droppy(simplifiedExpression));
-            if (seResult == TASTY) {
-                return TASTY;
+            Water seResult = droplet.droppy(simplifiedExpression).dryUp();
+            if (seResult.equals(Water.CLEAN_WATER)) {
+                return Water.CLEAN_WATER;
             }
 
             result.add(simplifiedExpression);
-            result.addAll(seResult);
+            result.add(seResult);
             return result;
         }
 
-        return UNEATABLE;
+        return Water.UNKNOWN_WATER;
     }
 
-
-    protected boolean processMethodParameter(List<StringBuffer> stack, List<InsideMethodState> insideMethodStack, List<String> result, Droplet droplet) {
+    protected boolean processMethodParameter(List<StringBuffer> stack, List<InsideMethodState> insideMethodStack, Water result, Droplet droplet) {
         boolean executed = false;
 
         StringBuffer buffer = stack.get(0);
@@ -233,8 +237,8 @@ public class BigRareRainbowFish implements RainbowFish {
             return false;
         }
 
-        List<String> subExpressionResult = World.see().river().isCallArgumentSuspected(droplet.droppy(actualParam));
-        if (subExpressionResult == TASTY) {
+        Water subExpressionResult = droplet.droppy(actualParam).dryUp();
+        if (subExpressionResult.equals(Water.CLEAN_WATER)) {
             buffer.setLength(startPos);
             buffer.append(SAFE_EXPRESSION);
             insideMethodStack.get(0).sentenceStart = buffer.length() + 1;
@@ -242,14 +246,11 @@ public class BigRareRainbowFish implements RainbowFish {
             executed = true;
         } else {
             result.add(actualParam);
-            result.addAll(subExpressionResult);
+            result.add(subExpressionResult);
         }
 
         return executed;
     }
-
-
-    Pattern PATT = Pattern.compile("^([\\w]*|\"[^\"]*\")$");
 
     protected boolean needsProcessing(String arg) {
         arg = arg.trim();

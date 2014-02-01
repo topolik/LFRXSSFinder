@@ -2,8 +2,10 @@ package cz.topolik.xssfinder.v2.animal.fish;
 
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
+import cz.topolik.xssfinder.v2.water.Water;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,12 +22,12 @@ public class SBRainbowFish implements RainbowFish {
     }
 
     @Override
-    public List<String> swallow(Droplet droplet) {
+    public Water swallow(Droplet droplet) {
         if (!droplet.getExpression().equals("sb.toString()")) {
-            return UNEATABLE;
+            return Water.UNKNOWN_WATER;
         }
 
-        List<String> result = new ArrayList<String>();
+        Water result = new Water();
         boolean everythingOK = true;
         boolean insideComment = false;
         for (int i = droplet.getRingNum() - 1; i >= 0; i--) {
@@ -46,20 +48,18 @@ public class SBRainbowFish implements RainbowFish {
             if (m.matches()) {
                 String arg = m.group(1);
 
-                List<String> callResult = World.see().river().isCallArgumentSuspected(droplet.droppy(arg));
-                if (callResult != TASTY) {
+                Water callResult = droplet.droppy(arg).dryUp();
+                if (!callResult.equals(Water.CLEAN_WATER)) {
                     everythingOK = false;
                     result.add(fileLine);
-                    if (callResult.size() > 0) {
-                        result.addAll(callResult);
-                    }
+                    result.add(callResult);
                 }
                 continue;
             }
 
             if (variableDeclaration.matcher(fileLine).matches() || fileLine.startsWith("sb = new ")) {
                 // stop searching to avoid collision with another variable with the same name
-                return everythingOK ? TASTY : result;
+                return everythingOK ? Water.CLEAN_WATER : result;
             }
 
             if (fileLine.contains("sb") && !fileLine.contains("sb.setIndex(") && !fileLine.contains("sb.index()") && !fileLine.contains("sb.toString()")) {
@@ -68,6 +68,6 @@ public class SBRainbowFish implements RainbowFish {
             }
         }
 
-        return everythingOK ? TASTY : result;
+        return everythingOK ? Water.CLEAN_WATER : result;
     }
 }

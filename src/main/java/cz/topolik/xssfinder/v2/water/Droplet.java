@@ -1,8 +1,12 @@
 package cz.topolik.xssfinder.v2.water;
 
+import cz.topolik.xssfinder.v2.World;
+import cz.topolik.xssfinder.v2.animal.bug.LadyBug;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tomas Polesovsky
@@ -18,6 +22,55 @@ public class Droplet {
         this.ringNum = ringNum;
         this.ring = ring;
         this.tree = tree;
+    }
+
+    public static Droplet surround(String ladyBug, int yearOfBirth, Tree tree) {
+        return new Droplet(ladyBug, yearOfBirth, tree.getRing(yearOfBirth), tree);
+    }
+
+    public LadyBug clean() {
+        if (World.see().remembers(this)) {
+            return LadyBug.NO_LADYBUG;
+        }
+
+        Water result = dryUp();
+
+        if (result.equals(Water.CLEAN_WATER)) {
+            World.memorize(this);
+            return LadyBug.NO_LADYBUG;
+        }
+
+        return new LadyBug(this, result);
+    }
+
+    public Water dryUp() {
+        Water result = new Water();
+
+        if (World.see().rain().shed(this)) {
+            return Water.CLEAN_WATER;
+        }
+
+        Water riverResult = World.see().river().isEdible(this);
+        if (riverResult.equals(Water.CLEAN_WATER)) {
+            return Water.CLEAN_WATER;
+        }
+        result.add(riverResult);
+
+        /*
+        TODO: Search container Row Checker (and co.) + ResultRow attrs
+         */
+
+        // so we know there is no direct XSS
+        // but there can be vulnerable taglib call
+
+        Water snowResult = World.see().snow().melt(this);
+        if (snowResult.equals(Water.CLEAN_WATER)) {
+            // it's safe
+            return Water.CLEAN_WATER;
+        }
+        result.add(snowResult);
+
+        return result;
     }
 
     public Droplet droppy(String newExpression) {
@@ -78,5 +131,15 @@ public class Droplet {
         result = 31 * result + (ring != null ? ring.hashCode() : 0);
         result = 31 * result + (tree != null ? tree.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Droplet{" +
+                "expression='" + expression + '\'' +
+                ", ringNum=" + ringNum +
+                ", ring='" + ring + '\'' +
+                ", tree=" + tree +
+                '}';
     }
 }
