@@ -4,15 +4,13 @@ import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.Water;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
  */
-public class BeanRainbowFish implements RainbowFish {
+public class BeanRainbowFish extends UsefulFish implements RainbowFish {
     static final Pattern EXPRESSION = Pattern.compile("^([a-z][\\w]+)\\.([\\w]+)\\(.*\\)$");
 
     @Override

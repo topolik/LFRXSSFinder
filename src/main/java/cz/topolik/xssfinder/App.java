@@ -13,7 +13,10 @@ public class App {
     public static void main(String[] args) throws IllegalAccessException {
         if (args.length < 1) {
             printSyntax();
-            args = new String[]{"/opt/liferay.git/portal", "8"};
+            args = new String[]{"", String.valueOf(Runtime.getRuntime().availableProcessors() - 1)};
+        }
+        else if (args.length < 2){
+            args = new String[]{args[0], String.valueOf(Runtime.getRuntime().availableProcessors() - 1)};
         }
         
         Set<LadyBug> ladyBugs = null;

@@ -5,7 +5,7 @@ import cz.topolik.xssfinder.v2.water.Droplet;
 /**
  * @author Tomas Polesovsky
  */
-public class TreeWhiteFish implements WhiteFish {
+public class TreeWhiteFish extends UsefulFish implements WhiteFish {
     private String treeName;
     private String content;
     private int growthRingNum = -1;
@@ -26,5 +26,14 @@ public class TreeWhiteFish implements WhiteFish {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "TreeWhiteFish{" +
+                "treeName='" + treeName + '\'' +
+                ", content='" + content + '\'' +
+                ", growthRingNum=" + growthRingNum +
+                '}';
     }
 }

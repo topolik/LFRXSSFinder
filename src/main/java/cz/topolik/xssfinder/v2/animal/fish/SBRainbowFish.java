@@ -4,16 +4,13 @@ import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.Water;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
  */
-public class SBRainbowFish implements RainbowFish {
+public class SBRainbowFish extends UsefulFish implements RainbowFish {
     Pattern variableDeclaration;
     Pattern SB_APPEND = Pattern.compile("sb\\.append\\((.*)\\);");
 

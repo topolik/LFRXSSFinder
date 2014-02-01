@@ -3,16 +3,13 @@ package cz.topolik.xssfinder.v2.animal.fish;
 import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.Water;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
  */
-public class StringGlueRainbowFish implements RainbowFish {
+public class StringGlueRainbowFish extends UsefulFish implements RainbowFish {
     static final Pattern EXPRESSION = Pattern.compile("^([^\\+]+\\+)+([^\\+]+)$");
 
     @Override

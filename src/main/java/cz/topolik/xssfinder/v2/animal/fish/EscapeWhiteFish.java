@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class EscapeWhiteFish implements WhiteFish {
+public class EscapeWhiteFish extends UsefulFish implements WhiteFish {
     /*
      * Use only variables that don't start with underscore
      */

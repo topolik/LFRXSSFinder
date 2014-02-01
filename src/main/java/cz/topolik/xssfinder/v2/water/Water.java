@@ -1,6 +1,8 @@
 package cz.topolik.xssfinder.v2.water;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Tomas Polesovsky

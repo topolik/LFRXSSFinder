@@ -3,15 +3,13 @@ package cz.topolik.xssfinder.v2.animal.fish;
 import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.Water;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
  */
-public class JSPContextAttributeFinderRainbowFish implements RainbowFish {
+public class JSPContextAttributeFinderRainbowFish extends UsefulFish implements RainbowFish {
     Pattern findAttributeRE = Pattern.compile("^_jspx_page_context\\.findAttribute\\((\"[^\\\"]+\")\\)");
     String replacement = "([\\w0-9_]+).setVar\\($1\\)";
 

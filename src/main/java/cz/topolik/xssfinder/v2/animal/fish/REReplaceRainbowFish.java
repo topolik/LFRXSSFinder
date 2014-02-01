@@ -3,14 +3,13 @@ package cz.topolik.xssfinder.v2.animal.fish;
 import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.Water;
 
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
  */
-public class REReplaceRainbowFish implements RainbowFish {
+public class REReplaceRainbowFish extends UsefulFish implements RainbowFish {
     Pattern regExp;
     String replacement;
 
@@ -31,4 +30,11 @@ public class REReplaceRainbowFish implements RainbowFish {
         return droplet.droppy(newReplacement).dryUp();
     }
 
+    @Override
+    public String toString() {
+        return "REReplaceRainbowFish{" +
+                "regExp=" + regExp +
+                ", replacement='" + replacement + '\'' +
+                '}';
+    }
 }

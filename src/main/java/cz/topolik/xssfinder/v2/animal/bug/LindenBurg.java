@@ -46,7 +46,7 @@ public class LindenBurg extends BirchBug {
 
         // vulnerable search container
         if (ladies.startsWith(ROW_ADDTEXT)) {
-            for(String dirtyLady : parseSearchContainerRowExpression(ladies, yearOfBirth, tree)) {
+            for (String dirtyLady : parseSearchContainerRowExpression(ladies, yearOfBirth, tree)) {
                 cleanLadyBug(dirtyLady, yearOfBirth, result);
             }
 
@@ -58,7 +58,7 @@ public class LindenBurg extends BirchBug {
 
     protected void cleanLadyBug(String dirtyLady, int yearOfBirth, List<LadyBug> cleanLadies) {
         LadyBug cleanLady = Droplet.surround(dirtyLady, yearOfBirth, tree).clean();
-        if(!cleanLady.equals(LadyBug.NO_LADYBUG)) {
+        if (!cleanLady.equals(LadyBug.NO_LADYBUG)) {
             cleanLadies.add(cleanLady);
         }
     }

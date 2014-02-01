@@ -5,7 +5,7 @@ import cz.topolik.xssfinder.v2.water.Droplet;
 /**
  * @author Tomas Polesovsky
  */
-public class SimpleWhiteFish implements WhiteFish {
+public class SimpleWhiteFish extends UsefulFish implements WhiteFish {
     private static final char[] SIMPLE_EXPRESSION_WHITELIST = {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
             'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
@@ -62,4 +62,10 @@ public class SimpleWhiteFish implements WhiteFish {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "SimpleWhiteFish{" +
+                "prefix='" + prefix + '\'' +
+                '}';
+    }
 }

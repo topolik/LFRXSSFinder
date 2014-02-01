@@ -5,8 +5,6 @@ import cz.topolik.xssfinder.v2.animal.bug.LadyBug;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Tomas Polesovsky

@@ -6,7 +6,6 @@ import cz.topolik.xssfinder.v2.animal.fish.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -31,7 +30,28 @@ public class River {
         trainFishes();
     }
 
-    protected void trainFishes(){
+    public void dryUp() {
+        List<UsefulFish> usefulFishes = new ArrayList<UsefulFish>(rainbowFishes.size() + whiteFishes.size());
+        for (RainbowFish fish : rainbowFishes) {
+            if (fish instanceof UsefulFish) {
+                usefulFishes.add((UsefulFish) fish);
+            }
+        }
+        for (WhiteFish fish : whiteFishes) {
+            if (fish instanceof UsefulFish) {
+                usefulFishes.add((UsefulFish) fish);
+            }
+        }
+
+        World.announce("Looking for fishes that were not useful ...");
+        for (UsefulFish fish : usefulFishes) {
+            if (!fish.isUseful()) {
+                World.announce(" ... " + fish);
+            }
+        }
+    }
+
+    protected void trainFishes() {
         InputStream in = getClass().getResourceAsStream(FISH_EXPERIENCE);
         try {
             Scanner s = new Scanner(in);
@@ -239,6 +259,9 @@ public class River {
     protected boolean doWhiteFishesLikeIt(Droplet droplet) {
         for (WhiteFish fish : whiteFishes) {
             if (fish.likes(droplet)) {
+                if (fish instanceof UsefulFish) {
+                    ((UsefulFish) fish).setUseful(true);
+                }
                 return true;
             }
         }
@@ -251,6 +274,9 @@ public class River {
         for (RainbowFish fish : rainbowFishes) {
             Water callResult = fish.swallow(droplet);
             if (callResult.equals(Water.CLEAN_WATER)) {
+                if (fish instanceof UsefulFish) {
+                    ((UsefulFish) fish).setUseful(true);
+                }
                 return Water.CLEAN_WATER;
             }
             result.add(callResult);

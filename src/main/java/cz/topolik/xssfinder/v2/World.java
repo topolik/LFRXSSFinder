@@ -67,6 +67,7 @@ public class World {
     }
 
     public void jDay() {
+        river.dryUp();
         toDust();
     }
 

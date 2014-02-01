@@ -3,16 +3,14 @@ package cz.topolik.xssfinder.v2.animal.fish;
 import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.Water;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
  */
-public class RERainbowFish implements RainbowFish {
+public class RERainbowFish extends UsefulFish implements RainbowFish {
     Pattern regExp;
     int[] groups;
 
@@ -54,5 +52,13 @@ public class RERainbowFish implements RainbowFish {
         }
 
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "RERainbowFish{" +
+                "regExp=" + regExp +
+                ", groups=" + Arrays.toString(groups) +
+                '}';
     }
 }

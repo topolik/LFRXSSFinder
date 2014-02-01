@@ -5,13 +5,11 @@ import cz.topolik.xssfinder.v2.water.Water;
 import cz.topolik.xssfinder.v2.wood.Tree;
 
 import java.io.File;
-import java.util.List;
 
 /**
- *
  * @author Tomas Polesovsky
  */
-public class LadyBug implements Comparable<LadyBug>{
+public class LadyBug implements Comparable<LadyBug> {
     public static final LadyBug NO_LADYBUG = new LadyBug(new Droplet("", -1, "", new Tree(new File(""), new File(""))), Water.CLEAN_WATER);
     private Droplet droplet;
     private Water stackTrace;
@@ -62,11 +60,11 @@ public class LadyBug implements Comparable<LadyBug>{
     }
 
     public int compareTo(LadyBug o) {
-        if ( o == null) {
+        if (o == null) {
             return 1;
         }
         int result = getTree().getRoot().compareTo(o.getTree().getRoot());
-        return result != 0 ? result : (getLineNum()<o.getLineNum() ? -1 : (getLineNum()==o.getLineNum()? 0 : 1));
+        return result != 0 ? result : (getLineNum() < o.getLineNum() ? -1 : (getLineNum() == o.getLineNum() ? 0 : 1));
     }
 
     @Override

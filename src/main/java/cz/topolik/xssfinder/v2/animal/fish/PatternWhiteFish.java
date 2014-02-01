@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 /**
  * @author Tomas Polesovsky
  */
-public class PatternWhiteFish implements WhiteFish {
+public class PatternWhiteFish extends UsefulFish implements WhiteFish {
     private Pattern regExp;
 
     public PatternWhiteFish(String pattern) {
@@ -17,5 +17,12 @@ public class PatternWhiteFish implements WhiteFish {
     @Override
     public boolean likes(Droplet droplet) {
         return regExp.matcher(droplet.getExpression()).matches();
+    }
+
+    @Override
+    public String toString() {
+        return "PatternWhiteFish{" +
+                "regExp=" + regExp +
+                '}';
     }
 }

@@ -5,14 +5,13 @@ import cz.topolik.xssfinder.v2.water.Droplet;
 import cz.topolik.xssfinder.v2.water.Water;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
 /**
  * @author Tomas Polesovsky
  */
-public class BigRareRainbowFish implements RainbowFish {
+public class BigRareRainbowFish extends UsefulFish implements RainbowFish {
     private static final String SAFE_EXPRESSION = "\"\"";
     private static final ThreadLocal<Boolean> EXECUTED = new ThreadLocal<Boolean>();
     Pattern PATT = Pattern.compile("^([\\w]*|\"[^\"]*\")$");
