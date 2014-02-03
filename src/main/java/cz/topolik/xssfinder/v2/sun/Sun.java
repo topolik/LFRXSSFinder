@@ -71,15 +71,11 @@ public class Sun {
     private List<Future<Collection<LadyBug>>> enlighten(List<Tree> trees) {
         treesToShineOn.set(trees.size());
 
-        List<Ray> rayTrees = new ArrayList<Ray>(trees.size());
+        List<Future<Collection<LadyBug>>> result = new ArrayList<Future<Collection<LadyBug>>>(trees.size());
         for (Tree tree : trees) {
-            rayTrees.add(new Ray(tree, treesToShineOn));
+            result.add(beams.submit(new Ray(tree, treesToShineOn)));
         }
 
-        try {
-            return beams.invokeAll(rayTrees);
-        } catch (InterruptedException e) {
-            throw new SunShineException("Unable to enlighten all trees :( ", e);
-        }
+        return result;
     }
 }

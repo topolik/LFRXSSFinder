@@ -663,6 +663,8 @@ reg-exp-replace-cep=$1$2=^(.*)"[^"]+" ?\+ ?(.*)$
 reg-exp-replace-cep=$1$2=^(.*) ?[+*-/] ?[0-9]+(.*)$
 reg-exp-replace-cep=$1$2=^(.*)[0-9]+ ?[+*-/] ?(.*)$
 
+reg-exp-replace-cep=$4=^\(([a-z\.]+\.)?[A-Z][\w0-9]+(<.+>)?(\[\])?\)(.+)$
+
 
 ######
 ###### Created during TAGLIBs PARSING, used at whole

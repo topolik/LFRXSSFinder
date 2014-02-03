@@ -3,7 +3,6 @@ package cz.topolik.xssfinder;
 import cz.topolik.xssfinder.v2.World;
 import cz.topolik.xssfinder.v2.animal.bug.LadyBug;
 import cz.topolik.xssfinder.v2.animal.bug.LindenBurg;
-import cz.topolik.xssfinder.v2.water.Droplet;
 
 import java.io.File;
 import java.util.*;
@@ -37,7 +36,7 @@ public class App {
         List<Occurence> occurences = new ArrayList<Occurence>();
         int i = 0;
         for (LadyBug ladyBug : ladyBugs) {
-            String relevantLines = Arrays.asList(ladyBug.getStackTrace().getWaves()).toString();
+            String relevantLines = Arrays.asList(ladyBug.getWater().getWaves()).toString();
 //            System.out.println("Problem " + ++i + ":");
             System.out.print(ladyBug.getTree().getRoot().getAbsolutePath() + " ");
             System.out.print(ladyBug.getLineNum() + ": ");

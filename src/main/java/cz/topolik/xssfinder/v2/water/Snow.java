@@ -1,23 +1,9 @@
 package cz.topolik.xssfinder.v2.water;
 
 import cz.topolik.xssfinder.v2.World;
-import cz.topolik.xssfinder.v2.animal.bug.LindenBurg;
 import cz.topolik.xssfinder.v2.wood.Tree;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -25,162 +11,72 @@ import java.util.regex.Pattern;
  */
 public class Snow {
 
-    private static final Pattern TAGLIB_CALL_PATTERN = Pattern.compile("^(_jspx_th_[\\w]+)\\.set([\\w]+)\\((.*)\\);$");
-    //[String id = (String)request.getAttribute("liferay-ui:upload-progress:id");]
-    private static final Pattern VULNERABLE_TAGLIB_LINE_PATTERN = Pattern.compile("^.*request.getAttribute\\(\"([a-zA-Z-]+):([a-zA-Z-]+):([a-zA-Z-]+)\"\\).*$");
     private static final String TLD_DIR_JSP = "/html/taglib/";
     private static final String TLD_DIR_JS_EDITOR = "/html/js/editor/";
 
-    private Map<String, Set<String>> vulnerableTaglibs = new HashMap<String, Set<String>>();
+    private Set<String> blackSpots = Collections.synchronizedSet(new HashSet<String>());
+    private Map<String, SnowFlakeChestnutStructure> flakesByClassName = new HashMap<String, SnowFlakeChestnutStructure>();
+    private Map<String, SnowFlakeChestnutStructure> flakesByAttrNormalizedName = new HashMap<String, SnowFlakeChestnutStructure>();
 
     public boolean isTagLibJSP(Tree tree) {
         String absPath = tree.getRoot().getAbsolutePath();
         return absPath.contains(TLD_DIR_JSP) || absPath.contains(TLD_DIR_JS_EDITOR);
     }
 
-    public Water melt(Droplet droplet) {
-        if (isTagLibJSP(droplet.getTree())) {
-            return Water.UNKNOWN_WATER;
-        }
-
-        Matcher m = TAGLIB_CALL_PATTERN.matcher(droplet.getRing());
-        if (!m.matches()) {
-            return Water.UNKNOWN_WATER;
-        }
-        String taglibVariableName = m.group(1);
-        String setFieldName = m.group(2);
-        String normalizedFieldName = setFieldName.toLowerCase();
-        String argument = m.group(3);
-
-        String taglibClassName = null;
-        // find declaration of the used taglib
-        String declarationLine = null;
-        Pattern taglibDeclaration = Pattern.compile("^.*(com.liferay.taglib.[^ ]+) " + taglibVariableName + " (=|:).*$");
-        for (int i = droplet.getRingNum(); i >= 0 && taglibClassName == null; i--) {
-            String fileLine = droplet.getRing(i);
-            Matcher declM = taglibDeclaration.matcher(fileLine);
-            if (!declM.matches()) {
-                continue;
-            }
-            declarationLine = fileLine;
-            taglibClassName = declM.group(1);
-        }
-        if (taglibClassName != null) {
-            if (vulnerableTaglibs.containsKey(taglibClassName)) {
-                for (String vulnerableProperty : vulnerableTaglibs.get(taglibClassName)) {
-                    if (vulnerableProperty.equals(normalizedFieldName)) {
-                        return droplet.droppy(argument).dryUp();
-                    }
-                }
-            }
-        }
-
-        // line is taglib-safe
-        return Water.CLEAN_WATER;
-    }
-
     public void fly() {
-        /*  TODO: taglibs are temporarily disabled */
-        if (true) return;
-
-
-        /** Taglib: shortName -> (tagName, tagClass)<br /> e.g. <code>liferay-ui -> asset-categories-error -> com.liferay.taglib.ui.AssetCategoriesErrorTag</code> */
-        Map<String, Map<String, String>> taglibStructure = null;
-
-        try {
-            taglibStructure = loadTaglibTLDs();
-        } catch (Exception ex) {
-            throw new RuntimeException("Cannot parse TLDs: " + ex.getMessage(), ex);
-        }
-
-
-        World.announce(" ... recognizing vulnerable taglibs ... ");
-        getVulnerableTaglibs(taglibStructure);
-        World.announce(" ... recognizing vulnerable taglibs ... finished with " + vulnerableTaglibs.size() + " entries");
+        World.announce("Snow is flying around ...");
+        World.announce(" ... recognizing black spots ... ");
+        identifyBlackSpots();
+        World.announce(" ... whirling snow to cover black spots with snow flakes ... ");
+        whirlSnow();
     }
 
-    protected Map<String, Map<String, String>> loadTaglibTLDs() throws ParserConfigurationException, SAXException, IOException {
-        Map<String, Map<String, String>> taglibStructure = new HashMap<String, Map<String, String>>();
-
-        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-        domFactory.setNamespaceAware(true);
-        domFactory.setValidating(false);
-        domFactory.setExpandEntityReferences(false);
-        DocumentBuilder builder = domFactory.newDocumentBuilder();
-
-
-        //<taglib>
-        //  <short-name>liferay-ui</short-name>
-        //  <tag>
-        //    <name>asset-categories-navigation</name>
-        //    <tag-class>com.liferay.taglib.ui.AssetCategoriesNavigationTag</tag-class>
-
-        for (Tree chestnut : World.see().forest().chestnuts()) {
-            Document doc = builder.parse(new ByteArrayInputStream(chestnut.melt().getBytes()));
-            String shortName = doc.getElementsByTagName("short-name").item(0).getTextContent();
-            if (!taglibStructure.containsKey(shortName)) {
-                taglibStructure.put(shortName, new HashMap<String, String>());
-            }
-
-            NodeList tags = doc.getElementsByTagName("tag");
-            for (int i = 0; i < tags.getLength(); i++) {
-                Node tag = tags.item(i);
-                String tagName = null;
-                String tagClass = null;
-                for (int j = 0; j < tag.getChildNodes().getLength(); j++) {
-                    Node child = tag.getChildNodes().item(j);
-                    if ("name".equals(child.getNodeName())) {
-                        tagName = child.getTextContent();
-                    }
-                    if ("tag-class".equals(child.getNodeName())) {
-                        tagClass = child.getTextContent();
-                    }
-                }
-                taglibStructure.get(shortName).put(tagName, tagClass);
-            }
-        }
-        return taglibStructure;
+    public void addBlackSpot(String blackSpot) {
+        blackSpots.add(blackSpot);
     }
 
-    protected void getVulnerableTaglibs(Map<String, Map<String, String>> taglibStructure) {
+    public void addSnowFlake(SnowFlakeChestnutStructure snowFlake) {
+        flakesByClassName.put(snowFlake.getClassName(), snowFlake);
+    }
+
+    protected void identifyBlackSpots() {
+        // go one time to know the vulnerable attrs - black spots via {@see SnowWhiteFish}
         for (Tree linden : World.see().forest().linden()) {
             if (isTagLibJSP(linden)) {
-                for (int lineNum = 0; lineNum < linden.getRings().size(); lineNum++) {
-                    String line = linden.getRing(lineNum);
+                linden.getTreeBug().meetLadyBugs();
+            }
+        }
+    }
 
-                    if (!line.startsWith(LindenBurg.OUT_PRINT)) {
-                        continue;
-                    }
-                    String functionArgument = line.substring(LindenBurg.OUT_PRINT.length(), line.length() - 2).trim();
-
-                    Water declaration = World.see().river().isEdible(new Droplet(functionArgument, lineNum, functionArgument, linden));
-
-                    if (!declaration.equals(Water.CLEAN_WATER) && declaration.size() > 0) {
-                        // the last line in the stack should be variable declaration
-                        String declarationLine = declaration.get(declaration.size() - 1);
-
-                        // TODO: add also variables which are initialized in pageContext / request attributes
-
-                        Matcher m = VULNERABLE_TAGLIB_LINE_PATTERN.matcher(declarationLine);
-                        if (m.matches()) {
-                            String taglibShortName = m.group(1);
-                            String tagName = m.group(2);
-                            String attrName = m.group(3);
-                            String normalizedAttrName = attrName.toLowerCase();
-
-                            try {
-                                String taglibClassName = taglibStructure.get(taglibShortName).get(tagName);
-                                if (!vulnerableTaglibs.containsKey(taglibClassName)) {
-                                    vulnerableTaglibs.put(taglibClassName, new HashSet<String>());
-                                }
-                                vulnerableTaglibs.get(taglibClassName).add(normalizedAttrName);
-                            } catch (NullPointerException e) {
-                                throw new RuntimeException("Cannot find " + taglibShortName, e);
-                            }
-                        }
-                    }
+    protected void whirlSnow() {
+        for (SnowFlakeChestnutStructure snowFlake : flakesByClassName.values()) {
+            StringBuffer sb = new StringBuffer(5);
+            sb.append(snowFlake.getShortName());
+            sb.append(":");
+            sb.append(snowFlake.getName());
+            sb.append(":");
+            String friendlyFlakeName = sb.toString().toLowerCase();
+            for (SnowFlakeChestnutAttribute attr : snowFlake.getAttributes()) {
+                String normalizedName = friendlyFlakeName + attr.getName().toLowerCase();
+                if (attr.isXssVulnerable()) {
+                    attr.setXssVulnerable(blackSpots.contains(normalizedName));
                 }
             }
         }
+    }
+
+    public boolean isBlackSpot(String taglibClassName, String setFieldName) {
+        String normalizedFieldName = setFieldName.toLowerCase();
+
+        SnowFlakeChestnutStructure snowFlake = flakesByClassName.get(taglibClassName);
+        if (snowFlake != null) {
+            for (SnowFlakeChestnutAttribute attr : snowFlake.getAttributes()) {
+                if (attr.getName().equals(normalizedFieldName)) {
+                    return attr.isXssVulnerable();
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -57,9 +57,11 @@ public class World {
 
         forest.callAntsToExamine();
 
+        forest.callTreeBugsToPrepare();
+
         rain.fallDown();
-        snow.fly();
         river.flow();
+        snow.fly();
     }
 
     public Set<LadyBug> rotate(int speed) {

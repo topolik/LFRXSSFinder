@@ -49,7 +49,7 @@ public class BirchBug implements TreeBug {
     }
 
     @Override
-    public void setTree(Tree tree) {
+    public void prepare(Tree tree) {
         this.tree = tree;
     }
 

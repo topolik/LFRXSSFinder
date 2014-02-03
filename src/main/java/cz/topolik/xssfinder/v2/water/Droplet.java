@@ -54,19 +54,6 @@ public class Droplet {
         }
         result.add(riverResult);
 
-        /*
-        TODO: Search container Row Checker (and co.) + ResultRow attrs
-         */
-
-        // so we know there is no direct XSS
-        // but there can be vulnerable taglib call
-
-        Water snowResult = World.see().snow().melt(this);
-        if (snowResult.equals(Water.CLEAN_WATER)) {
-            // it's safe
-            return Water.CLEAN_WATER;
-        }
-        result.add(snowResult);
 
         return result;
     }

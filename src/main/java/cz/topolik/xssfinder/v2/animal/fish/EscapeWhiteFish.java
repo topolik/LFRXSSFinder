@@ -18,7 +18,7 @@ public class EscapeWhiteFish extends UsefulFish implements WhiteFish {
     public boolean likes(Droplet droplet) {
         String expression = droplet.getExpression();
 
-        boolean isVariableStart = expression.charAt(0) >= 97 && expression.charAt(0) <= 122;
+        boolean isVariableStart = expression.length() > 0 && expression.charAt(0) >= 97 && expression.charAt(0) <= 122;
         if (!isVariableStart) {
             return false;
         }

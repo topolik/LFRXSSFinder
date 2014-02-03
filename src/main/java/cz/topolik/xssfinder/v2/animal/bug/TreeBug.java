@@ -9,5 +9,6 @@ import java.util.List;
  */
 public interface TreeBug {
     public List<LadyBug> meetLadyBugs();
-    public void setTree(Tree tree);
+
+    public void prepare(Tree tree);
 }

@@ -37,8 +37,8 @@ public class WoodWind {
         if (Tree.isTree(tree)) {
             trees.add(new Tree(tree, continent));
 
-            if (trees.size() % 100 == 0) {
-                World.announce("... there are " + trees.size() + " trees plant so far");
+            if (trees.size() % 1000 == 0) {
+                World.announce(" ... there are " + trees.size() + " trees plant so far");
             }
         }
     }

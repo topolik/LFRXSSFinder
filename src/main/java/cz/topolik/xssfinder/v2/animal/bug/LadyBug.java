@@ -12,11 +12,11 @@ import java.io.File;
 public class LadyBug implements Comparable<LadyBug> {
     public static final LadyBug NO_LADYBUG = new LadyBug(new Droplet("", -1, "", new Tree(new File(""), new File(""))), Water.CLEAN_WATER);
     private Droplet droplet;
-    private Water stackTrace;
+    private Water water;
 
-    public LadyBug(Droplet droplet, Water stackTrace) {
+    public LadyBug(Droplet droplet, Water water) {
         this.droplet = droplet;
-        this.stackTrace = stackTrace;
+        this.water = water;
     }
 
     public String getLineContent() {
@@ -35,8 +35,8 @@ public class LadyBug implements Comparable<LadyBug> {
         return droplet;
     }
 
-    public Water getStackTrace() {
-        return stackTrace;
+    public Water getWater() {
+        return water;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class LadyBug implements Comparable<LadyBug> {
         LadyBug ladyBug = (LadyBug) o;
 
         if (droplet != null ? !droplet.equals(ladyBug.droplet) : ladyBug.droplet != null) return false;
-        if (stackTrace != null ? !stackTrace.equals(ladyBug.stackTrace) : ladyBug.stackTrace != null) return false;
+        if (water != null ? !water.equals(ladyBug.water) : ladyBug.water != null) return false;
 
         return true;
     }
@@ -55,7 +55,7 @@ public class LadyBug implements Comparable<LadyBug> {
     @Override
     public int hashCode() {
         int result = droplet != null ? droplet.hashCode() : 0;
-        result = 31 * result + (stackTrace != null ? stackTrace.hashCode() : 0);
+        result = 31 * result + (water != null ? water.hashCode() : 0);
         return result;
     }
 
@@ -77,7 +77,7 @@ public class LadyBug implements Comparable<LadyBug> {
         sb.append("\n");
         sb.append(getLineContent());
         sb.append("\n");
-        sb.append(stackTrace);
+        sb.append(water);
         return sb.toString();
     }
 }

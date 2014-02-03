@@ -15,14 +15,12 @@ import java.util.regex.Pattern;
  * @author Tomas Polesovsky
  */
 public class River {
-    private static final String FISH_EXPERIENCE = "/fish_experience.txt";
-
-    List<RainbowFish> rainbowFishes = new ArrayList<RainbowFish>();
-    List<WhiteFish> whiteFishes = new ArrayList<WhiteFish>();
-
     static final String SAFE_VARIABLE_DECLARATION_START = ".*(byte|short|int|long|float|double|boolean|(java.lang.)?(Byte|Short|Integer|Long|Float|Double|Boolean))(\\[\\])? ";
     static final Pattern JAVA_VARIABLE_PATTERN = Pattern.compile("[_a-zA-Z][_a-zA-Z0-9]*");
     static final String ESCAPED_QUOTE = Matcher.quoteReplacement("\\\"");
+    private static final String FISH_EXPERIENCE = "/fish_experience.txt";
+    List<RainbowFish> rainbowFishes = new ArrayList<RainbowFish>();
+    List<WhiteFish> whiteFishes = new ArrayList<WhiteFish>();
 
     public void flow() {
         World.announce("Let's river flow ...");
@@ -116,6 +114,7 @@ public class River {
             }
         }
 
+        whiteFishes.add(new SnowWhiteFish());
         whiteFishes.add(new EscapeWhiteFish());
 
         rainbowFishes.add(new BigRareRainbowFish());

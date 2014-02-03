@@ -14,6 +14,10 @@ public class Forest extends TreeSet<Tree> {
     boolean antsAreTired = false;
 
     public void callAntsToExamine() {
+        if(antsAreTired) {
+            throw new AntException("Ants are already tired!");
+        }
+
         World.announce("Calling ants to examine the forest ... ");
 
         Iterator<Tree> ant = iterator();
@@ -22,7 +26,7 @@ public class Forest extends TreeSet<Tree> {
             ant.next().examineByAnt();
 
             pos++;
-            if (pos % 100 == 0) {
+            if (pos % 1000 == 0) {
                 World.announce(" ... ants climbed " + pos + " trees so far");
             }
         }
@@ -85,4 +89,20 @@ public class Forest extends TreeSet<Tree> {
         return chestnuts;
     }
 
+    public void callTreeBugsToPrepare() {
+        World.announce("Calling tree bugs to prepare the forest ... ");
+
+        Iterator<Tree> treeBug = iterator();
+        int pos = 0;
+        while (treeBug.hasNext()) {
+            treeBug.next().prepareTree();
+
+            pos++;
+            if (pos % 1000 == 0) {
+                World.announce(" ... tree bugs prepared " + pos + " trees so far");
+            }
+        }
+
+        World.announce(" ... Tree bugs processed all " + pos + " trees, now they are celebrating with Ants :)");
+    }
 }

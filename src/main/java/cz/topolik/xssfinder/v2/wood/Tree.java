@@ -48,7 +48,10 @@ public class Tree implements Comparable<Tree> {
         this.rings = Collections.unmodifiableList(rings);
 
         this.treeBug = isLinden() ? new LindenBurg() : isBirch() ? new BirchBug() : new ChestnutBug();
-        this.treeBug.setTree(this);
+    }
+
+    public void prepareTree(){
+        treeBug.prepare(this);
     }
 
     protected String bite(String s) {
@@ -111,6 +114,7 @@ public class Tree implements Comparable<Tree> {
         StringBuffer sb = new StringBuffer();
         for (String ring : rings) {
             sb.append(ring);
+            sb.append('\n');
         }
         return sb.toString();
     }
@@ -143,5 +147,12 @@ public class Tree implements Comparable<Tree> {
         }
 
         return o.root.compareTo(root);
+    }
+
+    @Override
+    public String toString() {
+        return "Tree{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }
