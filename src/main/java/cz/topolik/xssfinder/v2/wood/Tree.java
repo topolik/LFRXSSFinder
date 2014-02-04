@@ -1,9 +1,6 @@
 package cz.topolik.xssfinder.v2.wood;
 
-import cz.topolik.xssfinder.v2.animal.bug.BirchBug;
-import cz.topolik.xssfinder.v2.animal.bug.ChestnutBug;
-import cz.topolik.xssfinder.v2.animal.bug.LindenBurg;
-import cz.topolik.xssfinder.v2.animal.bug.TreeBug;
+import cz.topolik.xssfinder.v2.animal.bug.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;

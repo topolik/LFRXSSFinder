@@ -14,6 +14,10 @@ public class Ray implements Callable<Collection<LadyBug>> {
     private Tree tree;
     private AtomicInteger treesTotal;
 
+    public Ray(Tree tree) {
+        this.tree = tree;
+    }
+
     public Ray(Tree tree, AtomicInteger treesTotal) {
         this.tree = tree;
         this.treesTotal = treesTotal;
@@ -24,7 +28,9 @@ public class Ray implements Callable<Collection<LadyBug>> {
         try {
             return tree.getTreeBug().meetLadyBugs();
         } finally {
-            treesTotal.decrementAndGet();
+            if(treesTotal != null) {
+                treesTotal.decrementAndGet();
+            }
         }
     }
 

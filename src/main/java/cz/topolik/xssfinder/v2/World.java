@@ -52,7 +52,7 @@ public class World {
         System.out.flush();
     }
 
-    public void explore(File... continents) {
+    public void explore(int speed, File... continents) {
         forest = wind.explore(continents);
 
         forest.callAntsToExamine();
@@ -61,7 +61,7 @@ public class World {
 
         rain.fallDown();
         river.flow();
-        snow.fly();
+        snow.fly(speed);
     }
 
     public Set<LadyBug> rotate(int speed) {

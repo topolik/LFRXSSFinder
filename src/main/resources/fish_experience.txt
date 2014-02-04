@@ -656,14 +656,15 @@ reg-exp-cep=1=^StringUtil\.highlight\(([^,]+), [\w\._0-9]+\)$
 # PortalUtil.getUserName(curArticle)
 reg-exp-cep=1=^PortalUtil\.getUserName\(([\w_0-9]+)\)$
 
+# (Map<String, String>)expression
+reg-exp-cep=4=^\(([a-z\.]+\.)?[A-Z][\w0-9]+(<.+>)?(\[\])?\)(.+)$
+
 # remove String constants and number operations
 reg-exp-replace-cep=$1 + $2=^(.*)\.concat(.*)$
 reg-exp-replace-cep=$1$2=^(.*) ?\+ ?"[^"]+"(.*)$
 reg-exp-replace-cep=$1$2=^(.*)"[^"]+" ?\+ ?(.*)$
 reg-exp-replace-cep=$1$2=^(.*) ?[+*-/] ?[0-9]+(.*)$
 reg-exp-replace-cep=$1$2=^(.*)[0-9]+ ?[+*-/] ?(.*)$
-
-reg-exp-replace-cep=$4=^\(([a-z\.]+\.)?[A-Z][\w0-9]+(<.+>)?(\[\])?\)(.+)$
 
 
 ######
@@ -682,3 +683,5 @@ reg-exp-cep=1=^InlineUtil\.buildDynamicAttributes\((.+)\)$
 reg-exp-cep=1,2=^AUIUtil\.buildCss\(("[^"]+"|[^,^"]+), ?[^,^"]+, ?[^,^"]+, ?[^,^"]+, ?(.*)\)$
 reg-exp-cep=1,2,3=^AUIUtil\.buildLabel\(("[^"]+"|[^,^"]+), ?[^,^"]+, ("[^"]+"|[^,^"]+), ("[^"]+"|[^,^"]+)\)$
 
+# simple local method call
+reg-exp-cep=1=^[a-z_][A-Za-z0-9_]+\(([a-zA-Z_\.\(\)]+)\)$

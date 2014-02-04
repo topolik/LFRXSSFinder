@@ -18,7 +18,7 @@ public class App {
             args = new String[]{args[0], String.valueOf(Runtime.getRuntime().availableProcessors() - 1)};
         }
         
-        Set<LadyBug> ladyBugs = null;
+        TreeSet<LadyBug> ladyBugs = new TreeSet<LadyBug>();
 
         File[] continents = new File[]{
                 new File(args[0], "jsp-precompile"),
@@ -29,8 +29,9 @@ public class App {
                 new File(args[0], "util-taglib/src")
         };
 
-        World.see().explore(continents);
-        ladyBugs = World.see().rotate(Integer.parseInt(args[1]));
+        int speed = Integer.parseInt(args[1]);
+        World.see().explore(speed, continents);
+        ladyBugs.addAll(World.see().rotate(speed));
         World.see().jDay();
 
         List<Occurence> occurences = new ArrayList<Occurence>();
@@ -40,7 +41,7 @@ public class App {
 //            System.out.println("Problem " + ++i + ":");
             System.out.print(ladyBug.getTree().getRoot().getAbsolutePath() + " ");
             System.out.print(ladyBug.getLineNum() + ": ");
-            System.out.println(ladyBug.getLineContent().trim());
+            System.out.println(ladyBug.getLineContent());
             System.out.println("Relevant lines:");
             System.out.println(relevantLines);
             if (relevantLines.contains("ParamUtil.getString(req") ||
@@ -56,18 +57,20 @@ public class App {
             System.out.print(",");
             System.out.print(ladyBug.getLineNum());
             System.out.print(",");
-            String vuln = ladyBug.getLineContent().trim();
-            if (vuln.startsWith(LindenBurg.ROW_ADDTEXT)) {
-                String arg[] = LindenBurg.parseSearchContainerRowExpression(ladyBug.getLineContent(), ladyBug.getLineNum(), ladyBug.getTree());
-                System.out.print(arg[0]);
-                if (arg.length > 1) {
-                    System.out.print(" || <- OR -> || ");
-                    System.out.print(arg[1]);
-                }
-                System.out.println();
-            } else {
-                System.out.println(vuln.substring(10, vuln.length() - 2).trim());
-            }
+            String vuln = ladyBug.getDroplet().getExpression();
+            System.out.println(vuln);
+//            String vuln = ladyBug.getLineContent().trim();
+//            if (vuln.startsWith(LindenBurg.ROW_ADDTEXT)) {
+//                String arg[] = LindenBurg.parseSearchContainerRowExpression(ladyBug.getLineContent(), ladyBug.getLineNum(), ladyBug.getTree());
+//                System.out.print(arg[0]);
+//                if (arg.length > 1) {
+//                    System.out.print(" || <- OR -> || ");
+//                    System.out.print(arg[1]);
+//                }
+//                System.out.println();
+//            } else {
+//                System.out.println(vuln.substring(10, vuln.length() - 2).trim());
+//            }
             System.out.println("---------------------------------------------");
 
             boolean found = false;
@@ -101,18 +104,20 @@ public class App {
             System.out.print(",");
             System.out.print(ladyBug.getLineNum());
             System.out.print(",");
-            String vuln = ladyBug.getLineContent().trim();
-            if (vuln.startsWith(LindenBurg.ROW_ADDTEXT)) {
-                String arg[] = LindenBurg.parseSearchContainerRowExpression(ladyBug.getLineContent(), ladyBug.getLineNum(), ladyBug.getTree());
-                System.out.print(arg[0]);
-                if (arg.length > 1) {
-                    System.out.print(" || <- OR -> || ");
-                    System.out.print(arg[1]);
-                }
-                System.out.println();
-            } else {
-                System.out.println(vuln.substring(10, vuln.length() - 2).trim());
-            }
+            String vuln = ladyBug.getDroplet().getExpression();
+            System.out.println(vuln);
+//            String vuln = ladyBug.getLineContent().trim();
+//            if (vuln.startsWith(LindenBurg.ROW_ADDTEXT)) {
+//                String arg[] = LindenBurg.parseSearchContainerRowExpression(ladyBug.getLineContent(), ladyBug.getLineNum(), ladyBug.getTree());
+//                System.out.print(arg[0]);
+//                if (arg.length > 1) {
+//                    System.out.print(" || <- OR -> || ");
+//                    System.out.print(arg[1]);
+//                }
+//                System.out.println();
+//            } else {
+//                System.out.println(vuln);
+//            }
         }
 
 
